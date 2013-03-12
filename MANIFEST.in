@@ -1,0 +1,5 @@
+include docs/html/*
+include RELEASE-VERSION
+prune tests
+exclude .gitignore tasks.txt notes.txt
+exclude examples/run-shark-view.py
