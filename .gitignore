@@ -1,0 +1,15 @@
+*~
+
+*.pyc
+
+build
+dist
+flyscript.egg-info
+RELEASE-VERSION
+
+docs/flyscript/tmp
+docs/html
+
+*.swp
+.DS_Store
+.idea/
