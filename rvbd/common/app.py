@@ -71,7 +71,7 @@ class Application(object):
         pass
 
     @classmethod
-    def start_logging(cls, loglevel=logging.INFO, logfile=None):
+    def start_logging(cls, loglevel=logging.WARNING, logfile=None):
         """Start up logging.
 
         This must be called only once and it will not work
