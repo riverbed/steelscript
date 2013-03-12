@@ -63,11 +63,15 @@ def human2bytes(s):
 
 
 class Formatter(object):
-    """Helper class to format output into tables with headers
+    """ Helper class to format output into tables with headers
+        
+        get_csv and print_csv use simple formatting rules, for
+        more complex usage, including dialects, the built-in 
+        `csv` module may be more suitable.
     """
     @classmethod
     def print_table(cls, columns, headers, paginate=None, padding=4):
-        """Print formatted table with optional pagination
+        """ Print formatted table with optional pagination
         """
         widths = [max(len(str(x))+padding for x in col) for col in izip(headers,
                                                                         *columns)]
@@ -79,6 +83,21 @@ class Formatter(object):
                 print header
                 print '-' * len(header)
             print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
+
+    @classmethod
+    def get_csv(cls, columns, headers, delim=','):
+        """ Return list using `delim` as separator (defaults to comma-separated list)
+        """
+        output = [delim.join(s for s in headers)]
+        for row in columns:
+            output.append(delim.join(str(x) for x in row))
+        return output
+
+    @classmethod
+    def print_csv(cls, columns, headers, delim=','):
+        """ Print table to stdout using `delim` as separator
+        """
+        print '\n'.join(cls.get_csv(columns, headers, delim))
 
 
 class DictObject(dict):
