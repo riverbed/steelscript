@@ -435,6 +435,28 @@ class Connection(object):
 
         return json.loads(data, object_hook=DictObject.create_from_dict)
 
+    def upload_file(self, urlpath, data, params=None, extra_headers=None):
+        '''Send a JSON rquest to the host.  For POST/PUT requests, the
+        `data` parameter will be JSON-encoded before transmission.  For
+        all requests, the response is JSON-decoded using the
+        DictObject class before returning.'''
+
+        if extra_headers is None:
+            extra_headers = {}
+
+        extra_headers['Content-Type'] = 'application/octet-stream'
+
+        resp = self.request(urlpath, "PUT", data,
+                            params=params, extra_headers=extra_headers)
+
+        data = resp.read()
+        if resp.status == 204:
+            return # no data
+        elif resp.status == 201:
+            # created resource
+            return {'Location-Header': resp.getheader('location', '')}
+        return data
+
     def post_raw(self, urlpath, data, params=None, extra_headers=None):
         '''
         Upload raw data to the given URL path with the given
