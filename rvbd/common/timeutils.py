@@ -17,6 +17,7 @@ from datetime import datetime, timedelta, tzinfo
 from decimal import Decimal
 import time
 import calendar
+import re
 
 __all__ = [ 'ensure_timezone', 'force_to_utc', 'datetime_to_seconds', 
             'datetime_to_microseconds', 'datetime_to_nanoseconds',
@@ -376,22 +377,33 @@ _timedelta_units = {
     'w' : 7*24*60*60, 'week' : 7*24*60*60, 'weeks': 7*24*60*60,
 }
 
+_timedelta_re = re.compile("([0-9]*\.*[0-9]*) *([a-zA-Z]*)")
+
 def parse_timedelta(s):
-    """ Parse the string `s` representing some duration of time
+    ''' Parse the string `s` representing some duration of time
     (e.g., `"3 seconds"` or `"1 week"`) and return a `datetime.timedelta`
     object representing that length of time.
     If the string cannot be parsed, raises `ValueError`.
-    """
-    L = s.strip().split(None, 1)
-    if len(L) == 1:
+    '''
+    
+    m = _timedelta_re.match(s)
+    if not m:
+        raise ValueError("Could not parse string as timedelta: %s" % s)
+
+    if m.group(1) == "":
+        val = 1
+    else:
+        val = float(m.group(1))
+        
+    if m.group(2) == "":
         units = 1
     else:
         try:
-            units = _timedelta_units[L[1]]
+            units = _timedelta_units[m.group(2)]
         except KeyError:
             raise ValueError()
 
-    return timedelta(seconds=units * float(L[0]))
+    return timedelta(seconds=units * float(val))
     
 
 def parse_range(s):
