@@ -68,10 +68,31 @@ class BuildPackage(Command):
 
 setup(name="flyscript",
       version=get_git_version(),
-      description="Riverbed FlyScript libarary for interacting with Riverbed devices",
       author="Riverbed Technology",
       author_email="cwhite@riverbed.com",
       url="https://splash.riverbed.com/docs/DOC-1464",
+      description="Riverbed FlyScript library for interacting with Riverbed devices",
+      long_description="""FlyScript
+=========
+
+FlyScript is a collection of libraries and scripts in Python and JavaScript for
+interacting with Riverbed Technology devices.
+
+For a complete guide to installation, see:
+
+http://pythonhosted.org/flyscript/install.html
+      """,
+      platforms='',
+      license="""Copyright (c) 2013 Riverbed Technology, Inc.
+
+This software is licensed under the terms and conditions of the
+MIT License set forth at:
+
+https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").
+
+This software is distributed "AS IS" as set forth in the License.
+      """,
+
       classifiers=['Development Status :: 4 - Beta',
                    'Intended Audience :: Developers',
                    'Intended Audience :: Information Technology',
@@ -82,8 +103,8 @@ setup(name="flyscript",
                    'Topic :: System :: Networking'],
       
       data_files=[('share/doc/flyscript/html', glob.glob('docs/html/*'))],
-      packages = find_packages(),
-      scripts = [
+      packages=find_packages(),
+      scripts=[
           'examples/profiler/percentile.py',
           'examples/profiler/top_ports.py',
           'examples/profiler/timeseries.py',
@@ -99,8 +120,8 @@ setup(name="flyscript",
         ],
 
       cmdclass = {
-          "build_doc_ridl" : BuildDocRidl,
-          "build_doc_restapis" : BuildDocRESTAPI,
-          "build_package" : BuildPackage,
+          "build_doc_ridl": BuildDocRidl,
+          "build_doc_restapis": BuildDocRESTAPI,
+          "build_package": BuildPackage,
       },
-      include_package_data = True)
+      include_package_data=True)
