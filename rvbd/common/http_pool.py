@@ -6,7 +6,6 @@
 # This software is distributed "AS IS" as set forth in the License.
 
 
-
 import httplib
 
 __all__ = [ 'ConnectionPool' ]
@@ -17,7 +16,7 @@ class ResponseWrapper(object):
         self.__finished = finished
 
         self.msg = self.__resp.msg
-        self.verion = self.__resp.version
+        self.version = self.__resp.version
         self.status = self.__resp.status
         self.reason = self.__resp.reason
 
@@ -69,7 +68,7 @@ class ConnectionPool(object):
     def _start_connection(self):
         if self._current_connection is not None:
             raise httplib.ImproperConnectionState()
-        
+
         try:
             self._current_connection = self._free_connections.pop()
         except IndexError:
@@ -133,4 +132,3 @@ class ConnectionPool(object):
             self._busy_connections.remove(conn)
             raise
 
-            
