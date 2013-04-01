@@ -7,7 +7,7 @@ interacting with Riverbed devices and other network infrastructure.
 
 For a complete guide to installation, see:
 
-  docs/html/install.html
+  [http://pythonhosted.org/flyscript/](http://pythonhosted.org/flyscript/)
 
 Quick Start
 ===========
