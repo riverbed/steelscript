@@ -105,6 +105,7 @@ This software is distributed "AS IS" as set forth in the License.
       data_files=[('share/doc/flyscript/html', glob.glob('docs/html/*'))],
       packages=find_packages(),
       scripts=[
+          'examples/flyscript-about.py',
           'examples/profiler/percentile.py',
           'examples/profiler/top_ports.py',
           'examples/profiler/timeseries.py',
