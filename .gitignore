@@ -13,3 +13,4 @@ docs/html
 *.swp
 .DS_Store
 .idea/
+.tox/
