@@ -47,7 +47,7 @@ class Connection(object):
     """
 
     HTTPLIB_DEBUGLEVEL = 0
-    DEBUG_MSG_BODY = 1000
+    DEBUG_MSG_BODY = 0
 
     def __init__(self, hostname, port=None, force_ssl=True, pool_size=1,
                  reauthenticate_handler=None, test_resource=None):
