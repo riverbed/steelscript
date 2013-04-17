@@ -36,7 +36,7 @@ class RvbdHTTPException(RvbdException):
                     self.error_id = e.get('error_id')
                     self.error_text = e.get('error_text')
 
-            elif t == 'application/json':
+            elif t.find('application/json') != -1:
                 d = json.loads(data)
                 #for Shark
                 try:

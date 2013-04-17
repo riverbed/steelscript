@@ -47,7 +47,7 @@ class Connection(object):
     """
 
     HTTPLIB_DEBUGLEVEL = 0
-    DEBUG_MSG_BODY = 0
+    DEBUG_MSG_BODY = 1000
 
     def __init__(self, hostname, port=None, force_ssl=True, pool_size=1,
                  reauthenticate_handler=None, test_resource=None):
@@ -438,7 +438,7 @@ class Connection(object):
             return  # no data
 
         t = resp.getheader('Content-type')
-        if t != 'application/json':
+        if t is not None and t.find('application/json'):
             raise RvbdException('unexpected content type %s' % t)
 
         return json.loads(data, object_hook=DictObject.create_from_dict)
