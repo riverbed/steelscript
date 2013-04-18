@@ -24,6 +24,7 @@ import urllib
 import shutil
 import os
 import re
+import tempfile
 
 from rvbd.common.exceptions import RvbdException, RvbdHTTPException
 from rvbd.common.utils import DictObject
@@ -489,29 +490,70 @@ class Connection(object):
             return {'Location-Header': resp.getheader('location', '')}
         return data
 
-    def get_raw(self, urlpath, local_path, local_file_name=None,
-                local_file_overwrite=False, extra_headers=None, params=None):
-        """Download a file from a remote URI and save it to a local path"""
+    def download(self, urlpath, path=None, overwrite=False, method='GET', extra_headers=None, params=None):
+        """Download a file from a remote URI and save it to a local path.
+        
+        `urlpath` is the url of the file to download.
+
+        `path` is an optional path on the local filesystem to save the downloaded file.
+        It can be:
+
+            - a complete path
+            - a directory
+
+        In the first case the file will have the specified name and extension. In the second case the filename will be retrieved by the 'Content-Disposition' HTTP header.
+        If a path cannot be determined, a ValueError is raised.
+
+        `overwrite` if True will save the downloaded file to `path` no matter if the file already exists.
+        
+        `method` is the HTTP method used for the request.
+        
+        `extra_headers` is a dictionary of headers to use for the request.
+
+        `params` is a dictionary of parameters for the request.
+        """
+        
+        filename = None
+
+        # try to determine the filename
+        if path is None:
+            #we didn't got a path from, create a temp directory to 
+            # store the file
+            directory = tempfile.mkdtemp()
+        else:
+            # we got a path which is a directory maybe, check that it's valid
+            if os.path.isdir(path):
+                #it's valid, we have a directory to store the file in
+                directory = path
+            elif path[-1] == os.sep:
+                # we got a path which is a directory that doesn't exists
+                raise ValueError("{0} directory does not exists, create it first".format(path))
+            else:
+                #last case, we got a full path of a file
+                directory, filename = os.path.split(path)
 
         # Get request
-        resp = self.request(urlpath, method='GET', params=params, extra_headers=extra_headers)
+        resp = self.request(urlpath, method=method, params=params, extra_headers=extra_headers)
 
         # Check if the user specified a file name
-        if local_file_name is None:
+        if filename is None:
             # Retrieve the file name form the HTTP header
-            local_file_name = resp.getheader('Content-Disposition').split('=')[1]
+            filename = resp.getheader('Content-Disposition').split('=')[1]
 
-        # Get the Full path
-        full_path = os.path.join(local_path, local_file_name)
+        if not filename:
+            raise ValueError("{0} is not a valid path. Specify a full path for the file to be created".format(path))
+        # Compose the path
+        path = os.path.join(directory, filename)
 
         # Check if the local file already exists
-        if os.path.isfile(full_path) and not local_file_overwrite:
-            raise RvbdException('the file %s already exists' % full_path)
+        if os.path.isfile(path) and not overwrite:
+            raise RvbdException('the file %s already exists' % path)
 
         # Open the local file
-        with open(full_path, 'wb') as fd:
+        with open(path, 'wb') as fd:
             # Save the remote file to the local file
             shutil.copyfileobj(resp, fd)
+        return path
 
     def add_headers(self, headers):
         """Add the dictionary HEADERS to the list of customer headers for all requests"""
