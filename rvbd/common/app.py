@@ -30,8 +30,8 @@ class Application(object):
         self._main = main_fn
 
         self.optparse = optparse.OptionParser()
-        self._add_standard_options()
         self.add_options(self.optparse)
+        self._add_standard_options()
 
         self.options = None
         self.args = None
