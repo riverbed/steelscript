@@ -1,5 +1,11 @@
+exclude .gitignore
 include docs/html/*
 include RELEASE-VERSION
+include AUTHORS
+include LICENSE
+include README.md
+include examples/*.py
+include examples/profiler/*.py
+include examples/shark/*.py
+include examples/stingray/*.py
 prune tests
-exclude .gitignore tasks.txt notes.txt
-exclude examples/run-shark-view.py

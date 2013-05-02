@@ -70,11 +70,35 @@ class Formatter(object):
         `csv` module may be more suitable.
     """
     @classmethod
-    def print_table(cls, columns, headers, paginate=None, padding=4):
+    def print_table(cls, columns, headers, paginate=None, padding=4, 
+                        max_width=None, long_column=1, wrap_columns=False):
         """ Print formatted table with optional pagination
+
+            `columns`      - list of data rows
+            `headers`      - list of strings for table header
+            `paginate`     - number of rows to insert new header
+            `padding`      - extra spaces between columns
+            `max_width`    - number of characters to restrict output to
+            `long_column`  - column number to either truncate or wrap to meet max_width
+                             (defaults to second column)
+            `wrap_columns` - indicate whether to wrap or truncate long_column
         """
+        import textwrap
+
         widths = [max(len(str(x))+padding for x in col) for col in izip(headers,
                                                                         *columns)]
+
+        if max_width and sum(widths) > max_width:
+            delta = sum(widths) - max_width
+            if delta > widths[long_column]:
+                # issue warning then turn off wrapping so data is still printed
+                print ('WARNING: Formatting error: cannot truncate column %d to meet max_width %d, ' 
+                                'printing all data instead ...'
+                                % (long_column, max_width))
+                max_width=None
+            else:
+                widths[long_column] -= delta
+
         header = ''.join(s.ljust(x) for s,x in zip(headers, widths))
         for i, row in enumerate(columns):
             if i == 0 or (paginate and i % paginate == 0):
@@ -82,7 +106,25 @@ class Formatter(object):
                 print ''
                 print header
                 print '-' * len(header)
-            print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
+            if max_width:
+                row = list(row)
+                column = row[long_column]
+                width = widths[long_column] - padding - 2
+                if not wrap_columns:
+                    # truncate data with ellipsis if needed
+                    row[long_column] = (column[:width] + '..') if len(column) > width else column
+                    print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
+                else:
+                    # take column and wrap it in place, creating new rows
+                    wrapped = (r for r in textwrap.wrap(column, width=width))
+                    row[long_column] = wrapped.next()
+                    print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
+                    for line in wrapped:
+                        newrow = [''] * len(widths)
+                        newrow[long_column] = line
+                        print ''.join(str(s).ljust(x) for s,x in zip(newrow, widths))
+            else:
+                print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
 
     @classmethod
     def get_csv(cls, columns, headers, delim=','):

@@ -336,6 +336,7 @@ class TimeParser(object):
     _date_year_formats = (
         '%Y/%m/%d',
         '%m/%d/%Y',
+        '%m/%d/%y',
         '%B/%d/%Y',
         '%b/%d/%Y',
     )
