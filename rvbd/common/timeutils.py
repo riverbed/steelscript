@@ -46,12 +46,6 @@ class tzutc(tzinfo):
     def tzname(self, dt):
         return "UTC"
 
-    def __eq__(self, other):
-        return isinstance(other, tzutc) and other._offset == ZERO
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
     def __repr__(self):
         return "%s()" % self.__class__.__name__
 
@@ -127,11 +121,11 @@ class tzlocal(tzinfo):
 
 
 def ensure_timezone(dt):
-    ''' Return a datetime object that corresponds to `dt`
+    """ Return a datetime object that corresponds to `dt`
     but that always has timezone info.  If `dt` already
     has timezone info, then it is simply returned.  If `dt`
     does not have timezone info, then the local time zone is
-    assumed.'''
+    assumed."""
 
     if dt.tzinfo is not None:
         return dt
@@ -139,18 +133,18 @@ def ensure_timezone(dt):
     return dt.replace(tzinfo=tzlocal())
 
 def force_to_utc(dt):
-    ''' Return a datetime object that corresponds to `dt`
+    """ Return a datetime object that corresponds to `dt`
     but in UTC rather than local time.
     If `dt` includes timezone info, then this routine simply
     converts from the given timezone to UTC.
     If `dt` does not include timezone info, then it is assumed
-    to be in local time, which is then converted to UTC.'''
+    to be in local time, which is then converted to UTC."""
 
     return ensure_timezone(dt).astimezone(tzutc())
     
 def datetime_to_seconds(dt):
-    ''' Return the number of seconds since the Unix epoch
-    for the datetime object `dt` '''
+    """ Return the number of seconds since the Unix epoch
+    for the datetime object `dt` """
 
     dt = ensure_timezone(dt)
     
@@ -158,8 +152,8 @@ def datetime_to_seconds(dt):
     return sec
 
 def datetime_to_microseconds(dt):
-    ''' Return the number of microseconds since the Unix epoch
-    for the datetime object `dt` '''
+    """ Return the number of microseconds since the Unix epoch
+    for the datetime object `dt` """
 
     dt = ensure_timezone(dt)
     
@@ -167,8 +161,8 @@ def datetime_to_microseconds(dt):
     return sec * 1000000 + dt.microsecond
 
 def datetime_to_nanoseconds(dt):
-    ''' Return the number of nanoseconds since the Unix epoch
-    for the datetime object `dt` '''
+    """ Return the number of nanoseconds since the Unix epoch
+    for the datetime object `dt` """
 
     dt = ensure_timezone(dt)
     
@@ -178,26 +172,26 @@ def datetime_to_nanoseconds(dt):
     return int(calendar.timegm(dt.utctimetuple()))*1000000000+dt.nanosecond
 
 def sec_string_to_datetime(s):
-    ''' Convert the string `s` which represents a time in seconds
-    since the Unix epoch to a datetime object '''
+    """ Convert the string `s` which represents a time in seconds
+    since the Unix epoch to a datetime object """
     return datetime.fromtimestamp(s, tzutc())
 
 def msec_string_to_datetime(s):
-    ''' Convert the string `s` which represents a time in milliseconds
-    since the Unix epoch to a datetime object '''
+    """ Convert the string `s` which represents a time in milliseconds
+    since the Unix epoch to a datetime object """
     sec = Decimal(s) / Decimal(1000)
     return datetime.fromtimestamp(sec, tzutc())
 
 def usec_string_to_datetime(s):
-    ''' Convert the string `s` which represents a time in microseconds
-    since the Unix epoch to a datetime object '''
+    """ Convert the string `s` which represents a time in microseconds
+    since the Unix epoch to a datetime object """
     sec = Decimal(s) / Decimal(1000000)
     return datetime.fromtimestamp(sec, tzutc())
     
 def nsec_to_datetime(ns):
-    '''Convert the value `ns` which represents a time in nanoseconds
+    """Convert the value `ns` which represents a time in nanoseconds
     since the Unix epoch (either as an integer or a string) to a
-    datetime object'''
+    datetime object"""
     if isinstance(ns, str):
         ns = int(ns)
     if ns == 0:
@@ -217,12 +211,12 @@ def nsec_to_datetime(ns):
     return datetime.fromtimestamp(sec, tzutc())
 
 def string_to_datetime(s):
-    '''Determine level of precision by number of digits and return
+    """Determine level of precision by number of digits and return
     a datetime object.
 
     Note: this method is only valid for datetimes between year 2001 and
     year 2286 since it assumes second level precision has 10 digits.
-    '''
+    """
     t = int(s)
     digits = len(str(t))
     if digits == 10:
@@ -241,8 +235,8 @@ def string_to_datetime(s):
 nsec_string_to_datetime = nsec_to_datetime
 
 def usec_string_to_timedelta(s):
-    ''' Convert the string `s` which represents a number of microseconds
-    to a timedelta object '''
+    """ Convert the string `s` which represents a number of microseconds
+    to a timedelta object """
     sec = float(s) / 1000000
     return timedelta(seconds=sec)
 
@@ -254,7 +248,7 @@ def timedelta_total_seconds(td):
 
 
 class TimeParser(object):
-    ''' Instances of this class parse strings representing dates and/or
+    """ Instances of this class parse strings representing dates and/or
     times into python `datetime.datetime` objects.
     This class is capable of parsing a variety of different formats.
     On the first call, the method `parse()` may take some time, as it
@@ -262,17 +256,17 @@ class TimeParser(object):
     successfully parsing a string, the parser object remembers the format
     that was used so subsequent calls with identically formatted strings
     are as efficient as the underlying method `datetime.strptime`.
-    '''
+    """
     def __init__(self):
         """ Construct a new TimeParser object """
         self._fmt = None
 
     @classmethod
     def _parse_no_hint(cls, s):
-        ''' parse string s as a date/time without any hint about the format.
+        """ parse string s as a date/time without any hint about the format.
         If it can be parsed, returns a tuple of the datetime object
         and the format object that was used.  If the string cannot be
-        parsed, raises ValueError. '''
+        parsed, raises ValueError. """
         
         for fmt in cls._formats:
             try:
@@ -381,11 +375,11 @@ _timedelta_units = {
 _timedelta_re = re.compile("([0-9]*\.*[0-9]*) *([a-zA-Z]*)")
 
 def parse_timedelta(s):
-    ''' Parse the string `s` representing some duration of time
+    """ Parse the string `s` representing some duration of time
     (e.g., `"3 seconds"` or `"1 week"`) and return a `datetime.timedelta`
     object representing that length of time.
     If the string cannot be parsed, raises `ValueError`.
-    '''
+    """
     
     m = _timedelta_re.match(s)
     if not m:
@@ -488,4 +482,3 @@ def max_width(fmt):
         i += 1
 
     return m
-    
