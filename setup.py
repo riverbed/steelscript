@@ -113,6 +113,7 @@ This software is distributed "AS IS" as set forth in the License.
           'examples/profiler/traffic_flowlist.py',
           'examples/profiler/traffic_summary.py',
           'examples/profiler/traffic_timeseries.py',
+          'examples/profiler/wan_report.py',
           'examples/shark/backup_restore.py',
           'examples/shark/control_job.py',
           'examples/shark/create_job.py',
