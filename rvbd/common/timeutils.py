@@ -28,7 +28,6 @@ __all__ = [ 'ensure_timezone', 'force_to_utc', 'datetime_to_seconds',
 
 #
 # tzinfo objects for utc and the local timezone,
-# shamelessly ripped off from the excellent dateutil package.
 # https://launchpad.net/dateutil
 #
 
