@@ -19,7 +19,10 @@ from contrib.version import get_git_version
 class BuildDocRidl(Command):
     description = "Build the documentation in docs/ridl (requires Mac OS X or Linux)"
     user_options = []
-    
+
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+
     def run(self):
         os.system("cd docs/ridl ; python ridl ../flyscript")
         
@@ -27,7 +30,10 @@ class BuildDocRidl(Command):
 class BuildDocRESTAPI(Command):
     description = "Build documentation in docs/ridl and docs/rest_apis (requires Mac OS X or Linux)"
     user_options = []
-    
+
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+
     def run(self):
         os.system("mkdir -p docs/html; cd docs/rest_apis ; "
                   "for d in `ls */*/*.json`; do python generate -o ../html -f $d --nopdfoutput --noprintable --nocoverpage; done")
@@ -52,7 +58,10 @@ class BuildDocRESTAPI(Command):
 class BuildPackage(Command):
     description = "Build a new package"
     user_options = []
-    
+
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+
     def run(self):
         self.run_command("build_doc_restapis")
         self.run_command("sdist")
