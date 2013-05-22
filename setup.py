@@ -17,23 +17,24 @@ from contrib.version import get_git_version
 
 
 class BuildDocRidl(Command):
-    description = "Build the documentation in docs/ridl"
-    user_options =  [] 
-    
+    description = "Build the documentation in docs/ridl (requires Mac OS X or Linux)"
+    user_options = []
+
     def initialize_options(self): pass
     def finalize_options(self): pass
+
     def run(self):
         os.system("cd docs/ridl ; python ridl ../flyscript")
         
 
 class BuildDocRESTAPI(Command):
-    description = "Build documentation in docs/ridl and docs/rest_apis"
-    user_options =  [] 
-    
+    description = "Build documentation in docs/ridl and docs/rest_apis (requires Mac OS X or Linux)"
+    user_options = []
+
     def initialize_options(self): pass
     def finalize_options(self): pass
-    def run(self):
 
+    def run(self):
         os.system("mkdir -p docs/html; cd docs/rest_apis ; "
                   "for d in `ls */*/*.json`; do python generate -o ../html -f $d --nopdfoutput --noprintable --nocoverpage; done")
         # create a markdown page with updated references
@@ -56,11 +57,11 @@ class BuildDocRESTAPI(Command):
 
 class BuildPackage(Command):
     description = "Build a new package"
-    user_options =  [] 
-    
+    user_options = []
+
     def initialize_options(self): pass
     def finalize_options(self): pass
-            
+
     def run(self):
         self.run_command("build_doc_restapis")
         self.run_command("sdist")
@@ -101,30 +102,20 @@ This software is distributed "AS IS" as set forth in the License.
                    'Programming Language :: Python :: 2.6',
                    'Programming Language :: Python :: 2.7',
                    'Topic :: System :: Networking'],
-      
-      data_files=[('share/doc/flyscript/html', glob.glob('docs/html/*'))],
+
+      data_files=[('share/doc/flyscript/html', glob.glob('docs/html/*')),
+                  ('share/doc/flyscript/examples/profiler', glob.glob('examples/profiler/*')),
+                  ('share/doc/flyscript/examples/shark', glob.glob('examples/shark/*')),
+                  ('share/doc/flyscript/examples/stingray', glob.glob('examples/stingray/*')),
+                  ],
       packages=find_packages(),
       scripts=[
-          'examples/flyscript-about.py',
-          'examples/profiler/percentile.py',
-          'examples/profiler/top_ports.py',
-          'examples/profiler/timeseries.py',
-          'examples/profiler/profiler_columns.py',
-          'examples/profiler/traffic_flowlist.py',
-          'examples/profiler/traffic_summary.py',
-          'examples/profiler/traffic_timeseries.py',
-          'examples/profiler/wan_report.py',
-          'examples/shark/backup_restore.py',
-          'examples/shark/control_job.py',
-          'examples/shark/create_job.py',
-          'examples/shark/export.py',
-          'examples/shark/list_view_fields.py',
-          'examples/shark/readview.py',
-          'examples/shark/shark_upload_pcap.py',
-          'examples/shark/shark_info.py',
+          'utilities/flyscript_about.py',
+          'utilities/profiler_columns.py',
+          'utilities/shark_view_fields.py',
         ],
 
-      cmdclass = {
+      cmdclass={
           "build_doc_ridl": BuildDocRidl,
           "build_doc_restapis": BuildDocRESTAPI,
           "build_package": BuildPackage,
