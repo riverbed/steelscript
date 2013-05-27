@@ -274,7 +274,7 @@ class TimeParser(object):
             except ValueError:
                 pass
 
-        raise ValueError()
+        raise ValueError("Could not parse datetime string: %s" % s)
 
     @classmethod
     def parse_one(cls, s):
