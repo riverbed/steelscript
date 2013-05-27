@@ -143,14 +143,41 @@ class Formatter(object):
 
 
 class DictObject(dict):
-    """Creates an object from a custom dictionary by overriding the
-       the 'getattr' and 'setattr' methods.
-
-       We do not need to override the 'hasattr' as internally this
-       method invokes 'getattr' method and if 'getattr' returns
-       AttributeError then 'hasattr' returns False else it returns True.
     """
+    Creates an object from a custom dictionary, setting attributes
+    for each toplevel key in the dictionary.  This allows simpler
+    access to the top-level keys:
+
+    Example:
+      >>> d = DictObject({'foo': 1,
+                          'bar': 'This is the bar',
+                          'baz': { 'fozzle': 10,
+                                   'frobble': 'Flounder'}})
+      >>> d.foo
+      1
+      >>> d['foo']
+      1
+      >>> d
+      {'foo': 1,
+       'bar': 'This is the bar',
+       'baz': { 'fozzle': 10,
+                'frobble': 'Flounder'}}
+
+    The object is dict and can be maniuplated and iterated just like a dict.
+    Note that only the top-level keys are converted to attributes.  Values that
+    are dicts are still stored as dicts, thus must be accessed using [].
+
+      >>> type(d.baz)
+      dict
+      >>> d.baz['fozzle']
+      10
+    """
+    # This works by overriding the
+    # the 'getattr' and 'setattr' methods.
        
+    # We do not need to override the 'hasattr' as internally this
+    # method invokes 'getattr' method and if 'getattr' returns
+    # AttributeError then 'hasattr' returns False else it returns True.
 
     @staticmethod
     def create_from_dict(data):
@@ -205,7 +232,6 @@ class DictObject(dict):
     def __setattr__(self, key, value):
         # XXX - don't think KeyError will ever be called here
         self[key] = value
-
 
 class ColumnProxy(object):
     """ a class to simplify creating a data structure that mirrors
