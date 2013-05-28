@@ -126,7 +126,7 @@ class JsonDictTest(unittest.TestCase):
         w = Widget(name='Box')
         self.assertEqual(w.name, 'Box')
         
-    def test_class_required1(self):
+    def test_class_required2(self):
         class Widget(JsonDict):
             _default = {'name': None,
                         'size' : {'width': None,
