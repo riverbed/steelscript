@@ -6,6 +6,7 @@
 # This software is distributed "AS IS" as set forth in the License.
 
 import json
+import inspect
 
 class JsonDict(dict):
     _default = None
@@ -57,6 +58,20 @@ class JsonDict(dict):
         super(JsonDict, self).__init__()
         if default:
             self._default = default
+        else:
+            default = None
+            for c in reversed(inspect.getmro(self.__class__)):
+                try:
+                    cd = c._default
+                except:
+                    continue
+                if cd is not None:
+                    if default is None:
+                        default = {}
+                    for key,value in cd.iteritems():
+                        default[key] = value
+            self._default = default
+
         self.update(self._default)
         self.update(dict)
         self.update(kwargs)
@@ -131,10 +146,10 @@ class JsonDict(dict):
                 obj = obj[int(k)]
             elif isinstance(obj, dict):
                 if (k not in obj):
-                    raise AttributeError(key)
+                    raise KeyError(key)
                 obj = obj[k]
             else:
-                raise AttributeError(key)
+                raise KeyError(key)
                 
         return obj
     
