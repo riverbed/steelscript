@@ -68,7 +68,7 @@ class JsonDictTest(unittest.TestCase):
             return obj.foo
 
         j = JsonDict(first='John', last='Doe', age=1)
-        self.assertRaises(AttributeError, try_foo, j)
+        self.assertRaises(KeyError, try_foo, j)
 
     def test_class_default1(self):
         class Widget(JsonDict):
