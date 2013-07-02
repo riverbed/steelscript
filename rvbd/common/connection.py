@@ -224,8 +224,16 @@ class Connection(object):
         while True:
             try:
                 logger.debug('Issuing %s request to: %s' % (method, str(urlpath)))
-                logger.debug('Values are: \n headers: {0} \n body: {1}'.format(headers, body))
+                if '"password":' in body:
+                    clean_body = '<username and password hidden>'
+                    self.conn.set_debuglevel(0)
+                else:
+                    clean_body = body
+                logger.debug('Values are: \n headers: {0} \n body: {1}'.format(headers, clean_body))
                 self.conn.request(method, urlpath, body=body, headers=headers)
+
+                # reset debug level
+                self.conn.set_debuglevel(self.HTTPLIB_DEBUGLEVEL)
                 resp = self.conn.getresponse()
                 return resp
                 

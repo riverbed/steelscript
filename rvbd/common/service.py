@@ -61,6 +61,10 @@ class UserAuth(object):
         else:
             self.methods = [Auth.BASIC, Auth.COOKIE]
 
+    def __repr__(self):
+        return '<UserAuth username: %s password: %s>' % (self.username, 
+                                                         '*'*len(self.password))
+
 
 class OAuth(object):
     """This class is used for OAuth based authentication with relies
