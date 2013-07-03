@@ -7,6 +7,7 @@
 
 
 import httplib
+from itertools import chain
 
 __all__ = [ 'ConnectionPool' ]
 
@@ -58,12 +59,26 @@ class ConnectionPool(object):
         self._busy_connections = []
         self._free_connections = []
         self._current_connection = None
+
+        # initialize with dubugging turned off
+        self._debug_level = 0
         
-    # XXX?
-    def connect(self): pass
-    def close(self): pass
-    def set_debuglevel(self, level): raise NotImplementedError()
-    def set_tunnel(self, *args, **kwargs): raise NotImplementedError()
+    def connect(self):
+        pass
+
+    def close(self):
+        pass
+
+    def set_tunnel(self, *args, **kwargs): 
+        raise NotImplementedError()
+
+    def set_debuglevel(self, level): 
+        self._debug_level = level
+
+        if self._current_connection:
+            self._current_connection.set_debuglevel(level)
+        for conn in chain(self._free_connections, self._busy_connections):
+            conn.set_debuglevel(level)
 
     def _start_connection(self):
         if self._current_connection is not None:
@@ -77,6 +92,10 @@ class ConnectionPool(object):
             #print 'create new connection (%d busy)' % len(self._busy_connections)
             self._current_connection = self._connection_class(*self._conn_args, **self._conn_kwargs)
             self._current_connection.connect()
+
+            # if we have set the debug level, set it on new connections too
+            if self._debug_level:
+                self._current_connection.set_debug_level = self._debug_level
         
     def request(self, *args, **kwargs):
         self._start_connection()

@@ -53,16 +53,19 @@ class Application(object):
                                                "username/password")
         group.add_option("-A", "--api_version", dest="api_version",
                          help="api version to use unconditionally")
-        group.add_option("--httplib-debuglevel", help="set httplib debug",
-                         type=int, default=0)
-        group.add_option("--debug-msg-body", help="number of bytes of message body to log",
-                         type=int, default=0)
         self.optparse.add_option_group(group)
 
         group = optparse.OptionGroup(self.optparse, "Logging Parameters")
         group.add_option("--loglevel", help="log level",
                          choices=_log_levels.keys(), default="warning")
         group.add_option("--logfile", help="log file", default=None)
+        self.optparse.add_option_group(group)
+
+        group = optparse.OptionGroup(self.optparse, "HTTP Logging Parameters")
+        group.add_option("--httplib-debuglevel", help="set httplib debug (low-level, lots of data)",
+                         type=int, default=0)
+        group.add_option("--debug-msg-body", help="number of bytes of message body to log",
+                         type=int, default=0)
         self.optparse.add_option_group(group)
         
     def add_options(self, parser):
