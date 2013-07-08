@@ -224,7 +224,7 @@ class Connection(object):
         while True:
             try:
                 logger.debug('Issuing %s request to: %s' % (method, str(urlpath)))
-                if '"password":' in body:
+                if body is not None and '"password":' in repr(body):
                     clean_body = '<username and password hidden>'
                     self.conn.set_debuglevel(0)
                 else:
