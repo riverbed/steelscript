@@ -6,7 +6,6 @@
 # This software is distributed "AS IS" as set forth in the License.
 
 
-
 from rvbd.common.service import UserAuth, OAuth
 import rvbd.common.connection
 
@@ -23,10 +22,18 @@ _log_levels = {
     'error': logging.ERROR
 }
 
+
 class Application(object):
-    """ XXX describe """
+    """ Base class for command-line applications
+       
+        This provides the framework but should be subclassed to
+        add any customization needed for a particular device.
+
+        Actual scripts should inherit from the device-specific 
+        subclass rather than this script.
+    """
     def __init__(self, main_fn=None):
-        """ XXX document """
+        """ Base initialization """
         self._main = main_fn
 
         self.optparse = optparse.OptionParser()
@@ -50,7 +57,7 @@ class Application(object):
         group.add_option("-u", "--username", help="username to connect with")
         group.add_option("-p", "--password", help="password to connect with")
         group.add_option("--oauth", help="OAuth Access Code, in place of "
-                                               "username/password")
+                                         "username/password")
         group.add_option("-A", "--api_version", dest="api_version",
                          help="api version to use unconditionally")
         self.optparse.add_option_group(group)
@@ -96,7 +103,7 @@ class Application(object):
         logger.info("==== Started logging: %s" % ' '.join(sys.argv))
 
     def parse_args(self):
-        """ XXX document """
+        """ Parses options and arguments and performs validation """
         (self.options, self.args) = self.optparse.parse_args()
 
         self._validate_auth()
@@ -119,18 +126,18 @@ class Application(object):
         else:
             self.auth = UserAuth(self.options.username, self.options.password)
 
-
     def validate_args(self):
-        """ XXX document """
+        """ Hook for subclasses to add their own option/argument validation
+        """
         pass
 
     def setup(self):
-        """Commands to run right after arguments have been parsed, but before main.
+        """ Commands to run right after arguments have been parsed, but before main.
         """
         pass
     
     def run(self):
-        """ XXX document """
+        """ Main execution point """
         self.parse_args()
         self.start_logging(_log_levels[self.options.loglevel],
                            self.options.logfile)
@@ -149,6 +156,7 @@ class Application(object):
     def main(self):
         """ XXX document """
         raise NotImplementedError()
+
 
 class Logger(object):
 
@@ -181,4 +189,3 @@ class Logger(object):
 
         logger.info("=" * 70)
         logger.info("==== Started logging: %s" % ' '.join(sys.argv))
-
