@@ -509,10 +509,12 @@ class Connection(object):
             - a complete path
             - a directory
 
-        In the first case the file will have the specified name and extension. In the second case the filename will be retrieved by the 'Content-Disposition' HTTP header.
+        In the first case the file will have the specified name and extension. In the second case
+        the filename will be retrieved by the 'Content-Disposition' HTTP header.
         If a path cannot be determined, a ValueError is raised.
 
-        `overwrite` if True will save the downloaded file to `path` no matter if the file already exists.
+        `overwrite` if True will save the downloaded file to `path` no matter if the file
+                    already exists.
         
         `method` is the HTTP method used for the request.
         
@@ -525,13 +527,13 @@ class Connection(object):
 
         # try to determine the filename
         if path is None:
-            #we didn't got a path from, create a temp directory to 
+            # we didn't got a path from, create a temp directory to
             # store the file
             directory = tempfile.mkdtemp()
         else:
             # we got a path which is a directory maybe, check that it's valid
             if os.path.isdir(path):
-                #it's valid, we have a directory to store the file in
+                # it's valid, we have a directory to store the file in
                 directory = path
             elif path[-1] == os.sep:
                 # we got a path which is a directory that doesn't exists
@@ -549,7 +551,8 @@ class Connection(object):
             filename = resp.getheader('Content-Disposition').split('=')[1]
 
         if not filename:
-            raise ValueError("{0} is not a valid path. Specify a full path for the file to be created".format(path))
+            raise ValueError("{0} is not a valid path. "
+                             "Specify a full path for the file to be created".format(path))
         # Compose the path
         path = os.path.join(directory, filename)
 

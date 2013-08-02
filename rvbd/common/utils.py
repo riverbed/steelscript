@@ -297,6 +297,10 @@ class ColumnProxy(object):
         return dir(root)
 
     class FakeColumn(str):
+        def __getattribute__(self, n):
+            if n == 'count':
+                return str('%s.%s' % (self, n))
+            return str.__getattribute__(self, n)
         def __getattr__(self, n):
             return self.__class__('%s.%s' % (self, n))
 
