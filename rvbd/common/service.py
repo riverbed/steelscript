@@ -28,6 +28,8 @@ from __future__ import absolute_import
 import base64
 import logging
 
+import sleepwalker.connection
+
 import rvbd.common.connection
 from rvbd.common.exceptions import RvbdException
 
@@ -91,7 +93,7 @@ class Service(object):
     is created.  Requests can be made via the `Service.conn` property.
     """
     def __init__(self, service, host=None, port=None, auth=None,
-                 force_ssl=None, versions=None):
+                 force_ssl=None, verify_ssl=False, versions=None):
         """Establish a connection to the named host.
 
         `host` is the name or IP address of the device to connect to
@@ -107,7 +109,11 @@ class Service(object):
         `force_ssl` when set to True will only allow SSL based connections.
             If False, only allow non-SSL connections.  If set to None
             (the default) try SSL first, then try non-SSL.
-        
+
+        `verify_ssl` when set to True will only allow verified SSL certificates
+            on any connections, False will not verify certs (useful for self-signed
+            certs on many test systems)
+
         `versions` is the API versions that the caller can use.
             if unspecified, this will use the latest version supported
             by both this implementation and service requested.  This does
@@ -122,6 +128,7 @@ class Service(object):
         self.conn = None
 
         self.force_ssl = force_ssl
+        self.verify_ssl = verify_ssl
 
         logger.info("New service %s for host %s" % (self.service, self.host))
 
@@ -141,9 +148,8 @@ class Service(object):
         if self.conn is not None and hasattr(self.conn, 'close'):
             self.conn.close()
 
-        cls = self._get_connection_class()
-        self.conn = cls(self.host, self.port, ssl, reauthenticate_handler=self.reauthenticate,
-                        test_resource="/api/common/1.0/ping")
+        self.conn = sleepwalker.connection.Connection(self.host, port=self.port,
+                                                      verify=self.verify_ssl)
 
     def logout(self):
         """End the authenticated session with the device."""
@@ -207,10 +213,6 @@ class Service(object):
             self._supports_auth_cookie = False
             self._supports_auth_oauth  = False
             
-    def _get_connection_class(self):
-        """Internal function to return the class used to instantiate a connection"""
-        return rvbd.common.connection.Connection
-
     def authenticate(self, auth):
         """Authenticate with device using the defined authentication method.
         This sets up the appropriate authentication headers to access
