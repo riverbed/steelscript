@@ -187,7 +187,7 @@ class Service(object):
         """Get the common list of services and versions supported."""
         # uses the GL7 'services' resource.
         url = '/api/common/1.0/services'
-        services = self.conn.json_request(url, 'GET')
+        services = self.conn.json_request('GET', url)
 
         for service in services:
             if service['id'] == self.service:
