@@ -99,6 +99,9 @@ class Connection(object):
         if self.port is None:
             raise RvbdException('cannot connect to %s on port(s) %s' % (self.hostname, self.ports))
 
+    def __repr__(self):
+        return '<{0} to {1}>'.format(self.__class__.__name__, self.hostname)
+
     def _reset_connection(self, hostname, port, ssl):
         logger.debug("Attempting to connect to %s:%s, ssl %s, pool %d" %
                      (hostname, port, ssl, self._pool_size))
