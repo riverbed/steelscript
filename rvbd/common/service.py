@@ -201,7 +201,7 @@ class Service(object):
         url = '/api/common/1.0/auth_info'
 
         try:
-            auth_info = self.conn.json_request(url, method='GET')
+            auth_info = self.conn.json_request('GET', url)
             logger.info("Supported authentication methods: %s" %
                         (','.join(auth_info['supported_methods'])))
             self._supports_auth_basic  = ("BASIC" in auth_info['supported_methods'])
@@ -233,7 +233,7 @@ class Service(object):
                 'grant_type': 'access_code',
                 'assertion': code
                 }
-            answer = self.conn.json_request(url, 'POST', params=data)
+            answer = self.conn.json_request('POST', url, 'POST', params=data)
             token = answer['access_token']
             st = token.split('.')
             if len(st) == 1:
@@ -252,7 +252,7 @@ class Service(object):
                 "password": self.auth.password
                 }
 
-            answer = self.conn.json_request(url, 'POST', data=data)
+            answer = self.conn.json_request('POST', url, body=data)
 
             # we're good, set up our http headers for subsequent
             # requests!
