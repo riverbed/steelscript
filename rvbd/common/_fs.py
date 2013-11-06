@@ -1,8 +1,8 @@
 # Copyright (c) 2013 Riverbed Technology, Inc.
 #
-# This software is licensed under the terms and conditions of the 
+# This software is licensed under the terms and conditions of the
 # MIT License set forth at:
-#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").  
+#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").
 # This software is distributed "AS IS" as set forth in the License.
 
 
@@ -14,6 +14,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+
 
 def ensure_dir(d):
     if not os.path.exists(d):
@@ -30,14 +31,19 @@ class FlyscriptDir(object):
         self.component = os.path.join(*components)
 
         if self.basedir is None and platform.system() == 'Windows':
-            self.basedir = os.path.join(os.environ['APPDATA'],
-                                       'flyscript', self.component)
+            self.basedir = os.path.join(
+                os.environ['APPDATA'],
+                'flyscript',
+                self.component)
         elif self.basedir is None and platform.system() == 'Linux':
-            self.basedir = os.path.join(os.environ['HOME'],
-                                       '.flyscript', self.component)
+            self.basedir = os.path.join(
+                os.environ['HOME'],
+                '.flyscript', self.component)
         elif self.basedir is None and platform.system() == 'Darwin':
-            self.basedir = os.path.join(os.environ['HOME'],
-                                        '.flyscript', self.component)
+            self.basedir = os.path.join(
+                os.environ['HOME'],
+                '.flyscript',
+                self.component)
         ensure_dir(self.basedir)
 
     def isfile(self, filename, prefix=''):
@@ -112,5 +118,3 @@ class FlyscriptData(FlyscriptFile):
     def write(self):
         with open(self.fullpath, 'w') as f:
             pickle.dump(self.data, f)
-
-

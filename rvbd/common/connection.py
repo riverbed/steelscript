@@ -1,8 +1,8 @@
 # Copyright (c) 2013 Riverbed Technology, Inc.
 #
-# This software is licensed under the terms and conditions of the 
+# This software is licensed under the terms and conditions of the
 # MIT License set forth at:
-#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").  
+#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").
 # This software is distributed "AS IS" as set forth in the License.
 
 
@@ -85,19 +85,24 @@ class Connection(object):
         self.port = None
         self.ssl = None
         self.test_resource = test_resource
-        
+
         self._pool_size = pool_size
         self._reauthenticate_handler = reauthenticate_handler
 
         self._headers = {}
 
-        logger.debug("Connection with port=%s force_ssl=%s" % (port, force_ssl))
+        logger.debug(
+            "Connection with port=%s force_ssl=%s" %
+            (port, force_ssl))
 
         for p in self.ports:
             if self._tryconnect(p):
                 break
         if self.port is None:
-            raise RvbdException('cannot connect to %s on port(s) %s' % (self.hostname, self.ports))
+            raise RvbdException(
+                'cannot connect to %s on port(s) %s' %
+                (self.hostname,
+                 self.ports))
 
     def __repr__(self):
         return '<{0} to {1}>'.format(self.__class__.__name__, self.hostname)
@@ -145,9 +150,11 @@ class Connection(object):
             try:
                 self._reset_connection(self.hostname, port, ssl)
                 # Test the connection with *any* resource -- it need not be
-                # a valid resource, just something that will verify connectivity
+                # a valid resource, just something that will verify
+                # connectivity
                 if self.test_resource:
-                    rsc = "/foobar" if self.test_resource is True else self.test_resource
+                    rsc = "/foobar" if self.test_resource \
+                                    is True else self.test_resource
                     self.conn.request("GET", rsc)
                     resp = self.conn.getresponse()
 
@@ -244,11 +251,11 @@ class Connection(object):
                 # User probably forgot to drain the response
                 raise RvbdException('Cannot send request, exception httplib.ResponseNotReady - '
                                     'usually means response from last request was not drained with read()')
-                
+
             except httplib.CannotSendRequest, e:
                 if not retry or self._pool_size != 1:
                     raise e
-            
+
             except httplib.BadStatusLine, e:
                 # stupid httplib is supposed to put the status line in e.line
                 # which should be the empty string when the server closes
@@ -260,7 +267,7 @@ class Connection(object):
 
             except:
                 raise
-            
+
             retry = False
             # If we got this far, we're going to retry
             logger.info('Resetting connection')

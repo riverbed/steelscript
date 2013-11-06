@@ -1,8 +1,8 @@
 # Copyright (c) 2013 Riverbed Technology, Inc.
 #
-# This software is licensed under the terms and conditions of the 
+# This software is licensed under the terms and conditions of the
 # MIT License set forth at:
-#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").  
+#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").
 # This software is distributed "AS IS" as set forth in the License.
 
 
@@ -25,11 +25,11 @@ _log_levels = {
 
 class Application(object):
     """ Base class for command-line applications
-       
+
         This provides the framework but should be subclassed to
         add any customization needed for a particular device.
 
-        Actual scripts should inherit from the device-specific 
+        Actual scripts should inherit from the device-specific
         subclass rather than this script.
     """
     def __init__(self, main_fn=None):
@@ -69,12 +69,18 @@ class Application(object):
         self.optparse.add_option_group(group)
 
         group = optparse.OptionGroup(self.optparse, "HTTP Logging Parameters")
-        group.add_option("--httplib-debuglevel", help="set httplib debug (low-level, lots of data)",
-                         type=int, default=0)
-        group.add_option("--debug-msg-body", help="number of bytes of message body to log",
-                         type=int, default=0)
+        group.add_option(
+            "--httplib-debuglevel",
+            help="set httplib debug (low-level, lots of data)",
+            type=int,
+            default=0)
+        group.add_option(
+            "--debug-msg-body",
+            help="number of bytes of message body to log",
+            type=int,
+            default=0)
         self.optparse.add_option_group(group)
-        
+
     def add_options(self, parser):
         # this is here for subclasses to override, don't put
         # any log here
@@ -110,8 +116,10 @@ class Application(object):
 
         self.validate_args()
 
-        rvbd.common.connection.Connection.HTTPLIB_DEBUGLEVEL = self.options.httplib_debuglevel
-        rvbd.common.connection.Connection.DEBUG_MSG_BODY = self.options.debug_msg_body
+        rvbd.common.connection.Connection.HTTPLIB_DEBUGLEVEL =\
+            self.options.httplib_debuglevel
+        rvbd.common.connection.Connection.DEBUG_MSG_BODY =\
+            self.options.debug_msg_body
 
     def _validate_auth(self):
         """Verify authentication method passed in and setup Auth object
@@ -132,10 +140,11 @@ class Application(object):
         pass
 
     def setup(self):
-        """ Commands to run right after arguments have been parsed, but before main.
+        """ Commands to run right after arguments have been parsed,
+        but before main.
         """
         pass
-    
+
     def run(self):
         """ Main execution point """
         self.parse_args()
@@ -143,7 +152,7 @@ class Application(object):
                            self.options.logfile)
 
         self.setup()
-        
+ 
         if self._main is None:
             ret = self.main()
         else:

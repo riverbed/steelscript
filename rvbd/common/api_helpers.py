@@ -1,13 +1,14 @@
 # Copyright (c) 2013 Riverbed Technology, Inc.
 #
-# This software is licensed under the terms and conditions of the 
+# This software is licensed under the terms and conditions of the
 # MIT License set forth at:
-#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").  
+#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").
 # This software is distributed "AS IS" as set forth in the License.
 
 
 class APIVersion:
-    '''Simple class to wrap information about the client-side supported API versions'''
+    """Simple class to wrap information
+    about the client-side supported API versions"""
 
     def __init__(self, v):
         if isinstance(v, basestring):
@@ -19,7 +20,7 @@ class APIVersion:
             self.minor = v.minor
         else:
             raise ValueError("Invalid type: %s" % type(v))
-            
+
     def __str__(self):
         return "%s.%s" % (self.major, self.minor)
 
@@ -52,4 +53,3 @@ if __name__ == "__main__":
     print "a == a2", a == a2
     print "a > a2", a > a2
     print "a >= a2", a >= a2
-    
