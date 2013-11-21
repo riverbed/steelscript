@@ -364,6 +364,8 @@ class TimeParser(object):
                    for _tf in _time_formats for _df in _date_year_formats ]
 
 _timedelta_units = {
+    'us' : 0.000001, 'usec' : 0.000001, 'microsecond' : 0.000001, 'microseconds' : 0.000001,
+    'ms' : 0.001, 'msec' : 0.001, 'millisecond' : 0.001, 'milliseconds' : 0.001,
     's' : 1, 'sec' : 1, 'second' : 1, 'seconds' : 1,
     'm' : 60, 'min' : 60, 'minute' : 60, 'minutes' : 60,
     'h' : 60*60, 'hr' : 60*60, 'hour' : 60*60, 'hours' : 60*60,
