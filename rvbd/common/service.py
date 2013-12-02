@@ -28,9 +28,7 @@ from __future__ import absolute_import
 import base64
 import logging
 
-import sleepwalker.connection
-
-import rvbd.common.connection
+from rvbd.common import connection
 from rvbd.common.exceptions import RvbdException
 
 from rvbd.common.api_helpers import APIVersion
@@ -148,8 +146,8 @@ class Service(object):
         if self.conn is not None and hasattr(self.conn, 'close'):
             self.conn.close()
 
-        self.conn = sleepwalker.connection.Connection(self.host, port=self.port,
-                                                      verify=self.verify_ssl)
+        self.conn = connection.Connection(self.host, port=self.port,
+                                          verify=self.verify_ssl)
 
     def logout(self):
         """End the authenticated session with the device."""
