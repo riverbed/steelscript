@@ -17,13 +17,13 @@ class RvbdHTTPException(RvbdException):
     def __init__(self, result, data, method, urlpath):
         RvbdException.__init__(self,
                                'HTTP %s on %s returned status %s (%s)' %
-                               (method, urlpath, result.status, result.reason))
+                               (method, urlpath, result.status_code, result.reason))
 
-        self.status = result.status
+        self.status = result.status_code
         self.reason = result.reason
         # Try to parse the error structure (either XML or JSON)
         try:
-            t = result.getheader('Content-type')
+            t = result.headers.get('Content-type', None)
             if t == 'text/xml':
                 e = ElementTree.fromstring(data)
                 if e.tag != 'error':

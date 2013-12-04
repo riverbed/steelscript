@@ -147,7 +147,8 @@ class Service(object):
             self.conn.close()
 
         self.conn = connection.Connection(self.host, port=self.port,
-                                          verify=self.verify_ssl)
+                                          verify=self.verify_ssl,
+                                          reauthenticate_handler=self.reauthenticate)
 
     def logout(self):
         """End the authenticated session with the device."""

@@ -5,11 +5,15 @@
 #   https://github.com/riverbed/flyscript-portal/blob/master/LICENSE ("License").
 # This software is distributed "AS IS" as set forth in the License.
 
+import os
 import ssl
 import json
+import shutil
 import httplib
 import logging
+import tempfile
 import urlparse
+from xml.etree import ElementTree
 
 import requests
 import requests.exceptions
@@ -18,7 +22,7 @@ from requests.structures import CaseInsensitiveDict
 from requests.packages.urllib3.util import parse_url
 from requests.packages.urllib3.poolmanager import PoolManager
 
-from rvbd.common.exceptions import RvbdException
+from rvbd.common.exceptions import RvbdException, RvbdHTTPException
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +49,8 @@ class Connection(object):
     HTTPLIB_DEBUGLEVEL = 0
     DEBUG_MSG_BODY = 0
 
-    def __init__(self, hostname, auth=None, port=None, verify=True):
+    def __init__(self, hostname, auth=None, port=None, verify=True,
+                 reauthenticate_handler=None):
         """ Initialize new connection and setup authentication
 
             `hostname` - include protocol, e.g. "https://host.com"
@@ -74,7 +79,7 @@ class Connection(object):
             raise RvbdException(msg)
         else:
             if p.port and port and p.port != port:
-                raise URLError('Mismatched ports provided.')
+                raise RvbdException('Mismatched ports provided.')
             elif not p.port and port:
                 hostname = hostname + ':' + str(port)
 
@@ -87,6 +92,7 @@ class Connection(object):
         self.conn = requests.session()
         self.conn.auth = auth
         self.conn.verify = verify
+        self._reauthenticate_handler = reauthenticate_handler
 
         # store last full response
         self.response = None
@@ -111,14 +117,15 @@ class Connection(object):
         """ Returns a fully qualified URL given a URI. """
         return urlparse.urljoin(self.hostname, uri)
 
-    def _request(self, method, uri, body=None, params=None, extra_headers=None):
+    def _request(self, method, uri, body=None, params=None,
+                 extra_headers=None, **kwargs):
         p = parse_url(uri)
         if not p.host:
             uri = self.get_url(uri)
 
         try:
             r = self.conn.request(method, uri, data=body, 
-                                  params=params, headers=extra_headers)
+                                  params=params, headers=extra_headers, **kwargs)
         except (requests.exceptions.SSLError, 
                 requests.exceptions.ConnectionError):
             if self._ssladapter:
@@ -128,14 +135,31 @@ class Connection(object):
             # Otherwise, mount adapter and retry the request
             self.conn.mount('https://', SSLAdapter(ssl.PROTOCOL_TLSv1))
             self._ssladapter = True
-            r = self.conn.request(method, uri, data=body, 
+            logger.debug('SSL error -- retrying with TLSv1')
+            r = self.conn.request(method, uri, data=body,
                                   params=params, headers=extra_headers)
 
         self.response = r
 
         # check if good status response otherwise raise exception
         if not r.ok:
-            r.raise_for_status()
+            exc = RvbdHTTPException(r, r.text, method, uri)
+            if (self._reauthenticate_handler is not None and
+                exc.error_id in ('AUTH_INVALID_SESSION',
+                                 'AUTH_EXPIRED_TOKEN')):
+                logger.debug('session timed out -- reauthenticating')
+                handler = self._reauthenticate_handler
+                self._reauthenticate_handler = None
+                handler()
+                logger.debug('session reauthentication succeeded -- retrying')
+                r = self._request(method, uri, body, params,
+                                  extra_headers, **kwargs)
+                # successful connection, reset token if previously unset
+                self._reauthenticate_handler = handler
+                return r
+
+            else:
+                raise exc
 
         return r
 
@@ -160,8 +184,12 @@ class Connection(object):
             extra_headers = CaseInsensitiveDict()
         extra_headers['Content-Type'] = 'application/json'
         extra_headers['Accept'] = 'application/json'
-        if body:
+
+        if body is not None:
             body = json.dumps(body, cls=self.JsonEncoder)
+        else:
+            body = ''
+
         r = self._request(method, uri, body, params, extra_headers)
         if r.status_code == 204 or len(r.content) == 0:
             return None  # no data
@@ -216,13 +244,12 @@ class Connection(object):
         """
         r = self._request(method, uri, data, params=params,
                             extra_headers=extra_headers)
-        data = r.read()
         if r.status_code == 204:
             return  # no data
         elif r.status_code == 201:
             # created resource
-            return {'Location-Header': r.getheader('location', '')}
-        return data
+            return {'Location-Header': r.headers.get('location', '')}
+        return r.text
 
     def download(self, uri, path=None, overwrite=False, method='GET',
                  extra_headers=None, params=None):
@@ -268,12 +295,14 @@ class Connection(object):
                 directory, filename = os.path.split(path)
 
         # Get request
-        r = self._request(method, uri, None, params, extra_headers)
+        r = self._request(method, uri, None, params, extra_headers, stream=True)
 
         # Check if the user specified a file name
         if filename is None:
             # Retrieve the file name form the HTTP header
             filename = r.headers.get('Content-Disposition', None)
+            if filename is not None:
+                filename = filename.split('=')[1]
 
         if not filename:
             raise ValueError("{0} is not a valid path. Specify a full path "
@@ -285,10 +314,12 @@ class Connection(object):
         if os.path.isfile(path) and not overwrite:
             raise RvbdException('the file %s already exists' % path)
 
-        # Open the local file
-        with open(path, 'wb') as fd:
-            # Save the remote file to the local file
-            shutil.copyfileobj(resp, fd)
+        # Stream the remote file to the local file
+        with open(path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=2048):
+                if chunk:
+                    f.write(chunk)
+            #f.write(r.content)
         return path
 
     def add_headers(self, headers):
