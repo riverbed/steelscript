@@ -62,8 +62,7 @@ class UserAuth(object):
             self.methods = [Auth.BASIC, Auth.COOKIE]
 
     def __repr__(self):
-        return '<UserAuth username: %s password: %s>' % (self.username, 
-                                                         '*'*len(self.password))
+        return '<UserAuth username: %s password: *****>' % self.username
 
 
 class OAuth(object):

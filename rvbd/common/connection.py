@@ -294,7 +294,14 @@ class Connection(object):
                 #last case, we got a full path of a file
                 directory, filename = os.path.split(path)
 
-        # Get request
+        # Initiate the request
+        # XXX Handle cases where a Keep-Alive header is passed back in Response
+        # include "Connection: Close" as part of the request header
+        # otherwise a Keep-Alive response from the server will hang and block
+        # our connection until the system timeout (defaults to 100sec in one
+        # implementation)
+        #
+        extra_headers = CaseInsensitiveDict(Connection='Close')
         r = self._request(method, uri, None, params, extra_headers, stream=True)
 
         # Check if the user specified a file name
@@ -316,10 +323,10 @@ class Connection(object):
 
         # Stream the remote file to the local file
         with open(path, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=2048):
+            for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
-            #f.write(r.content)
+                    f.flush()
         return path
 
     def add_headers(self, headers):
