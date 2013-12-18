@@ -240,10 +240,10 @@ def usec_string_to_timedelta(s):
     return timedelta(seconds=sec)
 
 def timedelta_total_seconds(td):
+    """ Handle backwards compatability for timedelta.total_seconds."""
     if hasattr(td, 'total_seconds'):
         return td.total_seconds()
     return float(td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
-    
 
 
 class TimeParser(object):
