@@ -250,7 +250,8 @@ class Service(object):
 
             # we're good, set up our http headers for subsequent
             # requests!
-            self.conn.add_headers({'Cookie': answer['session_key'] + "=" + answer['session_id']})
+            cookie = answer['session_key'] + "=" + answer['session_id']
+            self.conn.add_headers({'Cookie': cookie})
 
             logger.info("Authenticated using COOKIE")
 

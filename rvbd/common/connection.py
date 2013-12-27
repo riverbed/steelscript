@@ -8,7 +8,6 @@
 import os
 import ssl
 import json
-import shutil
 import httplib
 import logging
 import tempfile
@@ -165,8 +164,6 @@ class Connection(object):
             logger.debug('SSL error -- retrying with TLSv1')
             r = self.conn.request(method, path, data=body,
                                   params=params, headers=extra_headers)
-
-        self.response = r
 
         # check if good status response otherwise raise exception
         if not r.ok:
