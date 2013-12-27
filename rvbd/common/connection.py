@@ -74,14 +74,20 @@ class Connection(object):
             when trying to connect.
         """
         p = parse_url(hostname)
+
+        if p.port and port and p.port != port:
+            raise RvbdException('Mismatched ports provided.')
+        elif not p.port and port:
+            hostname = hostname + ':' + str(port)
+
         if not p.scheme:
-            msg = 'Scheme must be provided (e.g. https:// or http://).'
-            raise RvbdException(msg)
-        else:
-            if p.port and port and p.port != port:
-                raise RvbdException('Mismatched ports provided.')
-            elif not p.port and port:
-                hostname = hostname + ':' + str(port)
+            # default to https, except when port 80 specified
+            if parse_url(hostname).port == '80':
+                logger.info("Connection defaulting to 'http://' scheme.")
+                hostname = 'http://' + hostname
+            else:
+                logger.info("Connection defaulting to 'https://' scheme.")
+                hostname = 'https://' + hostname
 
         self.hostname = hostname
         self._ssladapter = False
@@ -113,37 +119,58 @@ class Connection(object):
         else:
             httplib.HTTPConnection.debuglevel = level
 
-    def get_url(self, uri):
-        """ Returns a fully qualified URL given a URI. """
-        return urlparse.urljoin(self.hostname, uri)
+        requests_logger = logging.getLogger('requests.packages.urllib3')
+        requests_logger.propagate = True
 
-    def _request(self, method, uri, body=None, params=None,
+        if int(level) > 0:
+            requests_logger.setLevel(logging.DEBUG)
+        else:
+            requests_logger.setLevel(logging.INFO)
+
+    def get_url(self, path):
+        """ Returns a fully qualified URL given a path. """
+        return urlparse.urljoin(self.hostname, path)
+
+    def _request(self, method, path, body=None, params=None,
                  extra_headers=None, **kwargs):
-        p = parse_url(uri)
+        p = parse_url(path)
         if not p.host:
-            uri = self.get_url(uri)
+            path = self.get_url(path)
 
         try:
-            r = self.conn.request(method, uri, data=body, 
-                                  params=params, headers=extra_headers, **kwargs)
-        except (requests.exceptions.SSLError, 
+            logger.debug('Issuing %s request to: %s' % (method, str(path)))
+
+            flag = body is not None and '"password":' in repr(body)
+
+            if flag:
+                self.set_debuglevel(0)
+                logger.debug('<username and password hidden>')
+
+            r = self.conn.request(method, path, data=body, params=params,
+                                  headers=extra_headers, **kwargs)
+
+            if flag:
+                self.set_debuglevel()
+
+        except (requests.exceptions.SSLError,
                 requests.exceptions.ConnectionError):
             if self._ssladapter:
                 # If we've already applied an adapter, this is another problem
                 raise
 
             # Otherwise, mount adapter and retry the request
+            # See #152536 - Versions of openssl cause handshake failures
             self.conn.mount('https://', SSLAdapter(ssl.PROTOCOL_TLSv1))
             self._ssladapter = True
             logger.debug('SSL error -- retrying with TLSv1')
-            r = self.conn.request(method, uri, data=body,
+            r = self.conn.request(method, path, data=body,
                                   params=params, headers=extra_headers)
 
         self.response = r
 
         # check if good status response otherwise raise exception
         if not r.ok:
-            exc = RvbdHTTPException(r, r.text, method, uri)
+            exc = RvbdHTTPException(r, r.text, method, path)
             if (self._reauthenticate_handler is not None and
                 exc.error_id in ('AUTH_INVALID_SESSION',
                                  'AUTH_EXPIRED_TOKEN')):
@@ -152,7 +179,7 @@ class Connection(object):
                 self._reauthenticate_handler = None
                 handler()
                 logger.debug('session reauthentication succeeded -- retrying')
-                r = self._request(method, uri, body, params,
+                r = self._request(method, path, body, params,
                                   extra_headers, **kwargs)
                 # successful connection, reset token if previously unset
                 self._reauthenticate_handler = handler
@@ -175,7 +202,7 @@ class Connection(object):
                     res = obj.__dict__
             return res
 
-    def json_request(self, method, uri, body=None, 
+    def json_request(self, method, path, body=None,
                      params=None, extra_headers=None):
         """ Send a JSON request and receive JSON response. """
         if extra_headers:
@@ -190,15 +217,15 @@ class Connection(object):
         else:
             body = ''
 
-        r = self._request(method, uri, body, params, extra_headers)
+        r = self._request(method, path, body, params, extra_headers)
         if r.status_code == 204 or len(r.content) == 0:
             return None  # no data
         return r.json()
 
-    def xml_request(self, method, uri, body=None, 
+    def xml_request(self, method, path, body=None,
                     params=None, extra_headers=None):
-        """Send an XML request to the host.  
-        
+        """Send an XML request to the host.
+
         The Content-Type and Accept headers are set to text/xml.  In addition,
         any response will be XML-decoded as an xml.etree.ElementTree.  The body
         is assumed to be an XML encoded text string and is inserted into the
@@ -212,7 +239,7 @@ class Connection(object):
         extra_headers['Content-Type'] = 'text/xml'
         extra_headers['Accept'] = 'text/xml'
 
-        r = self._request(method, uri, body, params, extra_headers)
+        r = self._request(method, path, body, params, extra_headers)
 
         t = r.headers.get('Content-type', None)
         if t != 'text/xml':
@@ -225,7 +252,7 @@ class Connection(object):
 
         return tree
 
-    def upload(self, uri, data, method="POST", params=None, extra_headers=None):
+    def upload(self, path, data, method="POST", params=None, extra_headers=None):
         """Upload raw data to the given URL path with the given content type.
 
         `data` may be either a string or a python file object.
@@ -242,8 +269,8 @@ class Connection(object):
         Returns location information if resource has been created,
         otherwise the response body (if any).
         """
-        r = self._request(method, uri, data, params=params,
-                            extra_headers=extra_headers)
+        r = self._request(method, path, data, params=params,
+                          extra_headers=extra_headers)
         if r.status_code == 204:
             return  # no data
         elif r.status_code == 201:
@@ -251,13 +278,13 @@ class Connection(object):
             return {'Location-Header': r.headers.get('location', '')}
         return r.text
 
-    def download(self, uri, path=None, overwrite=False, method='GET',
+    def download(self, url, path=None, overwrite=False, method='GET',
                  extra_headers=None, params=None):
         """Download a file from a remote URI and save it to a local path.
-        
-        `uri` is the url of the file to download.
 
-        `path` is an optional path on the local filesystem to save the 
+        `url` is the url of the file to download.
+
+        `path` is an optional path on the local filesystem to save the
         downloaded file.  It can be:
 
             - a complete path
@@ -270,14 +297,14 @@ class Connection(object):
 
         `overwrite` if True will save the downloaded file to `path` no matter
             if the file already exists.
-        
+
         `method` is the HTTP method used for the request.
-        
+
         `extra_headers` is a dictionary of headers to use for the request.
 
         `params` is a dictionary of parameters for the request.
         """
-        
+
         filename = None
 
         # try to determine the filename
@@ -302,7 +329,7 @@ class Connection(object):
         # implementation)
         #
         extra_headers = CaseInsensitiveDict(Connection='Close')
-        r = self._request(method, uri, None, params, extra_headers, stream=True)
+        r = self._request(method, url, None, params, extra_headers, stream=True)
 
         # Check if the user specified a file name
         if filename is None:

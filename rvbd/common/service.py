@@ -20,7 +20,7 @@ be exposed by a separate child class.  The Cascade Express product implements
 both the "profiler" and "shark" namespaces.  These will be exposed via Shark
 and Profiler classes respectively, both based on the the Service class.
 A script that interacts with both namespaces must instantiate two separate
-objects.  
+objects.
 """
 
 from __future__ import absolute_import
@@ -47,6 +47,7 @@ class Auth(object):
 class UserAuth(object):
     """This class is used for both Basic and Cookie based authentication
     which rely on username and password."""
+
     def __init__(self, username, password, method=None):
         """Define an authentication method using `username` and `password`.
         By default this will be used for both Basic as well as Cookie
@@ -72,7 +73,7 @@ class OAuth(object):
     def __init__(self, access_code):
         """Define an OAuth based authentication method using `access_code`.
         The method is automatically set to `Auth.OAUTH`."""
-        
+
         self.access_code = access_code
         self.methods = [Auth.OAUTH]
 
@@ -80,7 +81,7 @@ class OAuth(object):
 class Service(object):
     """This class is the main interface to interact with a device via REST
     and provides the following functionality:
-    
+
     - Connection management
     - Resource requests and responses
     - Authentication
@@ -90,7 +91,7 @@ class Service(object):
     is created.  Requests can be made via the `Service.conn` property.
     """
     def __init__(self, service, host=None, port=None, auth=None,
-                 force_ssl=None, verify_ssl=False, versions=None):
+                 verify_ssl=False, versions=None):
         """Establish a connection to the named host.
 
         `host` is the name or IP address of the device to connect to
@@ -102,10 +103,6 @@ class Service(object):
         `auth` defines the authentication method and credentials to use
             to access the device.  See UserAuth and OAuth.  If set to None,
             connection is not authenticated.
-            
-        `force_ssl` when set to True will only allow SSL based connections.
-            If False, only allow non-SSL connections.  If set to None
-            (the default) try SSL first, then try non-SSL.
 
         `verify_ssl` when set to True will only allow verified SSL certificates
             on any connections, False will not verify certs (useful for self-signed
@@ -124,12 +121,11 @@ class Service(object):
         #Connection object.  Use this to make REST requests to the device.
         self.conn = None
 
-        self.force_ssl = force_ssl
         self.verify_ssl = verify_ssl
 
         logger.info("New service %s for host %s" % (self.service, self.host))
 
-        self.connect(self.force_ssl)
+        self.connect()
         self.check_api_versions(versions)
 
         if auth is not None:
@@ -141,7 +137,7 @@ class Service(object):
     def __exit__(self, type, value, traceback):
         self.logout()
 
-    def connect(self, ssl):
+    def connect(self):
         if self.conn is not None and hasattr(self.conn, 'close'):
             self.conn.close()
 
@@ -164,13 +160,13 @@ class Service(object):
         except:
             logger.warning("Failed to retrieved supported versions")
             return False
-        
+
         if supported_versions is None:
             return False
 
         logger.debug("Server supports the following services: %s" %
                      (",".join([str(v) for v in supported_versions])))
-        
+
         for v in api_versions:
             if v in supported_versions:
                 self.api_version = v
@@ -184,8 +180,8 @@ class Service(object):
     def _get_supported_versions(self):
         """Get the common list of services and versions supported."""
         # uses the GL7 'services' resource.
-        url = '/api/common/1.0/services'
-        services = self.conn.json_request('GET', url)
+        path = '/api/common/1.0/services'
+        services = self.conn.json_request('GET', path)
 
         for service in services:
             if service['id'] == self.service:
@@ -196,10 +192,10 @@ class Service(object):
     def _detect_auth_methods(self):
         """Get the list of authentication methods supported."""
         # uses the GL7 'auth_info' resource
-        url = '/api/common/1.0/auth_info'
+        path = '/api/common/1.0/auth_info'
 
         try:
-            auth_info = self.conn.json_request('GET', url)
+            auth_info = self.conn.json_request('GET', path)
             logger.info("Supported authentication methods: %s" %
                         (','.join(auth_info['supported_methods'])))
             self._supports_auth_basic  = ("BASIC" in auth_info['supported_methods'])
@@ -210,14 +206,14 @@ class Service(object):
             self._supports_auth_basic  = True
             self._supports_auth_cookie = False
             self._supports_auth_oauth  = False
-            
+
     def authenticate(self, auth):
         """Authenticate with device using the defined authentication method.
         This sets up the appropriate authentication headers to access
         restricted resources.
 
         `auth` must be an instance of either UserAuth or OAuth."""
-        
+
         assert auth is not None
 
         self.auth = auth
@@ -226,12 +222,12 @@ class Service(object):
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
             # TODO fix for future support to handle appropriate triplets
             code = self.auth.access_code
-            url = '/api/common/1.0/oauth/token'
+            path = '/api/common/1.0/oauth/token'
             data = {
                 'grant_type': 'access_code',
                 'assertion': code
-                }
-            answer = self.conn.json_request('POST', url, 'POST', params=data)
+            }
+            answer = self.conn.json_request('POST', path, 'POST', params=data)
             token = answer['access_token']
             st = token.split('.')
             if len(st) == 1:
@@ -244,13 +240,13 @@ class Service(object):
             logger.info('Authenticated using OAUTH2.0')
 
         elif self._supports_auth_cookie and Auth.COOKIE in self.auth.methods:
-            url = '/api/common/1.0/login'
+            path = '/api/common/1.0/login'
             data = {
                 "username": self.auth.username,
                 "password": self.auth.password
-                }
+            }
 
-            answer = self.conn.json_request('POST', url, body=data)
+            answer = self.conn.json_request('POST', path, body=data)
 
             # we're good, set up our http headers for subsequent
             # requests!

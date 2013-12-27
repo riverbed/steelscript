@@ -48,12 +48,6 @@ class Application(object):
         group = optparse.OptionGroup(self.optparse, "Connection Parameters")
         group.add_option("-P", "--port", dest="port",
                          help="connect on this port")
-        group.add_option("", "--force-ssl",
-                         dest="force_ssl", action='store_true',
-                         help="force ssl to be used")
-        group.add_option("", "--force-no-ssl",
-                         dest="force_ssl", action='store_false',
-                         help="force ssl to not be used")
         group.add_option("-u", "--username", help="username to connect with")
         group.add_option("-p", "--password", help="password to connect with")
         group.add_option("--oauth", help="OAuth Access Code, in place of "
@@ -152,7 +146,7 @@ class Application(object):
                            self.options.logfile)
 
         self.setup()
- 
+
         if self._main is None:
             ret = self.main()
         else:
