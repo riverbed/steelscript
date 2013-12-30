@@ -35,7 +35,10 @@ The suggested way to run tests is through [pytest](http://pytest.org/latest/)
 The easiest way to install pytest is through
 [python pip](http://www.pip-installer.org/en/latest/installing.html) with:
 
-    pip install pytest
+    pip install pytest testscenarios
+
+This will download and install py.test and the testscenarios packages along
+with all of their dependencies. 
 
 In order to run the tests you nedd a configuration file in which there are
 specified the hosts to run against. The file must look like
