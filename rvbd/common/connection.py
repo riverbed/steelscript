@@ -138,6 +138,7 @@ class Connection(object):
 
         try:
             logger.debug('Issuing %s request to: %s' % (method, str(path)))
+            #logger.debug('Body: %s' % (body))
 
             flag = body is not None and '"password":' in repr(body)
 
@@ -148,6 +149,8 @@ class Connection(object):
             r = self.conn.request(method, path, data=body, params=params,
                                   headers=extra_headers, **kwargs)
 
+            logger.debug('Response for %s request to %s: %s, %d' %
+                         (method, str(path), r.status_code, len(r.content)))
             if flag:
                 self.set_debuglevel()
 

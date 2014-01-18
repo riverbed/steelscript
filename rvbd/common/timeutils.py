@@ -397,7 +397,7 @@ def parse_timedelta(s):
         try:
             units = _timedelta_units[m.group(2)]
         except KeyError:
-            raise ValueError()
+            raise ValueError("Invalid timedelta units: %s" % m.group(2))
 
     return timedelta(seconds=units * float(val))
     
