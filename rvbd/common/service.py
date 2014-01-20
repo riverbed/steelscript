@@ -29,7 +29,7 @@ import base64
 import logging
 
 from rvbd.common import connection
-from rvbd.common.exceptions import RvbdException
+from rvbd.common.exceptions import RvbdException, RvbdHTTPException
 
 from rvbd.common.api_helpers import APIVersion
 
@@ -157,9 +157,11 @@ class Service(object):
 
         try:
             supported_versions = self._get_supported_versions()
-        except:
+        except RvbdHTTPException as e:
+            if e.status != 404:
+                raise
             logger.warning("Failed to retrieved supported versions")
-            return False
+            supported_versions = None
 
         if supported_versions is None:
             return False
@@ -201,7 +203,9 @@ class Service(object):
             self._supports_auth_basic  = ("BASIC" in auth_info['supported_methods'])
             self._supports_auth_cookie = ("COOKIE" in auth_info['supported_methods'])
             self._supports_auth_oauth  = ("OAUTH_2_0" in auth_info['supported_methods'])
-        except:
+        except RvbdHTTPException as e:
+            if e.status != 404:
+                raise
             logger.warning("Failed to retrieve auth_info, assuming basic")
             self._supports_auth_basic  = True
             self._supports_auth_cookie = False
