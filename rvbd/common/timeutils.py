@@ -22,7 +22,7 @@ import re
 __all__ = [ 'ensure_timezone', 'force_to_utc', 'datetime_to_seconds', 
             'datetime_to_microseconds', 'datetime_to_nanoseconds',
             'usec_string_to_datetime', 'nsec_string_to_datetime',
-            'timedelta_total_seconds',
+            'timedelta_total_seconds', 'timedelta_str',
             'TimeParser', 'parse_timedelta', 'parse_range' ]
 
 
@@ -375,6 +375,35 @@ _timedelta_units = {
 
 _timedelta_re = re.compile("([0-9]*\.*[0-9]*) *([a-zA-Z]*)")
 
+def timedelta_str(td):
+    def pluralize(val, base, plural):
+        if val > 1:
+            return "%d %s" % (val, plural)
+        else:
+            return "%d %s" % (val, base)
+
+    if td.days > 0:
+        if td.seconds != 0 or td.microseconds != 0:
+            raise ValueError("Timedelta has too many components for pretty string: %s" % str(td))
+        if td.days % 7 == 0:
+            return pluralize(td.days / 7, "week", "weeks")
+        else:
+            return pluralize(td.days, "day", "days")
+    elif td.seconds > 0:
+        if td.microseconds != 0:
+            raise ValueError("Timedelta has too many components for pretty string: %s" % str(td))
+        if td.seconds % (60*60) == 0:
+            return pluralize(td.seconds / (60*60), "hour", "hours")
+        elif td.seconds % 60 == 0:
+            return pluralize(td.seconds / 60, "minute", "minutes")
+        else:
+            return pluralize(td.seconds, "second", "seconds")
+    else:
+        if td.microseconds % 1000 == 0:
+            return pluralize(td.microseconds / 1000, "millisecond", "milliseconds")
+        else:
+            return pluralize(td.microseconds, "microsecond", "microseconds")
+    
 def parse_timedelta(s):
     """ Parse the string `s` representing some duration of time
     (e.g., `"3 seconds"` or `"1 week"`) and return a `datetime.timedelta`
