@@ -403,7 +403,26 @@ def timedelta_str(td):
             return pluralize(td.microseconds / 1000, "millisecond", "milliseconds")
         else:
             return pluralize(td.microseconds, "microsecond", "microseconds")
-    
+
+
+def round_time(dt=None, round_to=60, round_up=False):
+    """Round a datetime object to any time laps in seconds
+    `dt` : datetime.datetime object, default now.
+    `round_to` : Closest number of seconds to round to, default 1 minute.
+    `round_up`: Default rounds down to nearest `round_to` interval,
+               True here will instead round up.
+    """
+    # ref http://stackoverflow.com/a/10854034/2157429
+    if dt is None:
+        dt = datetime.now()
+    seconds = (dt - dt.min).seconds
+    if round_up:
+        rounding = (seconds + round_to / 2) // round_to * round_to
+    else:
+        rounding = (seconds - round_to / 2) // round_to * round_to
+    return dt + timedelta(0, rounding - seconds, -dt.microsecond)
+
+
 def parse_timedelta(s):
     """ Parse the string `s` representing some duration of time
     (e.g., `"3 seconds"` or `"1 week"`) and return a `datetime.timedelta`
