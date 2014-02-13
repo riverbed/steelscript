@@ -415,7 +415,8 @@ def round_time(dt=None, round_to=60, round_up=False):
     # ref http://stackoverflow.com/a/10854034/2157429
     if dt is None:
         dt = datetime.now()
-    seconds = (dt - dt.min).seconds
+    dt = ensure_timezone(dt)
+    seconds = (dt - dt.min.replace(tzinfo=dt.tzinfo)).seconds
     if round_up:
         rounding = (seconds + round_to / 2) // round_to * round_to
     else:
