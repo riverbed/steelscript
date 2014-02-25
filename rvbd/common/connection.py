@@ -203,7 +203,7 @@ class Connection(object):
             return res
 
     def json_request(self, method, path, body=None,
-                     params=None, extra_headers=None):
+                     params=None, extra_headers=None, response_headers=False):
         """ Send a JSON request and receive JSON response. """
         if extra_headers:
             extra_headers = CaseInsensitiveDict(extra_headers)
@@ -220,6 +220,8 @@ class Connection(object):
         r = self._request(method, path, body, params, extra_headers)
         if r.status_code == 204 or len(r.content) == 0:
             return None  # no data
+        if response_headers:
+            return r.json(), r.headers
         return r.json()
 
     def xml_request(self, method, path, body=None,

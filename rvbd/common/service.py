@@ -250,11 +250,12 @@ class Service(object):
                 "password": self.auth.password
             }
 
-            answer = self.conn.json_request('POST', path, body=data)
-
+            answer, resp_headers = self.conn.json_request('POST', path, body=data,
+                                                          response_headers=True)
+            
             # we're good, set up our http headers for subsequent
             # requests!
-            cookie = answer['session_key'] + "=" + answer['session_id']
+            cookie = resp_headers['set-cookie']
             self.conn.add_headers({'Cookie': cookie})
 
             logger.info("Authenticated using COOKIE")
