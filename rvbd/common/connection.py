@@ -203,7 +203,7 @@ class Connection(object):
             return res
 
     def json_request(self, method, path, body=None,
-                     params=None, extra_headers=None, response_headers=False):
+                     params=None, extra_headers=None, raw_response=False):
         """ Send a JSON request and receive JSON response. """
         if extra_headers:
             extra_headers = CaseInsensitiveDict(extra_headers)
@@ -220,12 +220,12 @@ class Connection(object):
         r = self._request(method, path, body, params, extra_headers)
         if r.status_code == 204 or len(r.content) == 0:
             return None  # no data
-        if response_headers:
-            return r.json(), r.headers
+        if raw_response:
+            return r
         return r.json()
 
     def xml_request(self, method, path, body=None,
-                    params=None, extra_headers=None):
+                    params=None, extra_headers=None, raw_response=False):
         """Send an XML request to the host.
 
         The Content-Type and Accept headers are set to text/xml.  In addition,
@@ -244,10 +244,13 @@ class Connection(object):
         r = self._request(method, path, body, params, extra_headers)
 
         t = r.headers.get('Content-type', None)
-        if t != 'text/xml':
+        if t.find('text/xml') == -1:
             raise RvbdException('unexpected content type %s' % t)
 
-        tree = ElementTree.parse(r).getroot()
+        if raw_response:
+            return r
+
+        tree = ElementTree.fromstring(r.text.encode('ascii', 'ignore'))
 
         if self.DEBUG_MSG_BODY:
             logger.debug('Response body:\n' + str(tree) + '\n')
