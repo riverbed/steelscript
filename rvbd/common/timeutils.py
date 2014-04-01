@@ -405,17 +405,24 @@ def timedelta_str(td):
             return pluralize(td.microseconds, "microsecond", "microseconds")
 
 
-def round_time(dt=None, round_to=60, round_up=False):
+def round_time(dt=None, round_to=60, round_up=False, trim=False):
     """Round a datetime object to any time laps in seconds
     `dt` : datetime.datetime object, default now.
     `round_to` : Closest number of seconds to round to, default 1 minute.
     `round_up`: Default rounds down to nearest `round_to` interval,
                True here will instead round up.
+    `trim`: Trim to nearest round_to value rather than rounding.
     """
     # ref http://stackoverflow.com/a/10854034/2157429
     if dt is None:
         dt = datetime.now()
     dt = ensure_timezone(dt)
+
+    if trim:
+        rounded = (round_time(dt, round_to, False),
+                   round_time(dt, round_to, True))
+        return max(rounded) if max(rounded) <= dt else min(rounded)
+
     seconds = (dt - dt.min.replace(tzinfo=dt.tzinfo)).seconds
     if round_up:
         rounding = (seconds + round_to / 2) // round_to * round_to
