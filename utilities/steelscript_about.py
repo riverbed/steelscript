@@ -22,17 +22,17 @@ except pkg_resources.DistributionNotFound:
     #sys.exit(1)
     
 
-import rvbd
+import steelscript
 import os.path, pkgutil
 
-pkgpath = os.path.dirname(rvbd.__file__)
+pkgpath = os.path.dirname(steelscript.__file__)
 
 print ""
 print "Path to source:\n  %s" % pkgpath
 print ""
 print "Modules provided:" 
 for (loader, name, ispkg) in pkgutil.walk_packages([pkgpath]):
-    print "  rvbd.%s" % name
+    print "  steelscript.%s" % name
 
 print ""
 print "Python information:"

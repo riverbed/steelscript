@@ -9,7 +9,7 @@ except ImportError:
     from distutils.cmd import Command
     packagedata = False
 
-    def find_packages(path="rvbd"):
+    def find_packages(path="steelscript"):
         return [p for p, files, dirs in os.walk(path) if '__init__.py' in files]
 
 from contrib.version import get_git_version
@@ -23,7 +23,7 @@ class BuildDocRidl(Command):
     def finalize_options(self): pass
 
     def run(self):
-        os.system("cd docs/ridl ; python ridl ../flyscript")
+        os.system("cd docs/ridl ; python ridl ../steelscript")
 
 
 class BuildDocRESTAPI(Command):
@@ -48,7 +48,7 @@ class BuildDocRESTAPI(Command):
         toc = "REST API Documentation\n======================\n\n"
         text = toc + '\n'.join(bullets) + '\n'
 
-        with open('docs/flyscript/md/rest_apis.md', 'w') as f:
+        with open('docs/steelscript/md/rest_apis.md', 'w') as f:
             f.write(text)
 
         self.run_command("build_doc_ridl")
@@ -66,16 +66,16 @@ class BuildPackage(Command):
         self.run_command("sdist")
 
 setup_args = {
-    'name': "flyscript",
+    'name': "steelscript",
     'version': get_git_version(),
     'author': "Riverbed Technology",
     'author_email': "cwhite@riverbed.com",
     'url': "https://splash.riverbed.com/docs/DOC-1464",
-    'description': "Riverbed FlyScript library for interacting with Riverbed devices",
-    'long_description': """FlyScript
+    'description': "Riverbed SteelScript library for interacting with Riverbed devices",
+    'long_description': """SteelScript
 =========
 
-FlyScript is a collection of libraries and scripts in Python and JavaScript for
+SteelScript is a collection of libraries and scripts in Python and JavaScript for
 interacting with Riverbed Technology devices.
 
 For a complete guide to installation, see:
@@ -107,16 +107,16 @@ This software is distributed "AS IS" as set forth in the License.
     ),
 
     'data_files': (
-        ('share/doc/flyscript/html', glob.glob('docs/html/*')),
-        ('share/doc/flyscript/examples/profiler', glob.glob('examples/profiler/*')),
-        ('share/doc/flyscript/examples/shark', glob.glob('examples/shark/*')),
-        ('share/doc/flyscript/examples/stingray', glob.glob('examples/stingray/*')),
+        ('share/doc/steelscript/html', glob.glob('docs/html/*')),
+        ('share/doc/steelscript/examples/profiler', glob.glob('examples/profiler/*')),
+        ('share/doc/steelscript/examples/shark', glob.glob('examples/shark/*')),
+        ('share/doc/steelscript/examples/stingray', glob.glob('examples/stingray/*')),
     ),
 
     'packages': find_packages(),
 
     'scripts': (
-        'utilities/flyscript_about.py',
+        'utilities/steelscript_about.py',
         'utilities/profiler_columns.py',
         'utilities/shark_view_fields.py',
     ),

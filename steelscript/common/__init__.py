@@ -8,5 +8,5 @@
 
 from __future__ import absolute_import
 
-from rvbd.common.service import *
-from rvbd.common.timeutils import *
+from steelscript.common.service import *
+from steelscript.common.timeutils import *

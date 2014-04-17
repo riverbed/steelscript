@@ -5,7 +5,7 @@
 #   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").  
 # This software is distributed "AS IS" as set forth in the License.
 
-from rvbd.common.jsondict import JsonDict
+from steelscript.common.jsondict import JsonDict
 
 import unittest
 import logging

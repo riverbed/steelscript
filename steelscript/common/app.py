@@ -6,8 +6,8 @@
 # This software is distributed "AS IS" as set forth in the License.
 
 
-from rvbd.common.service import UserAuth, OAuth
-import rvbd.common.connection
+from steelscript.common.service import UserAuth, OAuth
+import steelscript.common.connection
 
 import optparse
 import logging
@@ -110,9 +110,9 @@ class Application(object):
 
         self.validate_args()
 
-        rvbd.common.connection.Connection.HTTPLIB_DEBUGLEVEL =\
+        steelscript.common.connection.Connection.HTTPLIB_DEBUGLEVEL =\
             self.options.httplib_debuglevel
-        rvbd.common.connection.Connection.DEBUG_MSG_BODY =\
+        steelscript.common.connection.Connection.DEBUG_MSG_BODY =\
             self.options.debug_msg_body
 
     def _validate_auth(self):

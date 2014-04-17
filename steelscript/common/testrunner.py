@@ -13,7 +13,7 @@ import sys
 import csv
 import traceback
 
-import rvbd.common.app
+import steelscript.common.app
 
 logger = logging.getLogger(__name__)
 
@@ -145,7 +145,7 @@ class LogTestCommand(setuptools.Command):
             self.httpdebug = int(self.httpdebug)
 
     def run(self):
-        rvbd.common.app.Application.start_logging(logging.DEBUG, self.logfile,
+        steelscript.common.app.Application.start_logging(logging.DEBUG, self.logfile,
                                                   httplib_debuglevel=self.httpdebug)
 
         self.stream = None

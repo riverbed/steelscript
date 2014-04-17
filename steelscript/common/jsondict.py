@@ -36,7 +36,7 @@ class JsonDict(dict):
                 'frobble': 'Flounder'}}
 
       >>> type(d.baz)
-      rvbd.common.jsondict.JsonDict
+      steelscript.common.jsondict.JsonDict
       >>> d.baz.fozzle
       10
     """

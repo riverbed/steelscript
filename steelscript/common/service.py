@@ -28,10 +28,10 @@ from __future__ import absolute_import
 import base64
 import logging
 
-from rvbd.common import connection
-from rvbd.common.exceptions import RvbdException, RvbdHTTPException
+from steelscript.common import connection
+from steelscript.common.exceptions import RvbdException, RvbdHTTPException
 
-from rvbd.common.api_helpers import APIVersion
+from steelscript.common.api_helpers import APIVersion
 
 __all__ = ['Service', 'Auth', 'UserAuth', 'OAuth', 'RvbdException']
 

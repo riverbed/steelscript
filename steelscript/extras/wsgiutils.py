@@ -65,7 +65,7 @@ class WebError(Exception, Response):
 
 def wsgiwrapper(fn, env, start_response, **kwargs):
     ''' Bridge between wsgi and the various Response objects
-    defined in ``rvbd.extras.wsgiutils``.  The idea is that the
+    defined in ``steelscript.extras.wsgiutils``.  The idea is that the
     main wsgi handler is a one-liner that calls this function
     and ``fn`` is a handler that receives standard wsgi requests
     but may optionally return an instance of ``Response``

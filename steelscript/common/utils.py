@@ -265,7 +265,7 @@ class ColumnProxy(object):
     in the parent object so future references do not need another fetch
     from the server.
 
-    See the columns field in rvbd.shark.Shark objects for a typical
+    See the columns field in steelscript.shark.Shark objects for a typical
     example of how it is used.
     """
 

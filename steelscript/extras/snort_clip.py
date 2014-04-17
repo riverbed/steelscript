@@ -17,9 +17,9 @@ import sys
 import time
 import datetime
 
-from rvbd.shark import Shark, Time
-from rvbd.shark import filter
-from rvbd.extras import syslog
+from steelscript.shark import Shark, Time
+from steelscript.shark import filter
+from steelscript.extras import syslog
 
 #########################################################################
 # Global script settings

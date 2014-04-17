@@ -9,7 +9,7 @@
 import os
 import subprocess
 import logging
-import rvbd.shark.view
+import steelscript.shark.view
 
 wireshark_candidates = ["C:/Program Files/Wireshark/wireshark.exe",
                         "/usr/bin/wireshark", 
@@ -38,7 +38,7 @@ def sendToWireshark(uri, filters=None):
     if not ws:
         logging.warning("sendToWireshark: could not find wireshark executable")
         return
-    p2sview = rvbd.shark.view.PipeToSocket(uri, filters)
+    p2sview = steelscript.shark.view.PipeToSocket(uri, filters)
 
 
     p2sview.apply()
@@ -61,7 +61,7 @@ def sendToFile(uri, outfile, filters=None):
     if filters is None:
         filters = []
 
-    p2sview = rvbd.shark.view.PipeToSocket(uri, filters)
+    p2sview = steelscript.shark.view.PipeToSocket(uri, filters)
     p2sview.apply()
 
     fd = open(outfile, 'w')

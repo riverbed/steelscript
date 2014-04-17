@@ -15,8 +15,8 @@ For full field details, use the -v flag.
 
 import optparse
 
-from rvbd.shark.app import SharkApp
-from rvbd.common.utils import Formatter
+from steelscript.shark.app import SharkApp
+from steelscript.common.utils import Formatter
 
 
 class FieldsApp(SharkApp):

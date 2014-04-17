@@ -49,8 +49,8 @@ start_time                  Start Time                  40
 vxlan_name                  Virtual Network Tunnel      848                
 """
 
-from rvbd.profiler.app import ProfilerApp
-from rvbd.common.utils import Formatter
+from steelscript.profiler.app import ProfilerApp
+from steelscript.common.utils import Formatter
 import optparse
 
 class ProfilerInfo(ProfilerApp):

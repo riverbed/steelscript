@@ -21,8 +21,8 @@ def ensure_dir(d):
         os.makedirs(d)
 
 
-class FlyscriptDir(object):
-    """Manages the user dependent flyscript directory used
+class SteelScriptDir(object):
+    """Manages the user dependent steelscript directory used
     to store user relevant configuration and data
     """
     # TODO - add cleanup operations
@@ -33,16 +33,16 @@ class FlyscriptDir(object):
         if self.basedir is None and platform.system() == 'Windows':
             self.basedir = os.path.join(
                 os.environ['APPDATA'],
-                'flyscript',
+                'steelscript',
                 self.component)
         elif self.basedir is None and platform.system() == 'Linux':
             self.basedir = os.path.join(
                 os.environ['HOME'],
-                '.flyscript', self.component)
+                '.steelscript', self.component)
         elif self.basedir is None and platform.system() == 'Darwin':
             self.basedir = os.path.join(
                 os.environ['HOME'],
-                '.flyscript',
+                '.steelscript',
                 self.component)
         ensure_dir(self.basedir)
 
@@ -53,19 +53,19 @@ class FlyscriptDir(object):
         return os.listdir(self.basedir)
 
     def get_config(self, filename):
-        """Return FlyscriptConfig file for the filename specified
+        """Return SteelScriptConfig file for the filename specified
         """
         # TODO: support subdirectories
-        return FlyscriptConfig(self.basedir, filename)
+        return SteelScriptConfig(self.basedir, filename)
 
     def get_data(self, filename):
-        """Return FlyscriptData file for the filename specified
+        """Return SteelScriptData file for the filename specified
         """
         # TODO: support subdirectories
-        return FlyscriptData(self.basedir, filename)
+        return SteelScriptData(self.basedir, filename)
 
 
-class FlyscriptFile(object):
+class SteelScriptFile(object):
     """Base Class for Flyscript file storage objects
     """
     def __init__(self, path, filename):
@@ -84,11 +84,11 @@ class FlyscriptFile(object):
         pass
 
 
-class FlyscriptConfig(FlyscriptFile):
+class SteelScriptConfig(SteelScriptFile):
     """File object for JSON configuration files
     """
     def __init__(self, *args, **kwargs):
-        super(FlyscriptConfig, self).__init__(*args, **kwargs)
+        super(SteelScriptConfig, self).__init__(*args, **kwargs)
 
     def read(self):
         if os.path.isfile(self.fullpath):
@@ -102,11 +102,11 @@ class FlyscriptConfig(FlyscriptFile):
             json.dump(self.data, f)
 
 
-class FlyscriptData(FlyscriptFile):
+class SteelScriptData(SteelScriptFile):
     """File object for pickled data storage
     """
     def __init__(self, *args, **kwargs):
-        super(FlyscriptData, self).__init__(*args, **kwargs)
+        super(SteelScriptData, self).__init__(*args, **kwargs)
 
     def read(self):
         if os.path.isfile(self.fullpath):
