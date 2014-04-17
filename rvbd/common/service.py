@@ -250,8 +250,8 @@ class Service(object):
                 "password": self.auth.password
             }
             
-            http_response = self.conn.json_request('POST', path, body=data,
-                                                   raw_response=True)
+            response_body, http_response = self.conn.json_request('POST', path, body=data,
+                                                                  raw_response=True)
             
             # we're good, set up our http headers for subsequent
             # requests!

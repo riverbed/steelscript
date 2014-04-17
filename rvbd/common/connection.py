@@ -221,7 +221,7 @@ class Connection(object):
         if r.status_code == 204 or len(r.content) == 0:
             return None  # no data
         if raw_response:
-            return r
+            return r.json(), r
         return r.json()
 
     def xml_request(self, method, path, body=None,
@@ -247,13 +247,13 @@ class Connection(object):
         if t.find('text/xml') == -1:
             raise RvbdException('unexpected content type %s' % t)
 
-        if raw_response:
-            return r
-
         tree = ElementTree.fromstring(r.text.encode('ascii', 'ignore'))
 
         if self.DEBUG_MSG_BODY:
             logger.debug('Response body:\n' + str(tree) + '\n')
+
+        if raw_response:
+            return tree, r
 
         return tree
 
