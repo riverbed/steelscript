@@ -9,91 +9,32 @@ except ImportError:
     from distutils.cmd import Command
     packagedata = False
 
-    def find_packages(path="steelscript"):
+    def find_packages(path='steelscript'):
         return [p for p, files, dirs in os.walk(path) if '__init__.py' in files]
 
-from contrib.version import get_git_version
-
-
-class BuildDocRidl(Command):
-    description = "Build the documentation in docs/ridl (requires Mac OS X or Linux)"
-    user_options = []
-
-    def initialize_options(self): pass
-    def finalize_options(self): pass
-
-    def run(self):
-        os.system("cd docs/ridl ; python ridl ../steelscript")
-
-
-class BuildDocRESTAPI(Command):
-    description = "Build documentation in docs/ridl and docs/rest_apis (requires Mac OS X or Linux)"
-    user_options = []
-
-    def initialize_options(self): pass
-    def finalize_options(self): pass
-
-    def run(self):
-        os.system("mkdir -p docs/html; cd docs/rest_apis ; "
-                  "for d in `ls */*/*.json`; do python generate -o ../html -f $d --nopdfoutput --noprintable --nocoverpage; done")
-        # create a markdown page with updated references
-        apis = [os.path.basename(f) for f in glob.glob('docs/html/*REST_API*[0-9].html')]
-        apis.sort()
-        api_pairs = [(x.replace('_', ' ').strip('.html'), x) for x in apis]
-
-        # build each reference line
-        ref = '- [%s](%s)'
-        bullets = [ref % ap for ap in api_pairs]
-
-        toc = "REST API Documentation\n======================\n\n"
-        text = toc + '\n'.join(bullets) + '\n'
-
-        with open('docs/steelscript/md/rest_apis.md', 'w') as f:
-            f.write(text)
-
-        self.run_command("build_doc_ridl")
-
-
-class BuildPackage(Command):
-    description = "Build a new package"
-    user_options = []
-
-    def initialize_options(self): pass
-    def finalize_options(self): pass
-
-    def run(self):
-        self.run_command("build_doc_restapis")
-        self.run_command("sdist")
+from versioning import get_version
 
 setup_args = {
-    'name': "steelscript",
-    'version': get_git_version(),
-    'author': "Riverbed Technology",
-    'author_email': "cwhite@riverbed.com",
-    'url': "https://splash.riverbed.com/docs/DOC-1464",
-    'description': "Riverbed SteelScript library for interacting with Riverbed devices",
-    'long_description': """SteelScript
-=========
+    'name':               'steelscript.common',
+    'namespace_packages': ['steelscript'],
+    'version':            get_version(),
+    'author':             'Riverbed Technology',
+    'author_email':       'cwhite@riverbed.com',
+    'url':                'http://pythonhosted.org/steelscript',
+    'description':        'Core Python module for interacting with Riverbed devices',
+
+    'long_description': '''SteelScript
+===========
 
 SteelScript is a collection of libraries and scripts in Python and JavaScript for
 interacting with Riverbed Technology devices.
 
 For a complete guide to installation, see:
 
-http://pythonhosted.org/flyscript/install.html
-    """,
+http://pythonhosted.org/steelscript/install.html
+    ''',
 
-    'platforms': '',
-
-    'license': """Copyright (c) 2013 Riverbed Technology, Inc.
-
-This software is licensed under the terms and conditions of the
-MIT License set forth at:
-
-https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").
-
-This software is distributed "AS IS" as set forth in the License.
-    """,
+    'platforms': 'Linux, Mac OS, Windows',
 
     'classifiers': (
         'Development Status :: 4 - Beta',
@@ -106,30 +47,16 @@ This software is distributed "AS IS" as set forth in the License.
         'Topic :: System :: Networking',
     ),
 
-    'data_files': (
-        ('share/doc/steelscript/html', glob.glob('docs/html/*')),
-        ('share/doc/steelscript/examples/profiler', glob.glob('examples/profiler/*')),
-        ('share/doc/steelscript/examples/shark', glob.glob('examples/shark/*')),
-        ('share/doc/steelscript/examples/stingray', glob.glob('examples/stingray/*')),
-    ),
-
     'packages': find_packages(),
 
     'scripts': (
         'utilities/steelscript_about.py',
-        'utilities/profiler_columns.py',
-        'utilities/shark_view_fields.py',
     ),
 
     'install_requires': (
         'requests>=2.1.0',
     ),
 
-    'cmdclass': {
-        "build_doc_ridl": BuildDocRidl,
-        "build_doc_restapis": BuildDocRESTAPI,
-        "build_package": BuildPackage,
-    },
 }
 
 if packagedata:
