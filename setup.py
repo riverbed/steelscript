@@ -12,7 +12,7 @@ except ImportError:
     def find_packages(path='steelscript'):
         return [p for p, files, dirs in os.walk(path) if '__init__.py' in files]
 
-from versioning import get_version
+from gitpy_versioning import get_version
 
 setup_args = {
     'name':               'steelscript.common',
