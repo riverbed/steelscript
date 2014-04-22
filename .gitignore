@@ -4,11 +4,8 @@
 
 build
 dist
-flyscript.egg-info
+*.egg-info
 RELEASE-VERSION
-
-docs/flyscript/tmp
-docs/html
 
 *.swp
 .DS_Store
