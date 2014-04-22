@@ -21,6 +21,7 @@ setup_args = {
     'author':             'Riverbed Technology',
     'author_email':       'cwhite@riverbed.com',
     'url':                'http://pythonhosted.org/steelscript',
+    'license':            'MIT',
     'description':        'Core Python module for interacting with Riverbed devices',
 
     'long_description': '''SteelScript
