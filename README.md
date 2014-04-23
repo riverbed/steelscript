@@ -61,8 +61,8 @@ specified the hosts to run against. The file must look like
 
 and should be named `testconfig.py`. The file should be placed in the root
 dir of the flyscript package, alongside to the `rvbd` folder.
-The Sharks are ordered by API that should be tested. Shark hosts that are in the 4.0
-group will be tested against common calls and specific 4.0 calls. Shark hosts that
+The Sharks are ordered by API that should be tested. NetShark hosts that are in the 4.0
+group will be tested against common calls and specific 4.0 calls. NetShark hosts that
 are in the 5.0 group will be tested against common calls and specific 5.0 calls.
 
 To run the tests do:

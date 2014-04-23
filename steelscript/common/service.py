@@ -11,13 +11,13 @@ This module defines the Service class and associated authentication classes.
 The Service class is not instantiated directly, but is instead subclassed
 to implement handlers for particular REST namespaces.
 
-For example, the Shark is based on Service using the "shark" namespace, and
+For example, the NetShark is based on Service using the "netshark" namespace, and
 will provide the necessary methods to interface with the REST resources available
 within that namespace.
 
 If a device or appliance implements multiple namespaces, each namespace will
 be exposed by a separate child class.  The Cascade Express product implements
-both the "netprofiler" and "shark" namespaces.  These will be exposed via Shark
+both the "netprofiler" and "netshark" namespaces.  These will be exposed via NetShark
 and NetProfiler classes respectively, both based on the the Service class.
 A script that interacts with both namespaces must instantiate two separate
 objects.

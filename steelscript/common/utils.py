@@ -238,7 +238,7 @@ class ColumnProxy(object):
     a structure that can be fetched at run-time from a server.
 
     This class is used for structures like the list of valid
-    extractor fields on Shark or the list of valid columns on
+    extractor fields on NetShark or the list of valid columns on
     NetProfiler.  These are very long lists of names so we don't want
     to hard-code the list in flyscript but we would also like the
     list to be available at run-time so interactive tools like
@@ -265,7 +265,7 @@ class ColumnProxy(object):
     in the parent object so future references do not need another fetch
     from the server.
 
-    See the columns field in steelscript.shark.Shark objects for a typical
+    See the columns field in steelscript.netshark.NetShark objects for a typical
     example of how it is used.
     """
 
