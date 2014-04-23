@@ -239,7 +239,7 @@ class ColumnProxy(object):
 
     This class is used for structures like the list of valid
     extractor fields on Shark or the list of valid columns on
-    Profiler.  These are very long lists of names so we don't want
+    NetProfiler.  These are very long lists of names so we don't want
     to hard-code the list in flyscript but we would also like the
     list to be available at run-time so interactive tools like
     bpython or eclipse can do automatic completion.  At the same

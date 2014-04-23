@@ -17,8 +17,8 @@ within that namespace.
 
 If a device or appliance implements multiple namespaces, each namespace will
 be exposed by a separate child class.  The Cascade Express product implements
-both the "profiler" and "shark" namespaces.  These will be exposed via Shark
-and Profiler classes respectively, both based on the the Service class.
+both the "netprofiler" and "shark" namespaces.  These will be exposed via Shark
+and NetProfiler classes respectively, both based on the the Service class.
 A script that interacts with both namespaces must instantiate two separate
 objects.
 """

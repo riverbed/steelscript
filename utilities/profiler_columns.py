@@ -8,11 +8,11 @@
 # This software is distributed "AS IS" as set forth in the License.
 
 
-"""This program retrieves a list of valid columns for the current profiler.
+"""This program retrieves a list of valid columns for the current netprofiler.
 
 Example:
 
- python profiler-columns.py dev-staging2.lab.nbttech.com -r traffic_summary --centricity hos 
+ python netprofiler-columns.py dev-staging2.lab.nbttech.com -r traffic_summary --centricity hos
 
 Column                                 Label                                  Id
 app_name                               Application                            17
@@ -25,7 +25,7 @@ avg_bytes_rtx                          Avg Retrans Bytes/s                    39
 avg_conns_active                       Avg Active Connections/s               532
 avg_conns_new                          Avg New Connections/s                 
 
-python profiler-columns.py -i 729,848,40,41,158,4,14,44,10,45,46,47,50,124,48,49,51,123,39 dev-staging2.lab.nbttech.com
+python netprofiler-columns.py -i 729,848,40,41,158,4,14,44,10,45,46,47,50,124,48,49,51,123,39 dev-staging2.lab.nbttech.com
 Column                      Label                       Id                          
 
 c2s_flags                   C2S_FLAGS                   50                          
@@ -49,11 +49,12 @@ start_time                  Start Time                  40
 vxlan_name                  Virtual Network Tunnel      848                
 """
 
-from steelscript.profiler.app import ProfilerApp
+from steelscript.netprofiler.core.app import NetProfilerApp
 from steelscript.common.utils import Formatter
 import optparse
 
-class ProfilerInfo(ProfilerApp):
+
+class NetProfilerInfo(NetProfilerApp):
 
     def add_options(self, parser):
 
@@ -62,13 +63,13 @@ class ProfilerInfo(ProfilerApp):
                          help='Show list of valid groupbys instead of columns')
 
         group.add_option('-c', '--centricity', dest='centricity', default=None,
-                                  help="centricity to query for")
+                         help="centricity to query for")
         group.add_option('-r', '--realm', dest='realm', default=None,
-                                  help="realm to query for")
+                         help="realm to query for")
         group.add_option('-g', '--groupby', dest='groupby', default=None,
-                                  help="groupby to query for")
+                         help="groupby to query for")
         group.add_option('-i', '--ids', dest='ids', default=None,
-                                  help="column id numbers to include in results")
+                         help="column id numbers to include in results")
         group.add_option('-f', '--filter',
                          help="filter columns on this string")
         parser.add_option_group(group)
@@ -78,7 +79,7 @@ class ProfilerInfo(ProfilerApp):
         values = []
         for c in columns:
             if (self.options.filter and
-                self.options.filter.lower() not in c.label.lower()):
+                    self.options.filter.lower() not in c.label.lower()):
                 continue
 
             item = (c.key, c.label, c.id)
@@ -93,7 +94,7 @@ class ProfilerInfo(ProfilerApp):
 
     def main(self):
         if self.options.list_groupbys:
-            header =  ["GroupBy", "Id"]
+            header = ["GroupBy", "Id"]
             data = [(k, v) for k,v in self.profiler.groupbys.iteritems()]
             data.sort()
             Formatter.print_table(data, header)
@@ -123,4 +124,4 @@ class ProfilerInfo(ProfilerApp):
 
 
 if __name__ == '__main__':
-    ProfilerInfo().run()
+    NetProfilerInfo().run()

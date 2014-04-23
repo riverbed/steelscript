@@ -43,7 +43,7 @@ class RvbdHTTPException(RvbdException):
                     self.error_text = d['error_text']
                     self.error_id = d['error_id']
                 except KeyError:
-                    #for profiler
+                    #for netprofiler
                     self.error_id = None
                     self.error_text = d['status_text']
             elif self.reason == 'Unauthorized':
