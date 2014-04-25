@@ -1,8 +1,8 @@
 # Copyright (c) 2013 Riverbed Technology, Inc.
 #
-# This software is licensed under the terms and conditions of the 
+# This software is licensed under the terms and conditions of the
 # MIT License set forth at:
-#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").  
+#   https://github.com/riverbed/flyscript/blob/master/LICENSE ("License").
 # This software is distributed "AS IS" as set forth in the License.
 
 
@@ -11,16 +11,16 @@ This module defines the Service class and associated authentication classes.
 The Service class is not instantiated directly, but is instead subclassed
 to implement handlers for particular REST namespaces.
 
-For example, the NetShark is based on Service using the "netshark" namespace, and
-will provide the necessary methods to interface with the REST resources available
-within that namespace.
+For example, the NetShark is based on Service using the "netshark" namespace,
+and will provide the necessary methods to interface with the REST resources
+available within that namespace.
 
-If a device or appliance implements multiple namespaces, each namespace will
-be exposed by a separate child class.  The Cascade Express product implements
-both the "netprofiler" and "netshark" namespaces.  These will be exposed via NetShark
-and NetProfiler classes respectively, both based on the the Service class.
-A script that interacts with both namespaces must instantiate two separate
-objects.
+If a device or appliance implements multiple namespaces, each namespace will be
+exposed by a separate child class.  The SteelCentral NetExpress product
+implements both the "netprofiler" and "netshark" namespaces.  These will be
+exposed via NetShark and NetProfiler classes respectively, both based on the
+the Service class.  A script that interacts with both namespaces must
+instantiate two separate objects.
 """
 
 from __future__ import absolute_import
@@ -249,10 +249,10 @@ class Service(object):
                 "username": self.auth.username,
                 "password": self.auth.password
             }
-            
+
             response_body, http_response = self.conn.json_request('POST', path, body=data,
                                                                   raw_response=True)
-            
+
             # we're good, set up our http headers for subsequent
             # requests!
             cookie = http_response.headers['set-cookie']
