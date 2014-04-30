@@ -1,5 +1,5 @@
 import os
-import glob
+from glob import glob
 
 try:
     from setuptools import setup, find_packages, Command
@@ -49,6 +49,10 @@ http://pythonhosted.org/steelscript/install.html
     ),
 
     'packages': find_packages(exclude=('gitpy_versioning',)),
+
+    'data_files': (
+        ('share/doc/steelscript/docs/common', glob('docs/*')),
+    ),
 
     'scripts': (
         'utilities/steelscript_about.py',
