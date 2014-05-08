@@ -1,18 +1,42 @@
-SteelScript Common
-==================
+Riverbed SteelScript for Python
+===============================
 
-This module provides many utility functions and other classes used
-by the various other SteelScript components.
+Welcome, this is the documentation for Riverbed SteelScript for Python.
+SteelScript is a collection of Python modules that build upon
+REST APIs and other interfaces to interact with Riverbed appliances
+and software.
 
-Generic helper classes and functions:
+Quick Start
+-----------
 
-.. toctree::
+1. Install the core common code
 
-   timeutils
+   .. code:: bash
 
-Base classes and functionality specific to SteelScript:
+      $ pip install steelscript-common
 
-.. toctree::
+2. Install optional product specific packages
 
-   service
-   connection
+   .. code:: bash
+
+      $ pip install steelscript-netprofiler
+      $ pip install steelscript-netshark
+
+Documentation
+-------------
+
+* Installation
+
+  * :doc:`Quick Guide <install/quick>`
+  * :doc:`Linux / Mac <install/linuxmac>`
+  * :doc:`Windows <install/windows>`
+
+* Tutorials
+
+* Core modules
+
+  * :doc:`common/index`
+  * :doc:`netprofiler/netprofiler`
+  * :doc:`netshark/overview`
+
+* :doc:`toc`

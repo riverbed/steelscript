@@ -1,12 +1,14 @@
-*~
-
-*.pyc
-
 build
 dist
 *.egg-info
 RELEASE-VERSION
 
+docs/html
+docs/_templates
+docs/_build
+
+*~
+*.pyc
 *.swp
 .DS_Store
 .idea/
