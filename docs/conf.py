@@ -115,23 +115,23 @@ except ImportError:
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'relbartextcolor': '#e16832', #'#000',
-    'relbarlinkcolor': '#e16832', #'#000',
+    'relbartextcolor': '#e16832',
+    'relbarlinkcolor': '#e16832',
     'relbarbgcolor': '#000',
     #'headtextcolor': '#141',
 
-    'headbgcolor': '#ccc',
+    'headbgcolor': '#ddd',
     'headtextcolor': '#111',
 
     'textcolor': '#111',
-    'linkcolor': '#964',
-    'visitedlinkcolor': '#964',
+    'linkcolor': '#c77040',
+    'visitedlinkcolor': '#c77040',
 
     'codebgcolor': '#def',
 
-    'sidebarbgcolor': '#ddd',
+    'sidebarbgcolor': '#ccc',
     'sidebartextcolor': '#222',
-    'sidebarlinkcolor': '#d34',
+    'sidebarlinkcolor': '#c77030',
     'sidebarwidth' : 280,
 
     'footerbgcolor': '#222',

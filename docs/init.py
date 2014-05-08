@@ -3,31 +3,33 @@
 import os
 import sys
 
-PROJECTS = {
-    'common'      : 'SteelScript Common',
-    'netprofiler' : 'SteelScript NetProfiler',
-    'netshark'    : 'SteelScript NetShark',
-}
-
+PROJECTS = [
+    ('common', 'SteelScript Common', '..'),
+    ('netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'),
+    ('netshark', 'SteelScript NetShark', '../../steelscript-netshark')
+]
 
 def create_symlinks():
-    for proj, title in PROJECTS.iteritems():
+    for proj, title, path in PROJECTS:
         # Create a symlink, ignore common since its part of package
+        if proj == 'common':
+            continue
+
         try:
-            if proj != 'common':
-                os.unlink(proj)
+            os.unlink(proj)
         except OSError:
             pass
 
-        src = '../../steelscript-{proj}/docs'.format(proj=proj)
+        src = '{path}/docs'.format(path=path)
         if not os.path.exists(src):
             raise Exception('Could not find related project source tree: %s' % src)
 
         os.symlink(src, proj)
 
-
 def write_toc_templates():
-    for proj, title in PROJECTS.iteritems():
+    if not os.path.exists('_templates'):
+        os.mkdir('_templates')
+    for proj, title, path in PROJECTS:
         # Write a custom TOC template file
         tocfile = '%s_toc.html' % proj
         template_tocfile = '_templates/%s' % tocfile
@@ -40,7 +42,7 @@ def write_toc_templates():
 
 
 def setup_html_sidebards(html_sidebars):
-    for proj in PROJECTS.keys():
+    for proj, title, path in PROJECTS:
         tocfile = '%s_toc.html' % proj
         html_sidebars['%s/*' % proj] = \
                              [tocfile, 'relations.html',
@@ -48,11 +50,10 @@ def setup_html_sidebards(html_sidebars):
 
 
 def setup_sys_path():
-    for proj, title in PROJECTS.iteritems():
-        src = '../../steelscript-%s' % proj
-        if not os.path.exists(src):
-            raise Exception('Could not find related project source tree: %s' % src)
-        sys.path.insert(0, os.path.abspath(src))
+    for proj, title, path in PROJECTS:
+        if not os.path.exists(path):
+            raise Exception('Could not find related project source tree: %s' % path)
+        sys.path.insert(0, os.path.abspath(path))
 
 
 if __name__ == '__main__':
