@@ -15,7 +15,7 @@ except ImportError:
 from gitpy_versioning import get_version
 
 setup_args = {
-    'name':               'steelscript.common',
+    'name':               'steelscript',
     'namespace_packages': ['steelscript'],
     'version':            get_version(),
     'author':             'Riverbed Technology',
