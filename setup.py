@@ -50,10 +50,6 @@ http://pythonhosted.org/steelscript/install.html
 
     'packages': find_packages(exclude=('gitpy_versioning',)),
 
-    'data_files': (
-        ('share/doc/steelscript/docs/common', glob('docs/*')),
-    ),
-
     'entry_points': {
         'console_scripts': [
             'steel = steelscript.commands.steel:run'
