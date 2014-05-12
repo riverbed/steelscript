@@ -54,9 +54,11 @@ http://pythonhosted.org/steelscript/install.html
         ('share/doc/steelscript/docs/common', glob('docs/*')),
     ),
 
-    'scripts': (
-        'utilities/steelscript_about.py',
-    ),
+    'entry_points': {
+        'console_scripts': [
+            'steel = steelscript.commands.steel:run'
+        ]
+    },
 
     'install_requires': (
         'requests>=2.1.0',
