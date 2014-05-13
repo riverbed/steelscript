@@ -32,12 +32,9 @@ class Command(BaseCommand):
             print "Check the installation"
             sys.exit(1)
 
-        pkgpath = os.path.dirname(steelscript.__file__)
 
         e = pkg_resources.AvailableDistributions()
 
-        print ""
-        print "Path to source:\n  %s" % pkgpath
         print ""
         print "Installed SteelScript Packages"
         print "Core packages:"
@@ -59,6 +56,12 @@ class Command(BaseCommand):
         else:
             print "None."
 
+        print ""
+        print "Paths to source:"
+        paths = [os.path.dirname(p) for p in steelscript.__path__]
+        paths.sort()
+        for p in paths:
+            print "  %s" % p
 
         if self.options.verbose:
             print ""
