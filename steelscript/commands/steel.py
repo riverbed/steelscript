@@ -16,19 +16,15 @@ from pkg_resources import iter_entry_points
 
 import logging
 logger = logging.getLogger('main')
-logging.basicConfig(filename='.steel.log', level=logging.DEBUG)
+logfile = os.path.abspath('.steel.log')
+logging.basicConfig(filename=logfile, level=logging.DEBUG)
 
 STEELSCRIPT_CORE = ['steelscript',
                     'steelscript-netprofiler',
                     'steelscript-netshark']
 
-STEELSCRIPT_APPFW = ['steelscript-appfwk',
-                     'steelscript-appfwk-core',
+STEELSCRIPT_APPFW = ['steelscript-appfwk-core',
                      'steelscript-appfwk-busines-hours']
-
-
-class Failed(Exception):
-    pass
 
 
 class _Parser(OptionParser):
@@ -114,13 +110,16 @@ class BaseCommand(object):
         try:
             return mod.Command(self)
         except AttributeError:
-            logger.warning("Module has no Command class: %s" % str(mod))
+            logger.warning('Module has no Command class: %s' % str(mod))
             return None
 
     def load_subcommands(self):
         # Look for *.py files in self.submodule and try to
         # construct a Command() object from each one.
-        i = importlib.import_module(self.submodule)
+        try:
+            i = importlib.import_module(self.submodule)
+        except ImportError:
+            return
         for f in glob.glob(os.path.join(os.path.dirname(i.__file__), '*.py')):
             base_f = os.path.basename(f)
 
@@ -181,7 +180,11 @@ class BaseCommand(object):
             sys.exit(1)
 
         (self.options, self.args) = self.parser.parse_args(args)
+        self.postprocess_options()
         self.execute()
+
+    def postprocess_options(self):
+        return True
 
     def execute(self):
         self.parser.print_help()
@@ -191,7 +194,7 @@ class SteelCommand(BaseCommand):
     """The 'steel' command, top of all other commands."""
 
     keyword = 'steel'
-    help = "SteelScript commands"
+    help = 'SteelScript commands'
     submodule = 'steelscript.commands'
 
     @property
@@ -207,13 +210,183 @@ class SteelCommand(BaseCommand):
         return self._subcommands
 
 
+class InstallCommand(BaseCommand):
+
+    keyword = 'install'
+    help = 'Package installation'
+
+    def add_args(self):
+        group = OptionGroup(self.parser, 'Package installation options')
+        group.add_option(
+            '-U', '--upgrade', action='store_true', default=False,
+            help='Upgrade packages that are already installed')
+
+        group.add_option(
+            '-d', '--dir', action='store', default=None,
+            help='Directory to use for packages to install')
+
+        group.add_option(
+            # Install packages from gitlab
+            '-G', '--gitlab', action='store_true',
+            help=optparse.SUPPRESS_HELP)
+
+        group.add_option(
+            '--branch', help='Specify a branch for git checkout')
+
+        group.add_option(
+            '--develop', action='store_true',
+            help='Combine with --gitlab to checkout packages')
+
+        group.add_option(
+            '-p', '--package', action='append', dest='packages',
+            help='Package to install (may specify more than once)')
+
+        # Install packages from gitlab
+        group.add_option( '--appfwk', action='store_true',
+            help='Install all application framework packages')
+
+        #group.add_option( '--pip-options',
+        #    help='Additional options to pass to pip')
+
+        self.parser.add_option_group(group)
+
+    def postprocess_options(self):
+        if self.options.packages is None:
+            self.options.packages = STEELSCRIPT_CORE
+            if self.options.appfwk:
+                self.options.packages.extend(STEELSCRIPT_APPFW)
+
+    def execute(self):
+        if self.options.dir is None:
+            self.options.dir = tempfile.mkdtemp()
+            self.cleanupdir = self.options.dir
+        else:
+            self.install_dir()
+            self.cleanupdir = None
+
+        if self.options.gitlab:
+            self.install_gitlab()
+
+    def install_git(self, baseurl, branch=None):
+        """Install packages from a git repository."""
+        check_install_git()
+        for pkg in self.options.packages:
+            repo = '{baseurl}/{pkg}.git'.format(
+                baseurl=baseurl, pkg=pkg)
+            if branch:
+                baseurl = baseurl + '@' + branch
+
+            if self.options.develop:
+                outdir = os.path.abspath(pkg)
+                shell(cmd=('git clone --recursive {repo} {outdir}'
+                           .format(repo=repo, outdir=outdir)),
+                      msg=('Cloning {repo}'.format(repo=repo)))
+                shell(cmd=('cd {outdir}; python setup.py develop'
+                           .format(outdir=outdir)),
+                      msg=('Installing {pkg}'.format(pkg=pkg)))
+            else:
+                shell(cmd=('pip install git+{repo}'.format(repo=repo)),
+                      msg=('Installing {pkg}'.format(pkg=pkg)))
+
+
+    def install_gitlab(self):
+        """Install packages from gitlab internal to riverbed."""
+        check_install_pip()
+        self.install_git('https://gitlab.lab.nbttech.com/steelscript')
+
+    def install_dir(self):
+        if not self.options.dir:
+            console('Must specify package directory (--dir)')
+            sys.exit(1)
+
+        for pkg in self.options.packages:
+            cmd = (('pip install {upgrade}--no-index '
+                    '--find-links=file://{dir} {pkg}')
+                   .format(dir=self.options.dir, pkg=pkg,
+                           upgrade=('-U ' if self.options.upgrade else '')))
+            shell(cmd=cmd,
+                  msg=('Installing {pkg} from {dir}'
+                       .format(pkg=pkg, dir=self.options.dir)))
+
+
+def console(msg, lvl=logging.INFO, newline=True):
+    # Log a message to both the log and print to the console
+    logger.log(lvl, msg)
+    m = (sys.stderr if lvl == logging.ERROR else sys.stdout)
+    sys.stderr.write(msg)
+    if newline:
+        sys.stderr.write('\n')
+    sys.stderr.flush()
+
+
+def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True, env=None):
+    """Run `cmd` in a shell and return the result.
+
+    :raises CalledProcessError: on failure
+
+    """
+    if msg:
+        console(msg + '...', newline=False)
+
+    try:
+        logger.info('Running command: %s' % cmd)
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,
+                                         shell=True, env=env)
+        [logger.debug('shell: %s' % line) for line in output.split('\n') if line]
+        if msg:
+            console('done')
+        return output
+    except CalledProcessError, e:
+        if msg and not allow_fail:
+            console('failed')
+        logger.log((logging.INFO if allow_fail else logging.ERROR),
+                   'Command failed with return code %s' % e.returncode)
+
+        [logger.debug('shell: %s' % line) for line in e.output.split('\n') if line]
+        if exit_on_fail:
+            console('Command failed: %s' % cmd)
+            for line in e.output.split('\n')[-10:]:
+                print '  ',line
+            console('See log for details: %s' % (logfile))
+            sys.exit(1)
+        raise
+
+def check_install_git():
+    try:
+        git_version = shell(cmd='git --version',
+                            msg='Checking if git is installed',
+                            allow_fail=True)
+        return True
+    except CalledProcessError:
+        console('no\ngit is not installed, please install git to continue',
+                lvl=logging.ERROR)
+        sys.exit(1)
+
+
+def check_install_pip():
+    try:
+        pip_version = shell('pip --version',
+                            msg='Checking if pip is installed...',
+                            allow_fail=True)
+        return
+    except CalledProcessError:
+        pass
+
+    console('no')
+    shell('easy_install pip',
+          msg='Installing pip via easy_install')
+
+
 def run():
     # Main entry point as a script from setup.py
     cmd = SteelCommand()
 
+    # Manually add commands in this module
+    install = InstallCommand(cmd)
+
     try:
         cmd.parse(sys.argv[1:])
-    except Failed:
+    except CalledProcessError:
         sys.exit(1)
 
 if __name__ == '__main__':
