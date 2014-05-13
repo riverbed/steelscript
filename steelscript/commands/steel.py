@@ -16,15 +16,18 @@ from pkg_resources import iter_entry_points
 
 import logging
 logger = logging.getLogger('main')
-logfile = os.path.abspath('.steel.log')
+logfile = os.path.join(os.path.expanduser('~'), '.steelscript', 'steel.log')
+logdir = os.path.dirname(logfile)
+if not os.path.exists(logdir):
+    os.mkdirs(logdir)
 logging.basicConfig(filename=logfile, level=logging.DEBUG)
 
 STEELSCRIPT_CORE = ['steelscript',
-                    'steelscript-netprofiler',
-                    'steelscript-netshark']
+                    'steelscript.netprofiler',
+                    'steelscript.netshark']
 
-STEELSCRIPT_APPFW = ['steelscript-appfwk-core',
-                     'steelscript-appfwk-busines-hours']
+STEELSCRIPT_APPFW = ['steelscript.appfwk-core',
+                     'steelscript.appfwk.business-hours']
 
 
 class _Parser(OptionParser):
@@ -112,6 +115,8 @@ class BaseCommand(object):
         except AttributeError:
             logger.warning('Module has no Command class: %s' % str(mod))
             return None
+        except:
+            raise
 
     def load_subcommands(self):
         # Look for *.py files in self.submodule and try to
@@ -205,7 +210,17 @@ class SteelCommand(BaseCommand):
             super(SteelCommand, self).subcommands
             for obj in iter_entry_points(group='steel.commands', name=None):
                 i = obj.load(obj)
-                self._load_command(i)
+                # See if the entry point has a Command defined
+                # in __init__.py
+                if hasattr(i, 'Command'):
+                    self._load_command(i)
+                else:
+                    # If not, just create a simple command based
+                    # on this submodule
+                    cmd = BaseCommand(self)
+                    cmd.keyword = obj.name
+                    cmd.submodule = i.__name__
+                    cmd.help = 'Commands for {mod} module'.format(mod=i.__name__)
 
         return self._subcommands
 
@@ -223,7 +238,12 @@ class InstallCommand(BaseCommand):
 
         group.add_option(
             '-d', '--dir', action='store', default=None,
-            help='Directory to use for packages to install')
+            help='Directory to use for installation')
+
+        group.add_option(
+            # Install packages from gitlab
+            '-g', '--github', action='store_true',
+            help="Install packages from github")
 
         group.add_option(
             # Install packages from gitlab
@@ -256,28 +276,45 @@ class InstallCommand(BaseCommand):
             if self.options.appfwk:
                 self.options.packages.extend(STEELSCRIPT_APPFW)
 
-    def execute(self):
-        if self.options.dir is None:
-            self.options.dir = tempfile.mkdtemp()
-            self.cleanupdir = self.options.dir
-        else:
-            self.install_dir()
-            self.cleanupdir = None
+        if self.options.develop:
+            if not self.options.dir:
+                console('Must specify a directory (--dir)')
+                sys.exit(1)
 
+            if self.options.upgrade:
+                console('Cannot upgrade development packages, '
+                        'use git directly')
+                sys.exit(1)
+
+    def execute(self):
         if self.options.gitlab:
             self.install_gitlab()
 
+        if self.options.github:
+            self.install_github()
+
+    def pkg_installed(self, pkg):
+        try:
+            out = shell('pip show {pkg}'.format(pkg=pkg),
+                        allow_fail=True)
+            return pkg in out
+        except CalledProcessError:
+            return False
+
     def install_git(self, baseurl, branch=None):
         """Install packages from a git repository."""
-        check_install_git()
+        check_git()
         for pkg in self.options.packages:
+            if self.pkg_installed(pkg) and not self.options.upgrade:
+                console('Package {pkg} already installed'.format(pkg=pkg))
+                continue
             repo = '{baseurl}/{pkg}.git'.format(
-                baseurl=baseurl, pkg=pkg)
+                baseurl=baseurl, pkg=pkg.replace('.','-'))
             if branch:
                 baseurl = baseurl + '@' + branch
 
             if self.options.develop:
-                outdir = os.path.abspath(pkg)
+                outdir = os.path.join(self.options.dir, pkg)
                 shell(cmd=('git clone --recursive {repo} {outdir}'
                            .format(repo=repo, outdir=outdir)),
                       msg=('Cloning {repo}'.format(repo=repo)))
@@ -285,7 +322,11 @@ class InstallCommand(BaseCommand):
                            .format(outdir=outdir)),
                       msg=('Installing {pkg}'.format(pkg=pkg)))
             else:
-                shell(cmd=('pip install git+{repo}'.format(repo=repo)),
+                shell(cmd=('pip install {upgrade}git+{repo}'
+                           .format(repo=repo,
+                                   upgrade=('-U --no-deps '
+                                            if self.options.upgrade
+                                            else ''))),
                       msg=('Installing {pkg}'.format(pkg=pkg)))
 
 
@@ -294,12 +335,23 @@ class InstallCommand(BaseCommand):
         check_install_pip()
         self.install_git('https://gitlab.lab.nbttech.com/steelscript')
 
+    def install_github(self):
+        """Install packages from github.com/riverbed."""
+        console('Packages not available from github.com yet, '
+                'try -G/--gitlab for gitlab')
+        sys.exit(1)
+        check_install_pip()
+        self.install_git('https://github.com/riverbed/steelscript')
+
     def install_dir(self):
         if not self.options.dir:
             console('Must specify package directory (--dir)')
             sys.exit(1)
 
         for pkg in self.options.packages:
+            if self.pkg_installed(pkg) and not self.options.upgrade:
+                console('Package {pkg} already installed'.format(pkg=pkg))
+                continue
             cmd = (('pip install {upgrade}--no-index '
                     '--find-links=file://{dir} {pkg}')
                    .format(dir=self.options.dir, pkg=pkg,
@@ -351,7 +403,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True, env=None):
             sys.exit(1)
         raise
 
-def check_install_git():
+def check_git():
     try:
         git_version = shell(cmd='git --version',
                             msg='Checking if git is installed',

@@ -56,8 +56,7 @@ class TestInstallGitlab(unittest.TestCase):
                      env=self.env, exit_on_fail=False)
 
     def tearDown(self):
-        #shutil.rmtree(self.venv)
-        pass
+        shutil.rmtree(self.venv)
 
     def test_install_all(self):
         logger.info("--- test_install_all")
@@ -95,6 +94,26 @@ class TestInstallGitlab(unittest.TestCase):
         out = self.shell('steel about')
         self.assertFalse('steelscript.netprofiler' in out)
         self.assertFalse('steelscript.netshark' in out)
+
+    def test_install_develop(self):
+        logger.info("--- test_install_develop")
+        out = self.shell('pip freeze')
+        self.assertFalse('steel' in out)
+
+        outdir = os.path.join(self.venv, 'src')
+        out = self.shell(('{steel} install -G -p steelscript --develop '
+                          '--dir {dir}')
+                          .format(steel=self.steel, dir=outdir))
+        self.assertTrue('Installing steelscript' in out)
+
+        out = self.shell('steel about')
+        self.assertFalse('steelscript.netprofiler' in out)
+        self.assertFalse('steelscript.netshark' in out)
+
+        with self.assertRaises(CalledProcessError):
+            out = self.shell(('{steel} install -G -p steelscript -U --develop '
+                              '--dir {dir}')
+                             .format(steel=self.steel, dir=outdir))
 
 
 if __name__ == '__main__':
