@@ -11,6 +11,7 @@ import tempfile
 import importlib
 import glob
 import inspect
+import getpass
 
 from pkg_resources import iter_entry_points
 
@@ -191,6 +192,27 @@ class BaseCommand(object):
     def postprocess_options(self):
         return True
 
+    def prompt(self, msg, default=None, password=False):
+        if default is not None:
+            msg = '%s [%s]' % (msg, default)
+
+        msg += ': '
+        value = None
+
+        while not value:
+            if password:
+                value = getpass.getpass(msg)
+            else:
+                value = raw_input(msg)
+
+            if not value:
+                if default:
+                    value = default
+                else:
+                    print 'Please enter a valid response.'
+
+        return value
+
     def execute(self):
         self.parser.print_help()
 
@@ -262,7 +284,8 @@ class InstallCommand(BaseCommand):
             help='Package to install (may specify more than once)')
 
         # Install packages from gitlab
-        group.add_option( '--appfwk', action='store_true',
+        group.add_option(
+            '--appfwk', action='store_true',
             help='Install all application framework packages')
 
         #group.add_option( '--pip-options',
