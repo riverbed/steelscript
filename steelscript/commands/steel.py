@@ -191,9 +191,6 @@ class BaseCommand(object):
 
             self._load_command(i)
 
-    def add_postional_args(self):
-        pass
-
     def add_options(self, parser):
         add_log_options(parser)
 
@@ -207,7 +204,7 @@ class BaseCommand(object):
 
         # Look for subcommands, strip off and pass of
         # remaining args to the subcommands.  If there are
-        # positinal args, skip this step
+        # positional args, skip this step
         if (  not self.positional_args and
               len(args) > 0 and
               not args[0].startswith('-')):
@@ -404,7 +401,7 @@ class InstallCommand(BaseCommand):
             repo = '{baseurl}/{pkg}.git'.format(
                 baseurl=baseurl, pkg=pkg.replace('.','-'))
             if self.options.branch:
-                baseurl = baseurl + '@' + self.options.branch
+                repo = repo + '@' + self.options.branch
 
             if self.options.develop:
                 outdir = os.path.join(self.options.dir, pkg)
