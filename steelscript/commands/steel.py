@@ -17,12 +17,17 @@ from functools import partial
 from pkg_resources import iter_entry_points
 
 import logging
-logger = logging.getLogger('main')
-logfile = os.path.join(os.path.expanduser('~'), '.steelscript', 'steel.log')
-logdir = os.path.dirname(logfile)
-if not os.path.exists(logdir):
-    os.mkdirs(logdir)
-logging.basicConfig(filename=logfile, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+LOG_LEVELS = {
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'warning': logging.WARNING,
+    'critical': logging.CRITICAL,
+    'error': logging.ERROR
+}
+
+LOGFILE = None
 
 STEELSCRIPT_CORE = ['steelscript',
                     'steelscript.netprofiler',
@@ -36,6 +41,16 @@ class _Parser(OptionParser):
     """Custom OptionParser that does not re-flow the description."""
     def format_description(self, formatter):
         return self.description
+
+
+class PositionalArg(object):
+    def __init__(self, keyword, help, dest=None):
+        self.keyword = keyword.upper()
+        self.help = help
+        if dest:
+            self.dest = dest
+        else:
+            self.dest = keyword.replace('-', '_')
 
 
 class BaseCommand(object):
@@ -53,14 +68,32 @@ class BaseCommand(object):
 
     def __init__(self, parent=None):
         self.parent = parent
+
         if self.keyword is None:
             self.keyword = self.__module__.split('.')[-1]
 
+        # OptionParser created when parse() called
+        self.parser = None
+
+        # Positional args
+        self.positional_args = []
+
+        # options and args filled in by parse()
+        self.args = None
+        self.options = None
+
+        # List of subcommands
         self._subcommands = []
         self._subcommands_loaded = False
 
         if parent:
             self.parent._subcommands.append(self)
+
+    def add_positional_arg(self, keyword, help, dest=None):
+        self.positional_args.append(PositionalArg(keyword, help, dest=dest))
+
+    def add_positional_args(self):
+        pass
 
     @property
     def subcommands(self):
@@ -68,7 +101,9 @@ class BaseCommand(object):
         # if defined.
         if not self._subcommands_loaded:
             self._subcommands_loaded = True
-            if self.submodule:
+            if self.positional_args:
+                pass
+            elif self.submodule:
                 self.load_subcommands()
         return self._subcommands
 
@@ -80,7 +115,12 @@ class BaseCommand(object):
         else:
             base = '%prog'
 
-        if self.subcommands:
+        if self.positional_args:
+            for p in self.positional_args:
+                base = base + ' ' + p.keyword.upper()
+            return '%s [options] ...' % base
+
+        elif self.subcommands:
             if fromchild:
                 return base
             return '%s [command] ...' % base
@@ -95,19 +135,25 @@ class BaseCommand(object):
         else:
             desc = ''
 
-        if self.subcommands:
-            help_items = [(sc.keyword, sc.help) for sc in self.subcommands]
+        def add_help_items(title, items, desc):
+            help_items = [(sc.keyword, sc.help) for sc in items]
             help_items.sort(key=lambda item: item[0])
-            maxkeyword = max([len(sc.keyword) for sc in self.subcommands])
+            maxkeyword = max([len(sc.keyword) for sc in items])
             maxkeyword = max(10, maxkeyword)
-            if desc:
-                desc = desc + '\n'
 
             desc = desc + (
-                'Sub Commands:\n\n' +
+                title + ':\n\n' +
                 '\n'.join(['  %-*s  %s' % (maxkeyword, item[0], item[1] or '')
                            for item in help_items]) +
                 '\n')
+
+            return desc
+
+        if self.positional_args:
+            desc = add_help_items('Required Arguments', self.positional_args, desc)
+
+        elif self.subcommands:
+            desc = add_help_items('Sub Commands', self.subcommands, desc)
 
         return desc
 
@@ -115,7 +161,8 @@ class BaseCommand(object):
         try:
             return mod.Command(self)
         except AttributeError:
-            logger.warning('Module has no Command class: %s' % str(mod))
+            if str(mod.__name__) != 'steelscript.commands.steel':
+                logger.warning('Module has no Command class: %s' % str(mod))
             return None
         except:
             raise
@@ -144,56 +191,85 @@ class BaseCommand(object):
 
             self._load_command(i)
 
-    def add_args(self):
+    def add_postional_args(self):
         pass
 
-    def parse(self, args):
-        def try_import(m):
-            try:
-                i = importlib.import_module(m)
-                return i
-            except ImportError:
-                return None
+    def add_options(self, parser):
+        add_log_options(parser)
 
-        self.parser = _Parser(usage=self.usage(),
-                              description=self.description())
-        self.add_args()
-        if len(args) > 0 and not args[0].startswith('-'):
+    def parse(self, args):
+        """Parse the argument list."""
+
+        if self.parent is None:
+            start_logging(args)
+
+        self.add_positional_args()
+
+        # Look for subcommands, strip off and pass of
+        # remaining args to the subcommands.  If there are
+        # positinal args, skip this step
+        if (  not self.positional_args and
+              len(args) > 0 and
+              not args[0].startswith('-')):
             subcmds = [subcmd for subcmd in self.subcommands
                        if subcmd.keyword == args[0]]
             if subcmds:
+                # Found a matching registered subcommand
                 subcmds[0].parse(args[1:])
                 return
 
-            elif self.parent is None:
-                i = (try_import('steelscript.commands.%s' % args[0]) or
-                     try_import('steelscript.%s.commands' % args[0]))
-
-                if i:
-                    cmd = self._load_command(i)
-                    if cmd:
-                        cmd.parse(args[1:])
-                        return
-
-            elif self.submodule is not None:
-                i = try_import('%s.%s' % (self.submodule, args[0]))
-
-                if i:
-                    cmd = i.Command(self)
-                    cmd.parse(args[1:])
-                    return
-
-            print "Unknown command '%s'" % args[0]
-            sys.exit(1)
+        # Create a parser
+        self.parser = _Parser(usage=self.usage(),
+                              description=self.description())
+        self.add_options(self.parser)
 
         (self.options, self.args) = self.parser.parse_args(args)
-        self.postprocess_options()
-        self.execute()
+        if self.positional_args:
+            if len(self.args) != len(self.positional_args):
+                self.parser.error('Missing required arguments')
 
-    def postprocess_options(self):
-        return True
+            for i,p in enumerate(self.positional_args):
+                setattr(self.options, p.dest, self.args[i])
 
-    def execute(self):
+        self.validate_args()
+        self.setup()
+        self.main()
+
+    def validate_args(self):
+        """Hook for validating parsed options/arguments.
+
+        If validation fails, this function should raise an error with
+        self.parser.error(msg) or raise an exception.
+
+        If defined in a subclass, the subclass must recursively
+        validate_args of the parent:
+
+          super(<subclass>, self).setup()
+
+        """
+
+        pass
+
+    def setup(self):
+        """Commands to run before execution.
+
+        If defined in a subclass, the subclass will mostly
+        want to call setup() of the parent via:
+
+          super(<subclass>, self).setup()
+
+        This will ensure the any setup required of the parent
+        classes is perfomed as well.
+
+        """
+        pass
+
+    def main(self):
+        """Body of the execution for this command.
+
+        This is where subclasses should define the action of this
+        command.  By this point all command line arguments are
+        parsed and stored as attributes."""
         self.parser.print_help()
 
 
@@ -232,8 +308,8 @@ class InstallCommand(BaseCommand):
     keyword = 'install'
     help = 'Package installation'
 
-    def add_args(self):
-        group = OptionGroup(self.parser, 'Package installation options')
+    def add_options(self, parser):
+        group = OptionGroup(parser, 'Package installation options')
         group.add_option(
             '-U', '--upgrade', action='store_true', default=False,
             help='Upgrade packages that are already installed')
@@ -250,6 +326,11 @@ class InstallCommand(BaseCommand):
         group.add_option(
             # Install packages from gitlab
             '-G', '--gitlab', action='store_true',
+            help=optparse.SUPPRESS_HELP)
+
+        group.add_option(
+            # Install packages from a git url
+            '--giturl', action='store',
             help=optparse.SUPPRESS_HELP)
 
         group.add_option(
@@ -271,9 +352,9 @@ class InstallCommand(BaseCommand):
         #group.add_option( '--pip-options',
         #    help='Additional options to pass to pip')
 
-        self.parser.add_option_group(group)
+        parser.add_option_group(group)
 
-    def postprocess_options(self):
+    def validate_args(self):
         if self.options.packages is None:
             self.options.packages = STEELSCRIPT_CORE
             if self.options.appfwk:
@@ -289,12 +370,21 @@ class InstallCommand(BaseCommand):
                         'use git directly')
                 sys.exit(1)
 
-    def execute(self):
-        if self.options.gitlab:
+    def main(self):
+        if self.options.giturl:
+            self.install_git(self.options.giturl)
+
+        elif self.options.gitlab:
             self.install_gitlab()
 
-        if self.options.github:
+        elif self.options.github:
             self.install_github()
+
+        elif self.options.dir:
+            self.install_dir()
+
+        else:
+            self.parser.error('No installation method selected')
 
     def pkg_installed(self, pkg):
         try:
@@ -304,7 +394,7 @@ class InstallCommand(BaseCommand):
         except CalledProcessError:
             return False
 
-    def install_git(self, baseurl, branch=None):
+    def install_git(self, baseurl):
         """Install packages from a git repository."""
         check_git()
         for pkg in self.options.packages:
@@ -313,8 +403,8 @@ class InstallCommand(BaseCommand):
                 continue
             repo = '{baseurl}/{pkg}.git'.format(
                 baseurl=baseurl, pkg=pkg.replace('.','-'))
-            if branch:
-                baseurl = baseurl + '@' + branch
+            if self.options.branch:
+                baseurl = baseurl + '@' + self.options.branch
 
             if self.options.develop:
                 outdir = os.path.join(self.options.dir, pkg)
@@ -347,6 +437,7 @@ class InstallCommand(BaseCommand):
         self.install_git('https://github.com/riverbed/steelscript')
 
     def install_dir(self):
+        check_install_pip()
         if not self.options.dir:
             console('Must specify package directory (--dir)')
             sys.exit(1)
@@ -360,7 +451,7 @@ class InstallCommand(BaseCommand):
                    .format(dir=self.options.dir, pkg=pkg,
                            upgrade=('-U ' if self.options.upgrade else '')))
             shell(cmd=cmd,
-                  msg=('Installing {pkg} from {dir}'
+                  msg=('Installing {pkg}'
                        .format(pkg=pkg, dir=self.options.dir)))
 
 
@@ -392,6 +483,57 @@ def prompt(msg, choices=None, default=None, password=False):
             value = None
 
     return value
+
+def add_log_options(parser):
+    group = optparse.OptionGroup(parser, "Logging Parameters")
+    group.add_option("--loglevel", help="log level",
+                     choices=LOG_LEVELS.keys(), default="info")
+    group.add_option("--logfile", help="log file", default=None)
+    parser.add_option_group(group)
+
+def start_logging(args):
+    """Start up logging.
+
+    This must be called only once and it will not work
+    if logging.basicConfig() was already called."""
+
+    # Peek into the args for loglevel and logfile
+    logargs = []
+    for i,arg in enumerate(args):
+        if arg in ['--loglevel', '--logfile']:
+            logargs.append(arg)
+            logargs.append(args[i+1])
+
+    parser = OptionParser()
+    add_log_options(parser)
+    (options, args) = parser.parse_args(logargs)
+
+    global LOGFILE
+    if options.logfile is not None:
+        LOGFILE = options.logfile
+    else:
+        LOGFILE = os.path.join(os.path.expanduser('~'), '.steelscript', 'steel.log')
+
+    logdir = os.path.dirname(LOGFILE)
+    if not os.path.exists(logdir):
+        os.mkdirs(logdir)
+
+    logging.basicConfig(
+        level=LOG_LEVELS[options.loglevel],
+        filename=LOGFILE,
+        format= '%(asctime)s [%(levelname)-5.5s] (%(name)s) %(msg)s')
+
+    logger.info("=" * 70)
+    logger.info("==== Started logging: %s" % ' '.join(sys.argv))
+
+
+def try_import(m):
+    """Try to import a module by name, return None on fail."""
+    try:
+        i = importlib.import_module(m)
+        return i
+    except ImportError:
+        return None
 
 
 def console(msg, lvl=logging.INFO, newline=True):
@@ -431,11 +573,12 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True, env=None):
                    'Command failed with return code %s' % e.returncode)
 
         [logger.debug('shell: %s' % line) for line in e.output.split('\n') if line]
-        if exit_on_fail:
+        if not allow_fail and exit_on_fail:
             console('Command failed: %s' % cmd)
             for line in e.output.split('\n')[-10:]:
                 print '  ',line
-            console('See log for details: %s' % (logfile))
+            if LOGFILE:
+                console('See log for details: %s' % (LOGFILE))
             sys.exit(1)
         raise
 
@@ -454,7 +597,7 @@ def check_git():
 def check_install_pip():
     try:
         pip_version = shell('pip --version',
-                            msg='Checking if pip is installed...',
+                            msg='Checking if pip is installed',
                             allow_fail=True)
         return
     except CalledProcessError:
@@ -467,16 +610,16 @@ def check_install_pip():
 
 def run():
     # Main entry point as a script from setup.py
+    # If run as a script directly
+
+    # Create the main command
     cmd = SteelCommand()
 
     # Manually add commands in this module
     install = InstallCommand(cmd)
 
-    try:
-        cmd.parse(sys.argv[1:])
-    except CalledProcessError:
-        sys.exit(1)
+    cmd.parse(sys.argv[1:])
+
 
 if __name__ == '__main__':
-    # If run as a script directly
     run()

@@ -8,22 +8,14 @@
 
 from steelscript.common.service import UserAuth, OAuth
 import steelscript.common.connection
+from steelscript.commands.steel import BaseCommand
 
 import optparse
 import logging
 import sys
 
 
-_log_levels = {
-    'debug': logging.DEBUG,
-    'info': logging.INFO,
-    'warning': logging.WARNING,
-    'critical': logging.CRITICAL,
-    'error': logging.ERROR
-}
-
-
-class Application(object):
+class Application(BaseCommand):
     """ Base class for command-line applications
 
         This provides the framework but should be subclassed to
@@ -32,20 +24,16 @@ class Application(object):
         Actual scripts should inherit from the device-specific
         subclass rather than this script.
     """
-    def __init__(self, main_fn=None):
-        """ Base initialization """
-        self._main = main_fn
-
-        self.optparse = optparse.OptionParser()
-        self.add_options(self.optparse)
-        self._add_standard_options()
-
-        self.options = None
-        self.args = None
+    def __init__(self, *args, **kwargs):
+        super(Application,self).__init__(*args, **kwargs)
+        self.has_standard_options = False
         self.auth = None
 
-    def _add_standard_options(self):
-        group = optparse.OptionGroup(self.optparse, "Connection Parameters")
+    def run(self):
+        self.parse(sys.argv[1:])
+
+    def add_standard_options(self):
+        group = optparse.OptionGroup(self.parser, "Connection Parameters")
         group.add_option("-P", "--port", dest="port",
                          help="connect on this port")
         group.add_option("-u", "--username", help="username to connect with")
@@ -54,15 +42,10 @@ class Application(object):
                                          "username/password")
         group.add_option("-A", "--api_version", dest="api_version",
                          help="api version to use unconditionally")
-        self.optparse.add_option_group(group)
+        self.has_standard_options = True
+        self.parser.add_option_group(group)
 
-        group = optparse.OptionGroup(self.optparse, "Logging Parameters")
-        group.add_option("--loglevel", help="log level",
-                         choices=_log_levels.keys(), default="warning")
-        group.add_option("--logfile", help="log file", default=None)
-        self.optparse.add_option_group(group)
-
-        group = optparse.OptionGroup(self.optparse, "HTTP Logging Parameters")
+        group = optparse.OptionGroup(self.parser, "HTTP Logging Parameters")
         group.add_option(
             "--httplib-debuglevel",
             help="set httplib debug (low-level, lots of data)",
@@ -73,92 +56,32 @@ class Application(object):
             help="number of bytes of message body to log",
             type=int,
             default=0)
-        self.optparse.add_option_group(group)
-
-    def add_options(self, parser):
-        # this is here for subclasses to override, don't put
-        # any log here
-        pass
-
-    @classmethod
-    def start_logging(cls, loglevel=logging.WARNING, logfile=None):
-        """Start up logging.
-
-        This must be called only once and it will not work
-        if logging.basicConfig() was already called."""
-
-        options = {
-            'level': loglevel,
-            'format': "%(asctime)s [%(levelname)-5.5s] (%(name)s) %(msg)s"
-        }
-
-        if logfile is not None:
-            options['filename'] = logfile
-
-        logging.basicConfig(**options)
-
-        logger = logging.getLogger(__name__)
-
-        logger.info("=" * 70)
-        logger.info("==== Started logging: %s" % ' '.join(sys.argv))
-
-    def parse_args(self):
-        """ Parses options and arguments and performs validation """
-        (self.options, self.args) = self.optparse.parse_args()
-
-        self._validate_auth()
-
-        self.validate_args()
-
-        steelscript.common.connection.Connection.HTTPLIB_DEBUGLEVEL =\
-            self.options.httplib_debuglevel
-        steelscript.common.connection.Connection.DEBUG_MSG_BODY =\
-            self.options.debug_msg_body
-
-    def _validate_auth(self):
-        """Verify authentication method passed in and setup Auth object
-        """
-        if self.options.oauth and (self.options.username or
-                                   self.options.password):
-            self.optparse.error('Username/Password are mutually exclusive '
-                                'from OAuth tokens, please choose only '
-                                'one method.')
-        elif self.options.oauth:
-            self.auth = OAuth(self.options.oauth)
-        else:
-            self.auth = UserAuth(self.options.username, self.options.password)
+        self.parser.add_option_group(group)
 
     def validate_args(self):
         """ Hook for subclasses to add their own option/argument validation
         """
-        pass
+        super(Application,self).validate_args()
 
-    def setup(self):
-        """ Commands to run right after arguments have been parsed,
-        but before main.
-        """
-        pass
+        if self.has_standard_options:
+            if self.options.oauth and (self.options.username or
+                                       self.options.password):
+                self.parser.error('Username/Password are mutually exclusive '
+                                    'from OAuth tokens, please choose only '
+                                    'one method.')
+            elif self.options.oauth:
+                self.auth = OAuth(self.options.oauth)
+            else:
+                self.auth = UserAuth(self.options.username, self.options.password)
 
-    def run(self):
-        """ Main execution point """
-        self.parse_args()
-        self.start_logging(_log_levels[self.options.loglevel],
-                           self.options.logfile)
+            steelscript.common.connection.Connection.HTTPLIB_DEBUGLEVEL = (
+                self.options.httplib_debuglevel)
 
-        self.setup()
-
-        if self._main is None:
-            ret = self.main()
-        else:
-            ret = self._main(self)
-
-        if ret is None:
-            ret = 0
-        sys.exit(ret)
+            steelscript.common.connection.Connection.DEBUG_MSG_BODY = (
+                self.options.debug_msg_body)
 
     def main(self):
-        """ XXX document """
-        raise NotImplementedError()
+        pass
 
 
 class Logger(object):

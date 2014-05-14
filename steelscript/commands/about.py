@@ -19,12 +19,12 @@ import steelscript
 class Command(BaseCommand):
     help = 'Show information about SteelScript packages installed'
 
-    def add_args(self):
-        self.parser.add_option(
+    def add_options(self, parser):
+        parser.add_option(
             '-v', '--verbose', action='store_true', default=False,
             help='Show more detailed Python installation information')
 
-    def execute(self):
+    def main(self):
         try:
             dist = pkg_resources.get_distribution('steelscript')
         except pkg_resources.DistributionNotFound:

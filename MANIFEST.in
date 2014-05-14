@@ -2,5 +2,5 @@ include RELEASE-VERSION
 include AUTHORS
 include LICENSE
 include README.md
-recursive-include docs *
+recursive-include docs *o
 include gitpy_versioning/__init__.py
