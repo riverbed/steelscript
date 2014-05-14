@@ -331,9 +331,6 @@ class InstallCommand(BaseCommand):
             help=optparse.SUPPRESS_HELP)
 
         group.add_option(
-            '--branch', help='Specify a branch for git checkout')
-
-        group.add_option(
             '--develop', action='store_true',
             help='Combine with --gitlab to checkout packages')
 
@@ -400,8 +397,6 @@ class InstallCommand(BaseCommand):
                 continue
             repo = '{baseurl}/{pkg}.git'.format(
                 baseurl=baseurl, pkg=pkg.replace('.','-'))
-            if self.options.branch:
-                repo = repo + '@' + self.options.branch
 
             if self.options.develop:
                 outdir = os.path.join(self.options.dir, pkg)
