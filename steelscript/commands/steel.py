@@ -12,6 +12,7 @@ import importlib
 import glob
 import inspect
 import getpass
+from functools import partial
 
 from pkg_resources import iter_entry_points
 
@@ -98,7 +99,7 @@ class BaseCommand(object):
             help_items = [(sc.keyword, sc.help) for sc in self.subcommands]
             help_items.sort(key=lambda item: item[0])
             maxkeyword = max([len(sc.keyword) for sc in self.subcommands])
-            maxkeyword = max(10,maxkeyword)
+            maxkeyword = max(10, maxkeyword)
             if desc:
                 desc = desc + '\n'
 
@@ -191,27 +192,6 @@ class BaseCommand(object):
 
     def postprocess_options(self):
         return True
-
-    def prompt(self, msg, default=None, password=False):
-        if default is not None:
-            msg = '%s [%s]' % (msg, default)
-
-        msg += ': '
-        value = None
-
-        while not value:
-            if password:
-                value = getpass.getpass(msg)
-            else:
-                value = raw_input(msg)
-
-            if not value:
-                if default:
-                    value = default
-                else:
-                    print 'Please enter a valid response.'
-
-        return value
 
     def execute(self):
         self.parser.print_help()
@@ -384,14 +364,47 @@ class InstallCommand(BaseCommand):
                        .format(pkg=pkg, dir=self.options.dir)))
 
 
+def prompt(msg, choices=None, default=None, password=False):
+    if choices is not None:
+        msg = '%s (%s)' % (msg, '/'.join(choices))
+
+    if default is not None:
+        msg = '%s [%s]' % (msg, default)
+
+    msg += ': '
+    value = None
+
+    while not value:
+        if password:
+            value = getpass.getpass(msg)
+        else:
+            value = raw_input(msg)
+
+        if not value:
+            if default:
+                value = default
+            else:
+                print 'Please enter a valid response.'
+
+        if choices and value not in choices:
+            print ('Please choose from the following choices (%s)' %
+                   '/'.join(choices))
+            value = None
+
+    return value
+
+
 def console(msg, lvl=logging.INFO, newline=True):
     # Log a message to both the log and print to the console
     logger.log(lvl, msg)
     m = (sys.stderr if lvl == logging.ERROR else sys.stdout)
-    sys.stderr.write(msg)
+    m.write(msg)
     if newline:
-        sys.stderr.write('\n')
-    sys.stderr.flush()
+        m.write('\n')
+    m.flush()
+
+
+debug = partial(console, lvl=logging.DEBUG)
 
 
 def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True, env=None):
