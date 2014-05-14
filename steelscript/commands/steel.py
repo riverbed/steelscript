@@ -541,7 +541,8 @@ def console(msg, lvl=logging.INFO, newline=True):
 debug = partial(console, lvl=logging.DEBUG)
 
 
-def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True, env=None):
+def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
+          env=None, cwd=None):
     """Run `cmd` in a shell and return the result.
 
     :raises CalledProcessError: on failure
@@ -553,7 +554,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True, env=None):
     try:
         logger.info('Running command: %s' % cmd)
         output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,
-                                         shell=True, env=env)
+                                         shell=True, env=env, cwd=cwd)
         [logger.debug('shell: %s' % line) for line in output.split('\n') if line]
         if msg:
             console('done')
