@@ -3,8 +3,7 @@
 import os
 import sys
 import subprocess
-from subprocess import CalledProcessError
-from collections import namedtuple
+from collections import namedtuple, deque
 import optparse
 from optparse import OptionParser, OptionGroup
 import tempfile
@@ -13,11 +12,22 @@ import glob
 import inspect
 import getpass
 from functools import partial
+from subprocess import PIPE, Popen
+from threading  import Thread
+import time
+
+try:
+    from Queue import Queue, Empty
+except ImportError:
+    from queue import Queue, Empty  # python 3.x
 
 from pkg_resources import iter_entry_points
 
 import logging
-logger = logging.getLogger(__name__)
+if __name__ == '__main__':
+    logger = logging.getLogger('steel')
+else:
+    logger = logging.getLogger(__name__)
 
 LOG_LEVELS = {
     'debug': logging.DEBUG,
@@ -33,8 +43,13 @@ STEELSCRIPT_CORE = ['steelscript',
                     'steelscript.netprofiler',
                     'steelscript.netshark']
 
-STEELSCRIPT_APPFW = ['steelscript.appfwk-core',
+STEELSCRIPT_APPFW = ['steelscript.appfwk',
                      'steelscript.appfwk.business-hours']
+
+
+class ShellFailed(Exception):
+    def __init__(self, returncode):
+        self.returncode = returncode
 
 
 class _Parser(OptionParser):
@@ -383,9 +398,9 @@ class InstallCommand(BaseCommand):
     def pkg_installed(self, pkg):
         try:
             out = shell('pip show {pkg}'.format(pkg=pkg),
-                        allow_fail=True)
+                        allow_fail=True, save_output=True)
             return pkg in out
-        except CalledProcessError:
+        except ShellFailed:
             return False
 
     def install_git(self, baseurl):
@@ -398,11 +413,30 @@ class InstallCommand(BaseCommand):
             repo = '{baseurl}/{pkg}.git'.format(
                 baseurl=baseurl, pkg=pkg.replace('.','-'))
 
+            # Manually install django-admin-tools because it will
+            # die with recent versions of pip
+            if pkg == 'steelscript.appfwk':
+                shell(cmd=('pip install '
+                           '--allow-unverified django-admin-tools '
+                           'django-admin-tools==0.5.1'),
+                      msg=('Installing django-admin-tools'.format(pkg=pkg)))
+
             if self.options.develop:
+                # Clone the git repo
                 outdir = os.path.join(self.options.dir, pkg)
                 shell(cmd=('git clone --recursive {repo} {outdir}'
                            .format(repo=repo, outdir=outdir)),
                       msg=('Cloning {repo}'.format(repo=repo)))
+
+                # Install the requirements.txt
+                reqfile = os.path.join(outdir, 'requirements.txt')
+                if os.path.exists(reqfile):
+                    shell(cmd=('pip install -r {reqfile}'
+                               .format(reqfile=reqfile)),
+
+                          msg=('Installing {pkg} requirements'.format(pkg=pkg)))
+
+                # Now install this git repo in develop mode
                 shell(cmd=('cd {outdir}; python setup.py develop'
                            .format(outdir=outdir)),
                       msg=('Installing {pkg}'.format(pkg=pkg)))
@@ -542,46 +576,86 @@ debug = partial(console, lvl=logging.DEBUG)
 
 
 def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
-          env=None, cwd=None):
+          env=None, cwd=None, save_output=False):
     """Run `cmd` in a shell and return the result.
 
-    :raises CalledProcessError: on failure
+    :raises ShellFailed: on failure
 
     """
     if msg:
         console(msg + '...', newline=False)
 
-    try:
-        logger.info('Running command: %s' % cmd)
-        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,
-                                         shell=True, env=env, cwd=cwd)
-        [logger.debug('shell: %s' % line) for line in output.split('\n') if line]
-        if msg:
-            console('done')
-        return output
-    except CalledProcessError, e:
+    def enqueue_output(out, queue):
+        for line in iter(out.readline, b''):
+            queue.put(line)
+        out.close()
+
+    logger.info('Running command: %s' % cmd)
+    proc = subprocess.Popen(cmd, shell=True, env=env, cwd=cwd, bufsize=1,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    q = Queue()
+    t = Thread(target=enqueue_output, args=(proc.stdout, q))
+    t.daemon = True # thread dies with the program
+    t.start()
+
+    output = [] if save_output else None
+    tail = deque(maxlen=10)
+    def drain_to_log(q, output):
+        stalled = False
+        while not stalled:
+            try:
+                line = q.get_nowait()
+                line = line.rstrip()
+                if output is not None:
+                    output.append(line)
+                tail.append(line)
+                logger.info('shell: %s' % line.rstrip())
+
+            except Empty:
+                stalled = True
+
+    lastdot = time.time()
+    while t.isAlive():
+        now = time.time()
+        if now - lastdot > 4 and msg:
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            lastdot = now
+        drain_to_log(q, output)
+        time.sleep(0.5)
+
+    t.join()
+    proc.poll()
+    drain_to_log(q, output)
+
+    if proc.returncode > 0:
         if msg and not allow_fail:
             console('failed')
         logger.log((logging.INFO if allow_fail else logging.ERROR),
-                   'Command failed with return code %s' % e.returncode)
+                   'Command failed with return code %s' % proc.returncode)
 
-        [logger.debug('shell: %s' % line) for line in e.output.split('\n') if line]
         if not allow_fail and exit_on_fail:
             console('Command failed: %s' % cmd)
-            for line in e.output.split('\n')[-10:]:
+            for line in tail:
                 print '  ',line
             if LOGFILE:
                 console('See log for details: %s' % (LOGFILE))
             sys.exit(1)
-        raise
+        raise ShellFailed(proc.returncode)
+
+    if msg:
+        console('done')
+
+    return output
 
 def check_git():
     try:
-        git_version = shell(cmd='git --version',
-                            msg='Checking if git is installed',
-                            allow_fail=True)
+        shell(cmd='git --version',
+              msg='Checking if git is installed',
+              allow_fail=True)
         return True
-    except CalledProcessError:
+    except ShellFailed:
         console('no\ngit is not installed, please install git to continue',
                 lvl=logging.ERROR)
         sys.exit(1)
@@ -589,11 +663,11 @@ def check_git():
 
 def check_install_pip():
     try:
-        pip_version = shell('pip --version',
-                            msg='Checking if pip is installed',
-                            allow_fail=True)
+        shell('pip --version',
+              msg='Checking if pip is installed',
+              allow_fail=True)
         return
-    except CalledProcessError:
+    except ShellFailed:
         pass
 
     console('no')
