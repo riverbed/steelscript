@@ -282,6 +282,9 @@ class BaseCommand(object):
         This is where subclasses should define the action of this
         command.  By this point all command line arguments are
         parsed and stored as attributes."""
+        if self.args:
+            self.parser.error('Unrecognized command: {cmd}'
+                              .format(cmd=self.args[0]))
         self.parser.print_help()
 
 
@@ -380,6 +383,17 @@ class InstallCommand(BaseCommand):
                 sys.exit(1)
 
     def main(self):
+        if not is_root() and not in_venv():
+            console(
+                ('Running installation as user {username} may not have \n'
+                 'correct privileges to install packages.  Consider \n'
+                 'running as root or creating a virtualenv.\n')
+                .format(username=os.environ['USER']))
+            if not prompt_yn('Continue with installation anyway?',
+                             default_yes=False):
+                console('Aborting installation')
+                sys.exit(1)
+
         if self.options.giturl:
             self.install_git(self.options.giturl)
 
@@ -480,6 +494,10 @@ class InstallCommand(BaseCommand):
                   msg=('Installing {pkg}'
                        .format(pkg=pkg, dir=self.options.dir)))
 
+def prompt_yn(msg, default_yes=True):
+    yn = prompt(msg, choices=['yes', 'no'],
+                default=('yes' if default_yes else 'no'))
+    return yn == 'yes'
 
 def prompt(msg, choices=None, default=None, password=False):
     if choices is not None:
@@ -491,14 +509,14 @@ def prompt(msg, choices=None, default=None, password=False):
     msg += ': '
     value = None
 
-    while not value:
+    while value is None:
         if password:
             value = getpass.getpass(msg)
         else:
             value = raw_input(msg)
 
         if not value:
-            if default:
+            if default is not None:
                 value = default
             else:
                 print 'Please enter a valid response.'
@@ -647,7 +665,18 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
     if msg:
         console('done')
 
-    return output
+    if save_output:
+        if output:
+            return '\n'.join(output)
+        return ''
+    return None
+
+def is_root():
+    return os.environ['USER'] == 'root'
+
+def in_venv():
+    # Check if we're in a virtualenv - only works on linux
+    return os.environ.has_key('VIRTUAL_ENV')
 
 def check_git():
     try:
