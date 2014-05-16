@@ -714,7 +714,10 @@ def run():
     # Manually add commands in this module
     install = InstallCommand(cmd)
 
-    cmd.parse(sys.argv[1:])
+    try:
+        cmd.parse(sys.argv[1:])
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == '__main__':
