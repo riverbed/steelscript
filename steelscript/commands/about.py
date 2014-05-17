@@ -20,6 +20,7 @@ class Command(BaseCommand):
     help = 'Show information about SteelScript packages installed'
 
     def add_options(self, parser):
+        super(Command, self).add_options(parser)
         parser.add_option(
             '-v', '--verbose', action='store_true', default=False,
             help='Show more detailed Python installation information')

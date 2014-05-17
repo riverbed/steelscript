@@ -12,10 +12,9 @@ import unittest
 import tempfile
 import shutil
 import logging
-from subprocess import CalledProcessError
 
 import steelscript.commands.steel
-from steelscript.commands.steel import shell
+from steelscript.commands.steel import shell, ShellFailed
 
 logger = logging.getLogger(__name__)
 
@@ -51,9 +50,15 @@ class TestVirtualEnv(unittest.TestCase):
 
 
     def shell(self, cmd):
-        return shell('source {venv}/bin/activate; {cmd}'
-                     .format(venv=self.venv, cmd=cmd),
-                     env=self.env, exit_on_fail=False)
+        cmd = cmd.replace('vsteel', self.steel)
+        if cmd.startswith('steel' or cmd.startswith(self.steel)):
+            opts=' --loglevel debug --logfile -'
+        else:
+            opts=''
+        logger.info("shell command: {cmd}{opts}".format(cmd=cmd, opts=opts))
+        return shell('source {venv}/bin/activate; {cmd}{opts}'
+                     .format(venv=self.venv, cmd=cmd, opts=opts),
+                     env=self.env, exit_on_fail=False, save_output=True)
 
     def tearDown(self):
         #shutil.rmtree(self.venv)
@@ -66,22 +71,22 @@ class TestInstallGitlab(TestVirtualEnv):
         out = self.shell('pip freeze')
         self.assertFalse('steel' in out)
 
-        with self.assertRaises(CalledProcessError):
+        with self.assertRaises(ShellFailed):
             out = self.shell('steel -h')
 
-        out = self.shell('{steel} -h'.format(steel=self.steel))
+        out = self.shell('vsteel -h')
         self.assertTrue('Usage' in out)
 
-        out = self.shell('{steel} install -G'.format(steel=self.steel))
+        out = self.shell('vsteel install -G')
         self.assertTrue('Installing steelscript' in out)
 
-        out = self.shell('steel -h')
+        out = self.shell('vsteel -h')
         self.assertTrue('Usage' in out)
 
         out = self.shell('which steel')
         self.assertTrue('{venv}/bin/steel'.format(venv=self.venv) in out)
 
-        out = self.shell('steel about')
+        out = self.shell('vsteel about')
         self.assertTrue('steelscript.netprofiler' in out)
         self.assertTrue('steelscript.netshark' in out)
 
@@ -89,11 +94,10 @@ class TestInstallGitlab(TestVirtualEnv):
         out = self.shell('pip freeze')
         self.assertFalse('steel' in out)
 
-        out = self.shell('{steel} install -G -p steelscript'
-                         .format(steel=self.steel))
+        out = self.shell('vsteel install -G -p steelscript')
         self.assertTrue('Installing steelscript' in out)
 
-        out = self.shell('steel about')
+        out = self.shell('vsteel about')
         self.assertFalse('steelscript.netprofiler' in out)
         self.assertFalse('steelscript.netshark' in out)
 
@@ -103,25 +107,23 @@ class TestInstallGitlab(TestVirtualEnv):
 
         # Install just 'steelscript' as a developer
         outdir = os.path.join(self.venv, 'src')
-        out = self.shell(('{steel} install -G -p steelscript --develop '
-                          '--dir {dir}')
-                          .format(steel=self.steel, dir=outdir))
+        out = self.shell(('vsteel install -G -p steelscript --develop '
+                          '--dir {dir}').format(dir=outdir))
         self.assertTrue('Installing steelscript' in out)
 
         # Verify netprofiler is not installed
-        out = self.shell('steel about')
+        out = self.shell('vsteel about')
         self.assertFalse('steelscript.netprofiler' in out)
 
         # Verify that an attempt to upgrade fails
-        with self.assertRaises(CalledProcessError):
-            out = self.shell(('{steel} install -G -p steelscript -U --develop '
-                              '--dir {dir}')
-                             .format(steel=self.steel, dir=outdir))
+        with self.assertRaises(ShellFailed):
+            out = self.shell(('vsteel install -G -p steelscript -U --develop '
+                              '--dir {dir}').format(dir=outdir))
 
         # Install the rest of core packages, steelscript should be detected
         # as already installed
-        out = self.shell(('{steel} install -G --develop --dir {dir}')
-                          .format(steel=self.steel, dir=outdir))
+        out = self.shell(('vsteel install -G --develop --dir {dir}')
+                          .format(dir=outdir))
         self.assertTrue('Package steelscript already installed' in out)
         self.assertTrue('Installing steelscript.netprofiler' in out)
 
@@ -130,7 +132,7 @@ class TestInstallGitlab(TestVirtualEnv):
 
         # Create distributions
         for pkg in steelscript.commands.steel.STEELSCRIPT_CORE:
-            srcdir = os.path.join(outdir, pkg)
+            srcdir = os.path.join(outdir, pkg.replace('.', '-'))
             out = self.shell('cd {srcdir}; python setup.py sdist'
                              .format(srcdir=srcdir))
             # Uninstall this pkg
@@ -143,8 +145,8 @@ class TestInstallGitlab(TestVirtualEnv):
         self.assertFalse('steel' in out)
 
         # Now reinstall just steelscript from the pkgs directory
-        out = self.shell(('{steel} install --dir {dir} -p steelscript')
-                          .format(steel=self.steel, dir=pkgdir))
+        out = self.shell(('vsteel install --dir {dir} -p steelscript')
+                          .format(dir=pkgdir))
         self.assertTrue('Installing steelscript' in out)
 
 
@@ -154,7 +156,7 @@ class TestInstallLocalGit(TestVirtualEnv):
         out = self.shell('pip freeze')
         self.assertFalse('steel' in out)
 
-        with self.assertRaises(CalledProcessError):
+        with self.assertRaises(ShellFailed):
             out = self.shell('steel -h')
 
         gitdir = os.path.join(self.venv, 'git')
@@ -169,20 +171,18 @@ class TestInstallLocalGit(TestVirtualEnv):
         for pkg in pkgs:
             pkg = pkg.replace('.', '-')
             pkgdir = os.path.join(relpath, pkg)
-            self.assertTrue(os.path.exists(pkgdir))
+            if not os.path.exists(pkgdir):
+                raise Exception('Cannot find git directory: {0}'.format(pkgdir))
             os.symlink(pkgdir, os.path.join(gitdir, pkg + '.git'))
 
-        out = self.shell('{steel} install --giturl file://{gitdir}'
-                         .format(steel=self.steel, gitdir=gitdir))
+        out = self.shell('vsteel install --giturl file://{gitdir}'
+                         .format(gitdir=gitdir))
         self.assertTrue('Installing steelscript' in out)
-
-        out = self.shell('steel -h')
-        self.assertTrue('Usage' in out)
 
         out = self.shell('which steel')
         self.assertTrue('{venv}/bin/steel'.format(venv=self.venv) in out)
 
-        out = self.shell('steel about')
+        out = self.shell('vsteel about')
         self.assertTrue('steelscript.netprofiler' in out)
         self.assertTrue('steelscript.netshark' in out)
 

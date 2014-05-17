@@ -437,7 +437,7 @@ class InstallCommand(BaseCommand):
 
             if self.options.develop:
                 # Clone the git repo
-                outdir = os.path.join(self.options.dir, pkg)
+                outdir = os.path.join(self.options.dir, pkg.replace('.','-'))
                 shell(cmd=('git clone --recursive {repo} {outdir}'
                            .format(repo=repo, outdir=outdir)),
                       msg=('Cloning {repo}'.format(repo=repo)))
@@ -530,9 +530,9 @@ def prompt(msg, choices=None, default=None, password=False):
 
 def add_log_options(parser):
     group = optparse.OptionGroup(parser, "Logging Parameters")
-    group.add_option("--loglevel", help="log level",
+    group.add_option("--loglevel", help="log level: debug, warn, info, critical, error",
                      choices=LOG_LEVELS.keys(), default="info")
-    group.add_option("--logfile", help="log file", default=None)
+    group.add_option("--logfile", help="log file, use '-' for stdout", default=None)
     parser.add_option_group(group)
 
 def start_logging(args):
@@ -553,14 +553,17 @@ def start_logging(args):
     (options, args) = parser.parse_args(logargs)
 
     global LOGFILE
-    if options.logfile is not None:
-        LOGFILE = options.logfile
+    if options.logfile == '-':
+        LOGFILE = None
     else:
-        LOGFILE = os.path.join(os.path.expanduser('~'), '.steelscript', 'steel.log')
+        if options.logfile is not None:
+            LOGFILE = options.logfile
+        else:
+            LOGFILE = os.path.join(os.path.expanduser('~'), '.steelscript', 'steel.log')
 
-    logdir = os.path.dirname(LOGFILE)
-    if not os.path.exists(logdir):
-        os.mkdirs(logdir)
+        logdir = os.path.dirname(LOGFILE)
+        if logdir and not os.path.exists(logdir):
+            os.makedirs(logdir)
 
     logging.basicConfig(
         level=LOG_LEVELS[options.loglevel],
