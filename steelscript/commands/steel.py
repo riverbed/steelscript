@@ -478,11 +478,8 @@ class InstallCommand(BaseCommand):
 
     def install_github(self):
         """Install packages from github.com/riverbed."""
-        console('Packages not available from github.com yet, '
-                'try -G/--gitlab for gitlab')
-        sys.exit(1)
         check_install_pip()
-        self.install_git('https://github.com/riverbed/steelscript')
+        self.install_git('https://github.com/riverbed')
 
     def install_dir(self):
         check_install_pip()
