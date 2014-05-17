@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # reschema documentation build configuration file, created by
 # sphinx-quickstart on Fri Apr 11 08:09:14 2014.
