@@ -5,7 +5,6 @@
 # as set forth in the License.
 
 import os
-from glob import glob
 
 try:
     from setuptools import setup, find_packages, Command
@@ -25,7 +24,7 @@ setup_args = {
     'namespace_packages': ['steelscript'],
     'version':            get_version(),
     'author':             'Riverbed Technology',
-    'author_email':       'cwhite@riverbed.com',
+    'author_email':       'eng-github@riverbed.com',
     'url':                'http://pythonhosted.org/steelscript',
     'license':            'MIT',
     'description':        'Core Python module for interacting with Riverbed devices',
