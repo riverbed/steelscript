@@ -9,7 +9,6 @@ from optparse import OptionParser, OptionGroup
 import tempfile
 import importlib
 import glob
-import inspect
 import getpass
 from functools import partial
 from subprocess import PIPE, Popen

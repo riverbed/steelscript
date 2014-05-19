@@ -50,7 +50,7 @@ def human2bytes(s):
             letter = c.upper()
             break
         num += c
-            
+
     if offset:
         num = str(int(float(num) * 1024))
         letter = symbols[symbols.index(letter)-1]
@@ -64,13 +64,13 @@ def human2bytes(s):
 
 class Formatter(object):
     """ Helper class to format output into tables with headers
-        
+
         get_csv and print_csv use simple formatting rules, for
-        more complex usage, including dialects, the built-in 
+        more complex usage, including dialects, the built-in
         `csv` module may be more suitable.
     """
     @classmethod
-    def print_table(cls, columns, headers, paginate=None, padding=4, 
+    def print_table(cls, columns, headers, paginate=None, padding=4,
                         max_width=None, long_column=1, wrap_columns=False):
         """ Print formatted table with optional pagination
 
@@ -92,7 +92,7 @@ class Formatter(object):
             delta = sum(widths) - max_width
             if delta > widths[long_column]:
                 # issue warning then turn off wrapping so data is still printed
-                print ('WARNING: Formatting error: cannot truncate column %d to meet max_width %d, ' 
+                print ('WARNING: Formatting error: cannot truncate column %d to meet max_width %d, '
                                 'printing all data instead ...'
                                 % (long_column, max_width))
                 max_width=None
@@ -174,7 +174,7 @@ class DictObject(dict):
     """
     # This works by overriding the
     # the 'getattr' and 'setattr' methods.
-       
+
     # We do not need to override the 'hasattr' as internally this
     # method invokes 'getattr' method and if 'getattr' returns
     # AttributeError then 'hasattr' returns False else it returns True.
@@ -222,7 +222,7 @@ class DictObject(dict):
 
     def __dir__(self):
         return self.keys()
-        
+
     def __getattr__(self, key):
         try:
             return self.__getitem__(key)
@@ -240,7 +240,7 @@ class ColumnProxy(object):
     This class is used for structures like the list of valid
     extractor fields on NetShark or the list of valid columns on
     NetProfiler.  These are very long lists of names so we don't want
-    to hard-code the list in flyscript but we would also like the
+    to hard-code the list in steelscript but we would also like the
     list to be available at run-time so interactive tools like
     bpython or eclipse can do automatic completion.  At the same
     time, non-interactive scripts have no need to fetch and parse
@@ -273,7 +273,7 @@ class ColumnProxy(object):
         self._fn = fn
         self._callback = callback
 
-        
+
     class Container(object):
         pass
 
