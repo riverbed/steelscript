@@ -376,8 +376,8 @@ class InstallCommand(BaseCommand):
             '--appfwk', action='store_true',
             help='Install all application framework packages')
 
-        #group.add_option( '--pip-options',
-        #    help='Additional options to pass to pip')
+        group.add_option( '--pip-options', default='',
+            help='Additional options to pass to pip')
 
         parser.add_option_group(group)
 
@@ -422,7 +422,8 @@ class InstallCommand(BaseCommand):
             self.install_dir()
 
         else:
-            self.parser.error('No installation method selected')
+            self.install_pip()
+
 
     def pkg_installed(self, pkg):
         try:
@@ -445,9 +446,10 @@ class InstallCommand(BaseCommand):
             # Manually install django-admin-tools because it will
             # die with recent versions of pip
             if pkg == 'steelscript.appfwk':
-                shell(cmd=('pip install '
-                           '--allow-unverified django-admin-tools '
-                           'django-admin-tools==0.5.1'),
+                shell(cmd=(('pip install {pip_options} '
+                            '--allow-unverified django-admin-tools '
+                            'django-admin-tools==0.5.1')
+                           .format(pip_options=self.options.pip_options)),
                       msg=('Installing django-admin-tools'.format(pkg=pkg)))
 
             if self.options.develop:
@@ -460,8 +462,9 @@ class InstallCommand(BaseCommand):
                 # Install the requirements.txt
                 reqfile = os.path.join(outdir, 'requirements.txt')
                 if os.path.exists(reqfile):
-                    shell(cmd=('pip install -r {reqfile}'
-                               .format(reqfile=reqfile)),
+                    shell(cmd=('pip install -r {reqfile} {pip_options} '
+                               .format(reqfile=reqfile,
+                                       pip_options=self.options.pip_options)),
 
                           msg=('Installing {pkg} requirements'.format(pkg=pkg)))
 
@@ -470,12 +473,12 @@ class InstallCommand(BaseCommand):
                            .format(outdir=outdir)),
                       msg=('Installing {pkg}'.format(pkg=pkg)))
             else:
-                shell(cmd=('pip install {upgrade}git+{repo}'
+                shell(cmd=('pip install {pip_options} {upgrade}git+{repo}'
                            .format(repo=repo,
                                    upgrade=('-U --no-deps '
-                                            if self.options.upgrade
-                                            else ''))),
-                      msg=('Installing {pkg}'.format(pkg=pkg)))
+                                            if self.options.upgrade else ''),
+                                   pip_options=self.options.pip_options)),
+                msg=('Installing {pkg}'.format(pkg=pkg)))
 
 
     def install_gitlab(self):
@@ -498,10 +501,46 @@ class InstallCommand(BaseCommand):
             if self.pkg_installed(pkg) and not self.options.upgrade:
                 console('Package {pkg} already installed'.format(pkg=pkg))
                 continue
-            cmd = (('pip install {upgrade}--no-index '
+
+            # Manually install django-admin-tools because it will
+            # die with recent versions of pip
+            if pkg == 'steelscript.appfwk':
+                shell(cmd=(('pip install {pip_options} '
+                            '--allow-unverified django-admin-tools '
+                            'django-admin-tools==0.5.1')
+                           .format(pip_options=self.options.pip_options)),
+                      msg=('Installing django-admin-tools'.format(pkg=pkg)))
+
+            cmd = (('pip install {pip_options} {upgrade}--no-index '
                     '--find-links=file://{dir} {pkg}')
                    .format(dir=self.options.dir, pkg=pkg,
-                           upgrade=('-U ' if self.options.upgrade else '')))
+                           upgrade=('-U ' if self.options.upgrade else ''),
+                           pip_options=self.options.pip_options))
+            shell(cmd=cmd,
+                  msg=('Installing {pkg}'
+                       .format(pkg=pkg, dir=self.options.dir)))
+
+    def install_pip(self):
+        check_install_pip()
+        for pkg in self.options.packages:
+
+            if self.pkg_installed(pkg) and not self.options.upgrade:
+                console('Package {pkg} already installed'.format(pkg=pkg))
+                continue
+
+            # Manually install django-admin-tools because it will
+            # die with recent versions of pip
+            if pkg == 'steelscript.appfwk':
+                shell(cmd=(('pip install {pip_options} '
+                            '--allow-unverified django-admin-tools '
+                            'django-admin-tools==0.5.1')
+                           .format(pip_options=self.options.pip_options)),
+                      msg=('Installing django-admin-tools'.format(pkg=pkg)))
+
+            cmd = (('pip install {pip_options} {upgrade} {pkg}')
+                   .format(pkg=pkg,
+                           upgrade=('-U ' if self.options.upgrade else ''),
+                           pip_options=self.options.pip_options))
             shell(cmd=cmd,
                   msg=('Installing {pkg}'
                        .format(pkg=pkg, dir=self.options.dir)))
