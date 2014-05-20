@@ -7,6 +7,9 @@ steel_bootstrap.*
 docs/html
 docs/_templates
 docs/_build
+docs/netprofiler
+docs/netshark
+docs/appfwk
 
 *~
 *.pyc
