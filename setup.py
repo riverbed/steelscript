@@ -63,6 +63,7 @@ http://pythonhosted.org/steelscript/install.html
 
     'install_requires': (
         'requests>=2.1.0',
+        'importlib',
     ),
 
 }

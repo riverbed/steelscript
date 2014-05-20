@@ -7,13 +7,18 @@ from collections import namedtuple, deque
 import optparse
 from optparse import OptionParser, OptionGroup
 import tempfile
-import importlib
 import glob
 import getpass
 from functools import partial
 from subprocess import PIPE, Popen
 from threading  import Thread
 import time
+
+try:
+    import importlib
+    has_importlib = True
+except ImportError:
+    has_importlib = False
 
 try:
     from Queue import Queue, Empty
@@ -184,6 +189,9 @@ class BaseCommand(object):
     def load_subcommands(self):
         # Look for *.py files in self.submodule and try to
         # construct a Command() object from each one.
+        if not has_importlib:
+            return None
+
         try:
             i = importlib.import_module(self.submodule)
         except ImportError:
@@ -580,6 +588,9 @@ def start_logging(args):
 
 def try_import(m):
     """Try to import a module by name, return None on fail."""
+    if not has_importlib:
+        return None
+
     try:
         i = importlib.import_module(m)
         return i
