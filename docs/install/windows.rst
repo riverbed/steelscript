@@ -57,12 +57,12 @@ It is usually easiest to install as administrator:
       > easy_install.exe pip
       ...
 
-6. Use pip to install steelscript.common.
+6. Use pip to install steelscript:
 
    .. code-block:: bash
 
       > cd C:\Python27\Scripts
-      > pip.exe install steelscript.common
+      > pip.exe install steelscript
 
 7. Install one or more product specific SteelScript modules:
 
@@ -81,10 +81,10 @@ It is usually easiest to install as administrator:
 
       > cd c:\Python27\Scripts
       > c:\Python27\python steelscript_about.py
-      Package 'steelscript.common' version 0.5.2 installed
+      Package 'steelscript' version 0.5.2 installed
 
       Path to source:
-        c:\Python27\site-packages\flyscript-0.5.2-py2.7.egg\steelscript.common
+        c:\Python27\site-packages\flyscript-0.5.2-py2.7.egg\steelscript
 
       ...
 
@@ -109,7 +109,7 @@ to run these commands as administrator.
    > C:\Python27\python setup.py install
    ...
 
-3. Double click on the ``steelscript.common`` package to extract the contents.
+3. Double click on the ``steelscript`` package to extract the contents.
    Extract all product specific packages of interest as well.
 
 4. Install the package using the system python.  Open a
@@ -118,13 +118,13 @@ to run these commands as administrator.
 
    .. code-block:: bash
 
-      > cd c:\steelscript.common-0.7
+      > cd c:\steelscript-0.7
       > C:\Python27\python setup.py install
       ...
       ...
-      Installed c:\Python27\site-packages\steelscript.common-0.5.2-py2.7.egg
-      Processing dependencies for steelscript.common==0.7
-      Finished processing dependencies for steelscript.common==0.7
+      Installed c:\Python27\site-packages\steelscript-0.5.2-py2.7.egg
+      Processing dependencies for steelscript==0.7
+      Finished processing dependencies for steelscript==0.7
 
 5. :ref:`Verify <verify-windows>` your installation with ``steelscript_about.py``
 
@@ -141,7 +141,7 @@ as follows:
 
 .. code-block:: bash
 
-    > pip.exe install -U steelscript.common
+    > pip.exe install -U steelscript
 
 The ``-U`` stands for upgrade -- this will check for a more recent version
 of the named package, and if available, it will download it and update.

@@ -13,7 +13,8 @@ Dependencies
 
 * Python version 2.6.x or 2.7.x - see `<http://www.python.org>`_
 * Python `setuptools <https://pypi.python.org/pypi/setuptools>`_
-* `pip <http://pip.readthedocs.org/en/latest/installing.html>`_ - the Python package installer
+* `pip <http://pip.readthedocs.org/en/latest/installing.html>`_ - the
+  Python package installer
 * Python `requests library <https://pypi.python.org/pypi/requests>`_
 
 Installation via pip
@@ -25,13 +26,12 @@ First install pip, if not already installed:
 
    $ easy_install pip
 
-Then, install `steelscript.common
-<https://github.com/riverbed/steelscript.common/releases>`_
+Then, install `steelscript <https://github.com/riverbed/steelscript/releases>`_
 as well as one or more product specific SteelScript modules:
 
 .. code-block:: bash
 
-   $ pip install steelscript.common
+   $ pip install steelscript
    $ pip install steelscript.netprofiler
    $ pip install steelscript.netshark
 
@@ -49,10 +49,10 @@ offline for environments that may not have internet access.
 
 First, ensure that the dependencies listed above are downloaded and installed.
 
-Download the `steelscript.common`_ package along with any other product
+Download the `steelscript`_ package along with any other product
 specific packages of interest:
 
-* `steelscript.common <https://github.com/riverbed/steelscript.common/releases>`_
+* `steelscript <https://github.com/riverbed/steelscript/releases>`_
 * `steelscript.netprofiler <https://github.com/riverbed/steelscript.netprofiler/releases>`_
 * `steelscript.netshark <https://github.com/riverbed/steelscript.netshark/releases>`_
 
@@ -60,7 +60,7 @@ Upload to the target machine and install:
 
 .. code-block:: bash
 
-   $ pip install steelscript.common-0.6.0.tar.gz
+   $ pip install steelscript-0.6.0.tar.gz
    $ pip install steelscript.netprofiler-0.6.0.tar.gz
    $ pip install steelscript.netshark-0.6.0.tar.gz
 
@@ -93,7 +93,7 @@ With internet access, updates are as simple as:
 
 .. code-block:: bash
 
-   $ pip install -U steelscript.common
+   $ pip install -U steelscript
 
 Repeat the above for each product specific SteelScript package,
 
@@ -105,8 +105,8 @@ can run python:
 .. code-block:: bash
 
    $ python
-   >>> import steelscript.common
-   >>> help(steelscript.common)
+   >>> import steelscript
+   >>> help(steelscript)
 
 This will display the path to the package __init__.py file.  Delete
 the entire directory leading up to steelscript/__init__.py.

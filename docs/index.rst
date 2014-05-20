@@ -9,18 +9,24 @@ and software.
 Quick Start
 -----------
 
-1. Install the core common code
+If you already have pip, just run the following (in a virtualenv):
 
    .. code:: bash
 
-      $ pip install steelscript-common
+      $ pip install steelscript
+      $ steel install
 
-2. Install optional product specific packages
+Not sure about pip, but you know you have Python?
+
+1. Download :download:`steel_bootstrap.py`
+
+2. Run it (in a virtualenv):
 
    .. code:: bash
 
-      $ pip install steelscript-netprofiler
-      $ pip install steelscript-netshark
+      $ python steel_bootstrap.py install
+
+That's it!
 
 Documentation
 -------------
@@ -35,8 +41,8 @@ Documentation
 
 * Core modules
 
-  * :doc:`common/index`
-  * :doc:`netprofiler/netprofiler`
+  * :doc:`common/overview`
+  * :doc:`netprofiler/overview`
   * :doc:`netshark/overview`
 
 * :doc:`toc`

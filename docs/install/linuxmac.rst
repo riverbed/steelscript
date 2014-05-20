@@ -47,12 +47,11 @@ access is limited, see below for :ref:`installsys-linuxmac-offline` instructions
    tool that provides isolated Python environments.  This allows you
    to install packages without admin privileges.
 
-3. Install `steelscript.common
-   <https://github.com/riverbed/steelscript.common/releases>`_:
+3. Install `steelscript <https://github.com/riverbed/steelscript/releases>`_:
 
    .. code-block:: bash
 
-      $ sudo pip install steelscript.common
+      $ sudo pip install steelscript
 
    .. note::
       Omit ``sudo`` if you are using virtualenv, as admin
@@ -131,7 +130,7 @@ separately.
    Required:
 
    * `requests <https://github.com/kennethreitz/requests/archive/v2.2.1.tar.gz>`_
-   * `steelscript.common <https://github.com/riverbed/steelscript.common/releases>`_
+   * `steelscript <https://github.com/riverbed/steelscript/releases>`_
 
    Optional product specific packages:
 
@@ -143,7 +142,7 @@ separately.
    .. code-block:: bash
 
       $ sudo pip install requests-0.2.1.tar.gz
-      $ sudo pip install steelscript.common-0.7.tar.gz
+      $ sudo pip install steelscript-0.7.tar.gz
 
    Repeat for each product specific steelscript package as well.
 
@@ -170,7 +169,7 @@ Use this method to install SteelScript when the target system:
 
       $ mkdir /steelscript
       $ tar xvzf requsts-0.2.1.tar.gz
-      $ tar xvzf steelscript.common-0.7.tar.gz
+      $ tar xvzf steelscript-0.7.tar.gz
 
    Extract all packages that were downloaded, including the product
    specific packages.
@@ -182,7 +181,7 @@ Use this method to install SteelScript when the target system:
       $ cd /steelscript/requests-0.2.1
       $ python setup.py install
 
-      $ cd /steelscript/steelscript.common-0.7
+      $ cd /steelscript/steelscript-0.7
       $ python setup.py install
 
    Repeat for each package extracted.
@@ -202,7 +201,7 @@ as follows:
 
 .. code-block:: bash
 
-    $ pip install -U steelscript.common
+    $ pip install -U steelscript
 
 The ``-U`` stands for upgrade -- this will check for a more recent version
 of the named package, and if available, it will download it and update.

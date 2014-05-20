@@ -6,6 +6,6 @@ Table of Contents
    :maxdepth: 3
 
    install/toc
-   common/index
+   common/toc
    netprofiler/toc
    netshark/toc
