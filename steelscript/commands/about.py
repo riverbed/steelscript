@@ -16,6 +16,7 @@ import os.path
 import platform
 import steelscript
 
+
 class Command(BaseCommand):
     help = 'Show information about SteelScript packages installed'
 
@@ -32,7 +33,6 @@ class Command(BaseCommand):
             print "Package not found: 'steelscript'"
             print "Check the installation"
             sys.exit(1)
-
 
         e = pkg_resources.AvailableDistributions()
 

@@ -2,17 +2,16 @@
 
 import os
 import sys
-import subprocess
-from collections import namedtuple, deque
-import optparse
-from optparse import OptionParser, OptionGroup
-import tempfile
+import time
 import glob
 import getpass
+import optparse
+import subprocess
+from optparse import OptionParser, OptionGroup
+from threading import Thread
 from functools import partial
-from subprocess import PIPE, Popen
-from threading  import Thread
-import time
+from collections import deque
+from pkg_resources import get_distribution, iter_entry_points
 
 try:
     import importlib
@@ -25,13 +24,16 @@ try:
 except ImportError:
     from queue import Queue, Empty  # python 3.x
 
-from pkg_resources import iter_entry_points
 
 import logging
 if __name__ == '__main__':
     logger = logging.getLogger('steel')
 else:
     logger = logging.getLogger(__name__)
+
+
+__VERSION__ = get_distribution('steelscript').version
+
 
 LOG_LEVELS = {
     'debug': logging.DEBUG,
@@ -147,6 +149,9 @@ class BaseCommand(object):
         else:
             return '%s [options]' % base
 
+    def version(self):
+        return '%s (%s)' % (__VERSION__, os.path.abspath(__file__))
+
     def description(self):
         # Customize the description.  If there are subcommands,
         # build a help table.
@@ -240,13 +245,14 @@ class BaseCommand(object):
 
         # Create a parser
         self.parser = _Parser(usage=self.usage(),
+                              version=self.version(),
                               description=self.description())
 
         if self.positional_args:
             if len(args) < len(self.positional_args):
                 self.parser.error('Missing required arguments')
 
-            for i,p in enumerate(self.positional_args):
+            for i, p in enumerate(self.positional_args):
                 setattr(self.options, p.dest, args[i])
 
             args = args[len(self.positional_args):]
@@ -377,7 +383,8 @@ class InstallCommand(BaseCommand):
             '--appfwk', action='store_true',
             help='Install all application framework packages')
 
-        group.add_option( '--pip-options', default='',
+        group.add_option(
+            '--pip-options', default='',
             help='Additional options to pass to pip')
 
         parser.add_option_group(group)
@@ -433,7 +440,6 @@ class InstallCommand(BaseCommand):
         else:
             self.install_pip()
 
-
     def pkg_installed(self, pkg):
         try:
             out = shell('pip show {pkg}'.format(pkg=pkg),
@@ -450,7 +456,7 @@ class InstallCommand(BaseCommand):
                 console('Package {pkg} already installed'.format(pkg=pkg))
                 continue
             repo = '{baseurl}/{pkg}.git'.format(
-                baseurl=baseurl, pkg=pkg.replace('.','-'))
+                baseurl=baseurl, pkg=pkg.replace('.', '-'))
 
             # Manually install django-admin-tools because it will
             # die with recent versions of pip
@@ -463,7 +469,7 @@ class InstallCommand(BaseCommand):
 
             if self.options.develop:
                 # Clone the git repo
-                outdir = os.path.join(self.options.dir, pkg.replace('.','-'))
+                outdir = os.path.join(self.options.dir, pkg.replace('.', '-'))
                 shell(cmd=('git clone --recursive {repo} {outdir}'
                            .format(repo=repo, outdir=outdir)),
                       msg=('Cloning {repo}'.format(repo=repo)))
@@ -487,8 +493,7 @@ class InstallCommand(BaseCommand):
                                    upgrade=('-U --no-deps '
                                             if self.options.upgrade else ''),
                                    pip_options=self.options.pip_options)),
-                msg=('Installing {pkg}'.format(pkg=pkg)))
-
+                      msg=('Installing {pkg}'.format(pkg=pkg)))
 
     def install_gitlab(self):
         """Install packages from gitlab internal to riverbed."""
@@ -554,10 +559,12 @@ class InstallCommand(BaseCommand):
                   msg=('Installing {pkg}'
                        .format(pkg=pkg, dir=self.options.dir)))
 
+
 def prompt_yn(msg, default_yes=True):
     yn = prompt(msg, choices=['yes', 'no'],
                 default=('yes' if default_yes else 'no'))
     return yn == 'yes'
+
 
 def prompt(msg, choices=None, default=None, password=False):
     if choices is not None:
@@ -588,12 +595,14 @@ def prompt(msg, choices=None, default=None, password=False):
 
     return value
 
+
 def add_log_options(parser):
     group = optparse.OptionGroup(parser, "Logging Parameters")
     group.add_option("--loglevel", help="log level: debug, warn, info, critical, error",
                      choices=LOG_LEVELS.keys(), default="info")
     group.add_option("--logfile", help="log file, use '-' for stdout", default=None)
     parser.add_option_group(group)
+
 
 def start_logging(args):
     """Start up logging.
@@ -603,7 +612,7 @@ def start_logging(args):
 
     # Peek into the args for loglevel and logfile
     logargs = []
-    for i,arg in enumerate(args):
+    for i, arg in enumerate(args):
         if arg in ['--loglevel', '--logfile']:
             logargs.append(arg)
             logargs.append(args[i+1])
@@ -628,7 +637,7 @@ def start_logging(args):
     logging.basicConfig(
         level=LOG_LEVELS[options.loglevel],
         filename=LOGFILE,
-        format= '%(asctime)s [%(levelname)-5.5s] (%(name)s) %(msg)s')
+        format='%(asctime)s [%(levelname)-5.5s] (%(name)s) %(msg)s')
 
     logger.info("=" * 70)
     logger.info("==== Started logging: %s" % ' '.join(sys.argv))
@@ -680,11 +689,12 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
 
     q = Queue()
     t = Thread(target=enqueue_output, args=(proc.stdout, q))
-    t.daemon = True # thread dies with the program
+    t.daemon = True  # thread dies with the program
     t.start()
 
     output = [] if save_output else None
     tail = deque(maxlen=10)
+
     def drain_to_log(q, output):
         stalled = False
         while not stalled:
@@ -722,7 +732,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
         if not allow_fail and exit_on_fail:
             console('Command failed: %s' % cmd)
             for line in tail:
-                print '  ',line
+                print '  ', line
             if LOGFILE:
                 console('See log for details: %s' % (LOGFILE))
             sys.exit(1)
@@ -737,12 +747,15 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
         return ''
     return None
 
+
 def is_root():
     return os.environ['USER'] == 'root'
 
+
 def in_venv():
     # Check if we're in a virtualenv - only works on linux
-    return os.environ.has_key('VIRTUAL_ENV')
+    return 'VIRTUAL_ENV' in os.environ
+
 
 def check_git():
     try:

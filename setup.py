@@ -19,6 +19,30 @@ except ImportError:
 
 from gitpy_versioning import get_version
 
+
+class MakeSteel(Command):
+    description = "Create a bootstrap steel.py script for distribution"
+    user_options = []
+
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+
+    def run(self):
+        path = 'steelscript/commands/steel.py'
+        bootstrap = 'steel_bootstrap.py'
+        with open(path) as f:
+            lines = f.readlines()
+
+        for i, line in enumerate(lines):
+            if line.startswith('__VERSION__'):
+                lines[i] = "__VERSION__ = '%s'" % get_version()
+
+        with open(bootstrap, 'w') as f:
+            f.writelines(lines)
+
+        print '%s written.' % bootstrap
+
+
 setup_args = {
     'name':               'steelscript',
     'namespace_packages': ['steelscript'],
@@ -65,6 +89,10 @@ http://pythonhosted.org/steelscript/install.html
         'requests>=2.1.0',
         'importlib',
     ),
+
+    'cmdclass': {
+        'mksteel': MakeSteel,
+    }
 
 }
 
