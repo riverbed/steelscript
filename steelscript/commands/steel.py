@@ -411,7 +411,7 @@ class InstallCommand(BaseCommand):
                 ('Running installation as user {username} may not have \n'
                  'correct privileges to install packages.  Consider \n'
                  'running as root or creating a virtualenv.\n')
-                .format(username=os.environ['USER']))
+                .format(username=username()))
             if not prompt_yn('Continue with installation anyway?',
                              default_yes=False):
                 console('\n*** Aborting installation ***\n')
@@ -748,8 +748,23 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
     return None
 
 
+def username():
+    try:
+        return os.environ['USER']
+    except KeyError:
+        return os.environ['USERNAME']
+
+
 def is_root():
-    return os.environ['USER'] == 'root'
+    # detect if user has root or Administrator rights
+    try:
+        return os.getuid() == 0
+    except AttributeError:
+        try:
+            import ctypes
+            return ctypes.windll.shell32.IsUserAnAdmin() == 0
+        except AttributeError:
+            return False
 
 
 def in_venv():
