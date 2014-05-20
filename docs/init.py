@@ -6,7 +6,8 @@ import sys
 PROJECTS = [
     ('common', 'SteelScript Common', '..'),
     ('netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'),
-    ('netshark', 'SteelScript NetShark', '../../steelscript-netshark')
+    ('netshark', 'SteelScript NetShark', '../../steelscript-netshark'),
+    ('appfwk', 'SteelScript Application Framework', '../../steelscript-appfwk'),
 ]
 
 def create_symlinks():
