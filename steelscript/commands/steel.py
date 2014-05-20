@@ -48,6 +48,7 @@ STEELSCRIPT_CORE = ['steelscript',
                     'steelscript.netshark']
 
 STEELSCRIPT_APPFW = ['steelscript.appfwk',
+                     'steelscript.wireshark',
                      'steelscript.appfwk.business-hours']
 
 
@@ -406,7 +407,15 @@ class InstallCommand(BaseCommand):
                 .format(username=os.environ['USER']))
             if not prompt_yn('Continue with installation anyway?',
                              default_yes=False):
-                console('Aborting installation')
+                console('\n*** Aborting installation ***\n')
+
+                if not check_virtualenv():
+                    console('Install virtualenv:\n'
+                            '$ sudo pip install virtualenv\n\n'
+                            'Create a new virtual environment\n'
+                            '$ virtualenv <name>\n\n'
+                            'Activate the new virtal environment\n'
+                            '$ source <name>/bin/activate\n\n')
                 sys.exit(1)
 
         if self.options.giturl:
@@ -759,6 +768,14 @@ def check_install_pip():
     console('no')
     shell('easy_install pip',
           msg='Installing pip via easy_install')
+
+
+def check_virtualenv():
+    try:
+        shell(cmd='virtualenv --version', allow_fail=True)
+        return True
+    except ShellFailed:
+        return False
 
 
 def run():
