@@ -8,6 +8,7 @@ PROJECTS = [
     ('netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'),
     ('netshark', 'SteelScript NetShark', '../../steelscript-netshark'),
     ('appfwk', 'SteelScript Application Framework', '../../steelscript-appfwk'),
+    ('vmconfig', 'SteelScript VM', '../../steelscript-vm-config'),
 ]
 
 def create_symlinks():
@@ -23,7 +24,8 @@ def create_symlinks():
 
         src = '{path}/docs'.format(path=path)
         if not os.path.exists(src):
-            raise Exception('Could not find related project source tree: %s' % src)
+            raise Exception(
+                'Could not find related project source tree: %s' % src)
 
         os.symlink(src, proj)
 
@@ -55,8 +57,3 @@ def setup_sys_path():
         if not os.path.exists(path):
             raise Exception('Could not find related project source tree: %s' % path)
         sys.path.insert(0, os.path.abspath(path))
-
-
-if __name__ == '__main__':
-    create_symlinks()
-    write_toc_templates()

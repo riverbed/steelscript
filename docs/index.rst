@@ -65,6 +65,7 @@ Documentation
   * :doc:`netshark/overview`
 
 * :doc:`appfwk/overview`
+* :doc:`vmconfig/overview`
 * :doc:`toc`
 
 
