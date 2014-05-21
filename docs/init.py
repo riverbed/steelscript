@@ -48,8 +48,8 @@ def setup_html_sidebards(html_sidebars):
     for proj, title, path in PROJECTS:
         tocfile = '%s_toc.html' % proj
         html_sidebars['%s/*' % proj] = \
-                             [tocfile, 'relations.html',
-                              'sourcelink.html', 'searchbox.html', 'licensing.html']
+                             [tocfile, 'relations.html', 'sourcelink.html',
+                              'searchbox.html', 'license.html']
 
 
 def setup_sys_path():

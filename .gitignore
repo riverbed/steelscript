@@ -4,12 +4,13 @@ dist
 RELEASE-VERSION
 steel_bootstrap.*
 
-docs/html
-docs/_templates
+docs/_templates/*toc.html
 docs/_build
 docs/netprofiler
 docs/netshark
+docs/wireshark
 docs/appfwk
+docs/vmconfig
 
 *~
 *.pyc
