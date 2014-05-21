@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'steelscript'
-copyright = u'Copyright (c) 2014 Riverbed Technology, Inc.'
+copyright = u'2014 Riverbed Technology, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -174,7 +174,9 @@ html_static_path = ['_static']
 #html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-html_sidebars = {}
+html_sidebars = {
+    '**': ['localtoc.html', 'sourcelink.html', 'searchbox.html', 'licensing.html'],
+    }
 init.setup_html_sidebards(html_sidebars)
 
 # Additional templates that should be rendered to pages, maps page names to
