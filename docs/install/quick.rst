@@ -53,16 +53,16 @@ First, ensure that the dependencies listed above are downloaded and installed.
 Download the ``steelscript`` package along with any other product
 specific packages of interest:
 
-* ``steelscript`` - `PyPI <https://pypi.python.org/pypi/steelscript>`_,
-  `GitHub <https://github.com/riverbed/steelscript/releases>`_
+* ``steelscript`` - `PyPI <https://pypi.python.org/pypi/steelscript>`__,
+  `GitHub <https://github.com/riverbed/steelscript/releases>`__
 
 * ``steelscript.netprofiler`` -
-  `PyPI <https://pypi.python.org/pypi/steelscript.netprofiler>`_,
-  `GitHub <https://github.com/riverbed/steelscript-netprofiler/releases>`_
+  `PyPI <https://pypi.python.org/pypi/steelscript.netprofiler>`__,
+  `GitHub <https://github.com/riverbed/steelscript-netprofiler/releases>`__
 
 * ``steelscript.netshark`` -
-  `PyPI <https://pypi.python.org/pypi/steelscript.netshark>`_,
-  `GitHub <https://github.com/riverbed/steelscript-netshark/releases>`_
+  `PyPI <https://pypi.python.org/pypi/steelscript.netshark>`__,
+  `GitHub <https://github.com/riverbed/steelscript-netshark/releases>`__
 
 Upload to the target machine and install:
 

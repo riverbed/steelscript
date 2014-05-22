@@ -101,7 +101,7 @@ access is limited, see below for :ref:`installsys-linuxmac-offline` instructions
 .. _installsys-linuxmac-offline:
 
 Offline Installation via pip
----------------------------
+----------------------------
 
 Use this method to install SteelScript when the target system:
 
@@ -123,19 +123,19 @@ separately.
 
    * `requests <https://pypi.python.org/pypi/requests>`_
 
-   * ``steelscript`` - `PyPI <https://pypi.python.org/pypi/steelscript>`_,
-     `GitHub <https://github.com/riverbed/steelscript/releases>`_
+   * ``steelscript`` - `PyPI <https://pypi.python.org/pypi/steelscript>`__,
+     `GitHub <https://github.com/riverbed/steelscript/releases>`__
 
 
    Optional product specific packages:
 
    * ``steelscript.netprofiler`` -
-     `PyPI <https://pypi.python.org/pypi/steelscript.netprofiler>`_,
-     `GitHub <https://github.com/riverbed/steelscript-netprofiler/releases>`_
+     `PyPI <https://pypi.python.org/pypi/steelscript.netprofiler>`__,
+     `GitHub <https://github.com/riverbed/steelscript-netprofiler/releases>`__
 
    * ``steelscript.netshark`` -
-     `PyPI <https://pypi.python.org/pypi/steelscript.netshark>`_,
-     `GitHub <https://github.com/riverbed/steelscript-netshark/releases>`_
+     `PyPI <https://pypi.python.org/pypi/steelscript.netshark>`__,
+     `GitHub <https://github.com/riverbed/steelscript-netshark/releases>`__
 
 2. Use ``pip`` to install each tarball:
 
