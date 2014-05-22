@@ -39,7 +39,7 @@ def write_toc_templates():
         if not os.path.exists(template_tocfile):
             with open(template_tocfile, 'w') as f:
                 f.write("""{{%- if display_toc %}}
-  <h3><a href="{{{{ pathto('{proj}/index.html', 1) }}}}">{{{{ _('{title}') }}}}</a></h3>
+  <h3><a href="{{{{ pathto('{proj}/overview.html', 1) }}}}">{{{{ _('{title}') }}}}</a></h3>
   {{{{ toc }}}}
 {{%- endif %}}""".format(proj=proj, title=title))
 

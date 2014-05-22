@@ -60,6 +60,7 @@ symlinks:
 
 clean:
 	rm -rf $(BUILDDIR)/*
+	rm -rf _templates/*_toc.html
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
