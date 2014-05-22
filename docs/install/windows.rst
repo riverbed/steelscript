@@ -74,19 +74,26 @@ It is usually easiest to install as administrator:
 .. _verify-windows:
 
 8. At this point, you should be able to run the examples included in
-   the SteelScript package.  Run the ``steelscript_about.py`` script as a
+   the SteelScript package.  Run the ``steel.py about`` script as a
    simple test:
 
    .. code-block:: bash
 
-      > cd c:\Python27\Scripts
-      > c:\Python27\python steelscript_about.py
-      Package 'steelscript' version 0.5.2 installed
+      (vsteel) C:\Users\admin\vsteel\Scripts>steel about
 
-      Path to source:
-        c:\Python27\site-packages\flyscript-0.5.2-py2.7.egg\steelscript
+      Installed SteelScript Packages
+      Core packages:
+        steelscript                               0.9.0
+        steelscript.netprofiler                   0.9.0
+        steelscript.netshark                      0.9.0
 
-      ...
+      Application Framework packages:
+      None.
+
+      Paths to source:
+        C:\Users\admin\vsteel\lib\site-packages
+
+      (add -v or --verbose for further information)
 
 Offline Installation
 --------------------
@@ -118,15 +125,15 @@ to run these commands as administrator.
 
    .. code-block:: bash
 
-      > cd c:\steelscript-0.7
+      > cd c:\steelscript-0.9.0
       > C:\Python27\python setup.py install
       ...
       ...
-      Installed c:\Python27\site-packages\steelscript-0.5.2-py2.7.egg
-      Processing dependencies for steelscript==0.7
-      Finished processing dependencies for steelscript==0.7
+      Installed c:\Python27\site-packages\steelscript-0.9.0-py2.7.egg
+      Processing dependencies for steelscript==0.9.0
+      Finished processing dependencies for steelscript==0.9.0
 
-5. :ref:`Verify <verify-windows>` your installation with ``steelscript_about.py``
+5. :ref:`Verify <verify-windows>` your installation with ``steel.py about``
 
 Upgrade
 -------

@@ -1,20 +1,18 @@
 License
 -------
 
-.. container:: license
+This Riverbed SteelScript for Python documentation is provided "AS
+IS" and without any warranty or indemnification.  In no event shall
+Riverbed be liable for any claim, damages or other liability,
+whether in an action of contract, tort or otherwise, arising from,
+out of or in connection with this documentation.  Without limiting
+the foregoing, Riverbed is not obligated to provide any support for
+any questions or issues arising out of or in connection with your
+use of this documentation or any concepts or technology described
+herein.
 
-   This Riverbed SteelScript for Python documentation is provided "AS
-   IS" and without any warranty or indemnification.  In no event shall
-   Riverbed be liable for any claim, damages or other liability,
-   whether in an action of contract, tort or otherwise, arising from,
-   out of or in connection with this documentation.  Without limiting
-   the foregoing, Riverbed is not obligated to provide any support for
-   any questions or issues arising out of or in connection with your
-   use of this documentation or any concepts or technology described
-   herein.
-
-   Any sample code or scripts included in the documentation are licensed
-   under the following license terms:
+Any sample code or scripts included in the documentation are licensed
+under the following license terms:
 
 .. container:: copyright
 

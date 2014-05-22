@@ -255,19 +255,12 @@ div.viewcode-block:target {
     border-bottom: 1px solid #ac9;
 }
 
-div.license
-{
-  font-size: 0.85em;
-  font-style: italic;
-  color: #333;
-  }
-
 div.copyright
 {
   background: #d6d6d6;
   font-style: italic;
   color: #333;
-  font-size: 0.75em;
+  font-size: 0.85em;
   padding-left: 8px;
   padding-right: 8px;
   border: solid 1px;

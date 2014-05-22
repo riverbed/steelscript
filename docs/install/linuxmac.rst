@@ -47,7 +47,7 @@ access is limited, see below for :ref:`installsys-linuxmac-offline` instructions
    tool that provides isolated Python environments.  This allows you
    to install packages without admin privileges.
 
-3. Install `steelscript <https://github.com/riverbed/steelscript/releases>`_:
+3. Install ``steelscript``:
 
    .. code-block:: bash
 
@@ -80,35 +80,27 @@ access is limited, see below for :ref:`installsys-linuxmac-offline` instructions
 
    .. code-block:: bash
 
-      $ steelscript_about.py
+      $ steel about
 
-      Package 'steelscript' version 0.6.0-2-g4b83 installed
+      Installed SteelScript Packages
+      Core packages:
+        steelscript                               0.9.0
+        steelscript.netprofiler                   0.9.0
+        steelscript.netshark                      0.9.0
 
-      Path to source:
-        /ws/steelscript.netshark/steelscript
+      Application Framework packages:
+        None
 
-      Modules provided:
-        steelscript.shark
+      Paths to source:
+        /ws/ss/steelscript
+        /ws/ss/steelscript-netprofiler
+        /ws/ss/steelscript-netshark
 
-      Python information:
-      Version      : 2.7.3
-      Version tuple: ('2', '7', '3')
-      Compiler     : GCC 4.2.1 Compatible Apple Clang 4.1 ((tags/Apple/clang-421.11.66))
-      Build        : ('default', 'Nov 17 2012 19:54:34')
-      Architecture : ('64bit', '')
-
-      Platform information:
-      Darwin-12.5.0-x86_64-i386-64bit
-      system   : Darwin
-      node     : mbpro
-      release  : 12.5.0
-      version  : Darwin Kernel Version 12.5.0: Sun Sep 29 13:33:47 PDT 2013; root:xnu-2050.48.12~1/RELEASE_X86_64
-      machine  : x86_64
-      processor: i386
+      (add -v or --verbose for further information)
 
 .. _installsys-linuxmac-offline:
 
-Manual Installation via pip
+Offline Installation via pip
 ---------------------------
 
 Use this method to install SteelScript when the target system:
@@ -129,20 +121,28 @@ separately.
 
    Required:
 
-   * `requests <https://github.com/kennethreitz/requests/archive/v2.2.1.tar.gz>`_
-   * `steelscript <https://github.com/riverbed/steelscript/releases>`_
+   * `requests <https://pypi.python.org/pypi/requests>`_
+
+   * ``steelscript`` - `PyPI <https://pypi.python.org/pypi/steelscript>`_,
+     `GitHub <https://github.com/riverbed/steelscript/releases>`_
+
 
    Optional product specific packages:
 
-   * `steelscript.netprofiler <https://github.com/riverbed/steelscript.netprofiler/releases>`_
-   * `steelscript.netshark <https://github.com/riverbed/steelscript.netshark/releases>`_
+   * ``steelscript.netprofiler`` -
+     `PyPI <https://pypi.python.org/pypi/steelscript.netprofiler>`_,
+     `GitHub <https://github.com/riverbed/steelscript-netprofiler/releases>`_
+
+   * ``steelscript.netshark`` -
+     `PyPI <https://pypi.python.org/pypi/steelscript.netshark>`_,
+     `GitHub <https://github.com/riverbed/steelscript-netshark/releases>`_
 
 2. Use ``pip`` to install each tarball:
 
    .. code-block:: bash
 
       $ sudo pip install requests-0.2.1.tar.gz
-      $ sudo pip install steelscript-0.7.tar.gz
+      $ sudo pip install steelscript-0.9.0.tar.gz
 
    Repeat for each product specific steelscript package as well.
 
@@ -150,7 +150,7 @@ separately.
       Omit ``sudo`` if you are using virtualenv, as admin
       privileges are not required
 
-3. :ref:`Verify <verify-linuxmac>` your installation with ``steelscript_about.py``
+3. :ref:`Verify <verify-linuxmac>` your installation with ``steel about``
 
 Manual Installation without pip
 -------------------------------
@@ -169,7 +169,7 @@ Use this method to install SteelScript when the target system:
 
       $ mkdir /steelscript
       $ tar xvzf requsts-0.2.1.tar.gz
-      $ tar xvzf steelscript-0.7.tar.gz
+      $ tar xvzf steelscript-0.9.0.tar.gz
 
    Extract all packages that were downloaded, including the product
    specific packages.
@@ -181,12 +181,12 @@ Use this method to install SteelScript when the target system:
       $ cd /steelscript/requests-0.2.1
       $ python setup.py install
 
-      $ cd /steelscript/steelscript-0.7
+      $ cd /steelscript/steelscript-0.9.0
       $ python setup.py install
 
    Repeat for each package extracted.
 
-4. :ref:`Verify <verify-linuxmac>` your installation with ``steelscript_about.py``
+4. :ref:`Verify <verify-linuxmac>` your installation with ``steel about``
 
 Upgrade
 -------

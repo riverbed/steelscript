@@ -5,7 +5,9 @@ Table of Contents
    :numbered:
    :maxdepth: 3
 
+   license
    install/toc
    common/toc
    netprofiler/toc
    netshark/toc
+   appfwk/toc

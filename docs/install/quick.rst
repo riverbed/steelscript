@@ -5,7 +5,7 @@ This page provides instructions for installing SteelScript and associated
 modules for those that have experience with Python and package installation.
 
 See the step by step installation guides for
-:doc:`Linux/Mac <install_linuxmac>` and :doc:`Windows <install_windows>` for
+:doc:`Linux/Mac <linuxmac>` and :doc:`Windows <windows>` for
 detailed instructions.
 
 Dependencies
@@ -43,26 +43,34 @@ Start coding!
 Download and Install
 --------------------
 
-The latest version of SteelScript can also be downloaded from `GitHub
-<http://github.com/riverbed>`_.  This way the SDK can be installed
-offline for environments that may not have internet access.
+The latest stable version of SteelScript can also be downloaded from
+`PyPI <https://pypi.python.org/pypi>`_.  For the bleeding edge go to
+`GitHub <http://github.com/riverbed>`_.  This way the SDK can be
+installed offline for environments that may not have internet access.
 
 First, ensure that the dependencies listed above are downloaded and installed.
 
-Download the `steelscript`_ package along with any other product
+Download the ``steelscript`` package along with any other product
 specific packages of interest:
 
-* `steelscript <https://github.com/riverbed/steelscript/releases>`_
-* `steelscript.netprofiler <https://github.com/riverbed/steelscript.netprofiler/releases>`_
-* `steelscript.netshark <https://github.com/riverbed/steelscript.netshark/releases>`_
+* ``steelscript`` - `PyPI <https://pypi.python.org/pypi/steelscript>`_,
+  `GitHub <https://github.com/riverbed/steelscript/releases>`_
+
+* ``steelscript.netprofiler`` -
+  `PyPI <https://pypi.python.org/pypi/steelscript.netprofiler>`_,
+  `GitHub <https://github.com/riverbed/steelscript-netprofiler/releases>`_
+
+* ``steelscript.netshark`` -
+  `PyPI <https://pypi.python.org/pypi/steelscript.netshark>`_,
+  `GitHub <https://github.com/riverbed/steelscript-netshark/releases>`_
 
 Upload to the target machine and install:
 
 .. code-block:: bash
 
-   $ pip install steelscript-0.6.0.tar.gz
-   $ pip install steelscript.netprofiler-0.6.0.tar.gz
-   $ pip install steelscript.netshark-0.6.0.tar.gz
+   $ pip install steelscript-0.9.0.tar.gz
+   $ pip install steelscript.netprofiler-0.9.0.tar.gz
+   $ pip install steelscript.netshark-0.9.0.tar.gz
 
 Directory Layout
 ----------------
