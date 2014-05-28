@@ -248,15 +248,6 @@ class BaseCommand(object):
                               version=self.version(),
                               description=self.description())
 
-        if self.positional_args:
-            if len(args) < len(self.positional_args):
-                self.parser.error('Missing required arguments')
-
-            for i, p in enumerate(self.positional_args):
-                setattr(self.options, p.dest, args[i])
-
-            args = args[len(self.positional_args):]
-
         if args and not args[0].startswith('-'):
             self.parser.error('Unrecognized command: {cmd}'.
                               format(cmd=args[0]))
@@ -264,6 +255,14 @@ class BaseCommand(object):
         self.add_options(self.parser)
 
         (self.options, self.args) = self.parser.parse_args(args)
+
+        if self.positional_args:
+            if len(self.args) < len(self.positional_args):
+                self.parser.error('Missing required argument: %s'
+                                  % self.positional_args[0].keyword)
+
+            for i, p in enumerate(self.positional_args):
+                setattr(self.options, p.dest, self.args[i])
 
         self.validate_args()
         self.setup()
