@@ -50,21 +50,15 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
-symlinks:
-	@for proj in ${SUBPROJECTS}; do \
-		rm -f $$proj ; \
-		if [ ! -e ../../steelscript-$$proj/docs ]; then \
-			echo "Could not find related project: ../../steelscript-$$proj/docs" ; \
-		else \
-			ln -s ../../steelscript-$$proj/docs $$proj ; \
-		fi ; \
-	done
+steel_bootstrap.py: ../steelscript/commands/steel.py
+	(cd ..; python setup.py mksteel)
+	cp ../steel_bootstrap.py .
 
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf _templates/*_toc.html
 
-html:
+html: steel_bootstrap.py
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
