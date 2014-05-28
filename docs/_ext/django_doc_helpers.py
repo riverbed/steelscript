@@ -4,10 +4,13 @@ import re
 
 THIS_DIR = os.path.dirname(__file__)
 PROJECT_DIR = os.path.join(THIS_DIR, '..', 'appfwk_project')
-sys.path.append(PROJECT_DIR)
 
 if not os.path.exists(PROJECT_DIR):
-    raise Exception('Missing Django project at %s' % PROJECT_DIR)
+    os.system('steel appfwk mkproject -d %s' % PROJECT_DIR)
+    os.system('cd %s ; steel appfwk init' % PROJECT_DIR)
+    os.system('touch %s/__init__.py' % PROJECT_DIR)
+
+sys.path.append(PROJECT_DIR)
 
 import inspect
 import local_settings
