@@ -15,15 +15,16 @@ import sys
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
-import init
+import _ext.helpers as helpers
+from _ext.django_doc_helpers import process_docstring
 
-init.create_symlinks()
-init.write_toc_templates()
+helpers.create_symlinks()
+helpers.write_toc_templates()
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-init.setup_sys_path()
+helpers.setup_sys_path()
 
 # -- General configuration ------------------------------------------------
 
@@ -181,7 +182,7 @@ html_sidebars = {
     '*': ['localtoc.html', 'sourcelink.html',
           'searchbox.html', 'license.html'],
     }
-init.setup_html_sidebards(html_sidebars)
+helpers.setup_html_sidebards(html_sidebars)
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -294,3 +295,7 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+def setup(app):
+    # Register the docstring processor with sphinx
+    app.connect('autodoc-process-docstring', process_docstring)
