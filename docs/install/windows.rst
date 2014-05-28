@@ -33,8 +33,9 @@ It is usually easiest to install as administrator:
 
 3. Add Python to your System Path:
 
-   * Navigate to the Enviroment Variables window via
-     Right-click on "My Computer"->Properties->Advanced->Environment Variables.
+   * Navigate to the Enviroment Variables window via Right-click on
+     "My Computer"->Properties->Advanced system settings->Environment
+     Variables.
 
    * Add a new item to the "User variables for USERNAME" section in the top part of
      the window with the following properties (assumes Python from Step 1 was
@@ -74,12 +75,12 @@ It is usually easiest to install as administrator:
 .. _verify-windows:
 
 8. At this point, you should be able to run the examples included in
-   the SteelScript package.  Run the ``steel.py about`` script as a
+   the SteelScript package.  Run the ``steel about`` script as a
    simple test:
 
    .. code-block:: bash
 
-      (vsteel) C:\Users\admin\vsteel\Scripts>steel about
+      C:\Python27\Scripts>steel about
 
       Installed SteelScript Packages
       Core packages:
@@ -91,7 +92,7 @@ It is usually easiest to install as administrator:
       None.
 
       Paths to source:
-        C:\Users\admin\vsteel\lib\site-packages
+        C:\Python27\lib\site-packages
 
       (add -v or --verbose for further information)
 
