@@ -6,6 +6,7 @@ steel_bootstrap.*
 
 docs/_templates/*toc.html
 docs/_build
+docs/appfwk_project
 docs/netprofiler
 docs/netshark
 docs/wireshark
