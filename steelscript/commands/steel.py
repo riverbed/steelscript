@@ -527,7 +527,7 @@ class InstallCommand(BaseCommand):
             cmd = (('pip install {pip_options} {upgrade}--no-index '
                     '--find-links=file://{dir} {pkg}')
                    .format(dir=self.options.dir, pkg=pkg,
-                           upgrade=('-U ' if self.options.upgrade else ''),
+                           upgrade=('-U --no-deps' if self.options.upgrade else ''),
                            pip_options=self.options.pip_options))
             shell(cmd=cmd,
                   msg=('Installing {pkg}'
@@ -552,7 +552,7 @@ class InstallCommand(BaseCommand):
 
             cmd = (('pip install {pip_options} {upgrade} {pkg}')
                    .format(pkg=pkg,
-                           upgrade=('-U ' if self.options.upgrade else ''),
+                           upgrade=('-U --no-deps' if self.options.upgrade else ''),
                            pip_options=self.options.pip_options))
             shell(cmd=cmd,
                   msg=('Installing {pkg}'
