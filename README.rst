@@ -9,6 +9,27 @@ For a complete guide to installation, see:
 
   `https://support.riverbed.com/apis/steelscript/index.html <https://support.riverbed.com/apis/steelscript/index.html>`_
 
+Quick Start
+-----------
+
+If you already have pip, just run the following (in a
+`virtualenv <http://www.virtualenv.org/>`_):
+
+.. code:: bash
+
+   $ pip install steelscript
+   $ steel install
+
+Not sure about pip, but you know you have Python?
+
+1. Download `steel_bootstrap.py <https://support.riverbed.com/apis/steelscript/_downloads/steel_bootstrap.py>`_
+
+2. Run it (in a `virtualenv <http://www.virtualenv.org/>`_):
+
+   .. code:: bash
+
+      $ python steel_bootstrap.py install
+
 License
 =======
 
