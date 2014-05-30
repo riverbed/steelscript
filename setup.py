@@ -61,7 +61,7 @@ interacting with Riverbed Technology devices.
 
 For a complete guide to installation, see:
 
-http://pythonhosted.org/steelscript/install.html
+http://pythonhosted.org/steelscript/
     ''',
 
     'platforms': 'Linux, Mac OS, Windows',

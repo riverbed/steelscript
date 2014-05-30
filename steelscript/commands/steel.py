@@ -248,7 +248,7 @@ class BaseCommand(object):
                               version=self.version(),
                               description=self.description())
 
-        if args and not args[0].startswith('-'):
+        if not self.positional_args and args and not args[0].startswith('-'):
             self.parser.error('Unrecognized command: {cmd}'.
                               format(cmd=args[0]))
 
