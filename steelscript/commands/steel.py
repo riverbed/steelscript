@@ -7,6 +7,7 @@ import glob
 import getpass
 import optparse
 import subprocess
+import re
 from optparse import OptionParser, OptionGroup
 from threading import Thread
 from functools import partial
@@ -615,6 +616,8 @@ def start_logging(args):
         if arg in ['--loglevel', '--logfile']:
             logargs.append(arg)
             logargs.append(args[i+1])
+        elif re.match('--log(level|file)=', arg):
+            logargs.append(arg)
 
     parser = OptionParser()
     add_log_options(parser)
@@ -640,7 +643,6 @@ def start_logging(args):
 
     logger.info("=" * 70)
     logger.info("==== Started logging: %s" % ' '.join(sys.argv))
-
 
 def try_import(m):
     """Try to import a module by name, return None on fail."""
