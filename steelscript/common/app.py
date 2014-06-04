@@ -5,7 +5,6 @@
 # as set forth in the License.
 
 
-
 from steelscript.common.service import UserAuth, OAuth
 import steelscript.common.connection
 from steelscript.commands.steel import BaseCommand
@@ -25,7 +24,7 @@ class Application(BaseCommand):
         subclass rather than this script.
     """
     def __init__(self, *args, **kwargs):
-        super(Application,self).__init__(*args, **kwargs)
+        super(Application, self).__init__(*args, **kwargs)
         self.has_standard_options = False
         self.auth = None
 
@@ -61,18 +60,19 @@ class Application(BaseCommand):
     def validate_args(self):
         """ Hook for subclasses to add their own option/argument validation
         """
-        super(Application,self).validate_args()
+        super(Application, self).validate_args()
 
         if self.has_standard_options:
             if self.options.oauth and (self.options.username or
                                        self.options.password):
                 self.parser.error('Username/Password are mutually exclusive '
-                                    'from OAuth tokens, please choose only '
-                                    'one method.')
+                                  'from OAuth tokens, please choose only '
+                                  'one method.')
             elif self.options.oauth:
                 self.auth = OAuth(self.options.oauth)
             else:
-                self.auth = UserAuth(self.options.username, self.options.password)
+                self.auth = UserAuth(self.options.username,
+                                     self.options.password)
 
             steelscript.common.connection.Connection.HTTPLIB_DEBUGLEVEL = (
                 self.options.httplib_debuglevel)
