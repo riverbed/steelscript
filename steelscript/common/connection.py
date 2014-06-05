@@ -24,7 +24,7 @@ from requests.packages.urllib3.poolmanager import PoolManager
 from steelscript.common.exceptions import RvbdException, RvbdHTTPException
 
 logger = logging.getLogger(__name__)
-
+rest_logger = logging.getLogger('REST')
 
 class SSLAdapter(HTTPAdapter):
     """ An HTTPS Transport Adapter that uses an arbitrary SSL version. """
@@ -42,11 +42,28 @@ class SSLAdapter(HTTPAdapter):
                                        ssl_version=self.ssl_version)
 
 
+def scrub_passwords(data):
+    if hasattr(data, 'iteritems'):
+        result = {}
+        for (k,v) in data.iteritems():
+            if k.lower() in ('password', 'authenticate', 'cookie'):
+                result[k] = "********"
+            else:
+                result[k] = scrub_passwords(data[k])
+        return result
+    elif isinstance(data, list):
+        result = []
+        for i in data:
+            result.append(scrub_passwords(i))
+        return result
+    else:
+        return data
+
 class Connection(object):
     """ Handle authentication and communication to remote machines. """
 
-    HTTPLIB_DEBUGLEVEL = 0
-    DEBUG_MSG_BODY = 0
+    REST_DEBUG = 0
+    REST_BODY_LINES = 0
 
     def __init__(self, hostname, auth=None, port=None, verify=True,
                  reauthenticate_handler=None):
@@ -91,9 +108,6 @@ class Connection(object):
         self.hostname = hostname
         self._ssladapter = False
 
-        if self.HTTPLIB_DEBUGLEVEL > 0:
-            self.set_debuglevel()
-
         self.conn = requests.session()
         self.conn.auth = auth
         self.conn.verify = verify
@@ -107,52 +121,75 @@ class Connection(object):
     def __repr__(self):
         return '<{0} to {1}>'.format(self.__class__.__name__, self.hostname)
 
-    def set_debuglevel(self, level=None):
-        if level is None:
-            level = self.HTTPLIB_DEBUGLEVEL
-
-        logger.debug("Setting HTTPLIB_DEBUGLEVEL to %d" % level)
-
-        if parse_url(self.hostname).scheme == 'https':
-            httplib.HTTPSConnection.debuglevel = level
-        else:
-            httplib.HTTPConnection.debuglevel = level
-
-        requests_logger = logging.getLogger('requests.packages.urllib3')
-        requests_logger.propagate = True
-
-        if int(level) > 0:
-            requests_logger.setLevel(logging.DEBUG)
-        else:
-            requests_logger.setLevel(logging.INFO)
-
     def get_url(self, path):
         """ Returns a fully qualified URL given a path. """
         return urlparse.urljoin(self.hostname, path)
 
     def _request(self, method, path, body=None, params=None,
-                 extra_headers=None, **kwargs):
+                 extra_headers=None, raw_json=None, **kwargs):
         p = parse_url(path)
         if not p.host:
             path = self.get_url(path)
 
         try:
-            logger.debug('Issuing %s request to: %s' % (method, str(path)))
+            rest_logger.info('%s %s' % (method, str(path)))
+            if params:
+                rest_logger.info('Parameters: ')
+                for k,v in params.iteritems():
+                    rest_logger.info('... %s: %s' % (k,v ))
+
+
             #logger.debug('Body: %s' % (body))
-
-            flag = body is not None and '"password":' in repr(body)
-
-            if flag:
-                self.set_debuglevel(0)
-                logger.debug('<username and password hidden>')
+            if self.REST_DEBUG >= 1 and extra_headers:
+                rest_logger.info('Extra request headers: ')
+                for k,v in extra_headers.iteritems():
+                    rest_logger.info('... %s: %s' % (k,v ))
+            if self.REST_DEBUG >=2 and body:
+                rest_logger.info('Request body: ')
+                if raw_json:
+                    if (path.endswith('login')):
+                        debug_body = json.dumps(scrub_passwords(raw_json), indent=2)
+                    else:
+                        debug_body = json.dumps(raw_json, indent=2)
+                else:
+                    debug_body = body
+                lines = debug_body.split('\n')
+                for line in lines[:self.REST_BODY_LINES]:
+                    rest_logger.info('... %s' % line)
+                if len(lines) > self.REST_BODY_LINES:
+                    rest_logger.info('... <truncated %d lines>' % (len(lines) - 20))
 
             r = self.conn.request(method, path, data=body, params=params,
                                   headers=extra_headers, **kwargs)
 
-            logger.debug('Response for %s request to %s: %s, %d' %
-                         (method, str(path), r.status_code, len(r.content)))
-            if flag:
-                self.set_debuglevel()
+            if r.request.url != path:
+                rest_logger.info('Full URL: %s' % r.request.url)
+
+            if self.REST_DEBUG >= 1 and extra_headers:
+                rest_logger.info('Request headers: ')
+                for k,v in scrub_passwords(r.request.headers).iteritems():
+                    rest_logger.info('... %s: %s' % (k,v ))
+
+            rest_logger.info('Response Status %s, %d bytes' %
+                             (r.status_code, len(r.content)))
+
+            if self.REST_DEBUG >= 1 and extra_headers:
+                rest_logger.info('Response headers: ')
+                for k,v in r.headers.iteritems():
+                    rest_logger.info('... %s: %s' % (k,v ))
+
+            if self.REST_DEBUG >=2 and r.text:
+                rest_logger.info('Response body: ')
+                try:
+                    debug_body = json.dumps(r.json(), indent=2)
+                    lines = debug_body.split('\n')
+                except:
+                    lines = r.text.split('\n')
+
+                for line in lines[:self.REST_BODY_LINES]:
+                    rest_logger.info('... %s' % line)
+                if len(lines) > self.REST_BODY_LINES:
+                    rest_logger.info('... <truncated %d lines>' % (len(lines) - 20))
 
         except (requests.exceptions.SSLError,
                 requests.exceptions.ConnectionError):
@@ -164,7 +201,7 @@ class Connection(object):
             # See #152536 - Versions of openssl cause handshake failures
             self.conn.mount('https://', SSLAdapter(ssl.PROTOCOL_TLSv1))
             self._ssladapter = True
-            logger.debug('SSL error -- retrying with TLSv1')
+            logger.info('SSL error -- retrying with TLSv1')
             r = self.conn.request(method, path, data=body,
                                   params=params, headers=extra_headers)
 
@@ -180,7 +217,7 @@ class Connection(object):
                 handler()
                 logger.debug('session reauthentication succeeded -- retrying')
                 r = self._request(method, path, body, params,
-                                  extra_headers, **kwargs)
+                                  extra_headers, raw_json=raw_json, **kwargs)
                 # successful connection, reset token if previously unset
                 self._reauthenticate_handler = handler
                 return r
@@ -212,12 +249,15 @@ class Connection(object):
         extra_headers['Content-Type'] = 'application/json'
         extra_headers['Accept'] = 'application/json'
 
+        raw_json = body
         if body is not None:
             body = json.dumps(body, cls=self.JsonEncoder)
         else:
             body = ''
 
-        r = self._request(method, path, body, params, extra_headers)
+        r = self._request(method, path, body, params, extra_headers,
+                          raw_json=raw_json)
+
         if r.status_code == 204 or len(r.content) == 0:
             return None  # no data
         if raw_response:
@@ -248,9 +288,6 @@ class Connection(object):
             raise RvbdException('unexpected content type %s' % t)
 
         tree = ElementTree.fromstring(r.text.encode('ascii', 'ignore'))
-
-        if self.DEBUG_MSG_BODY:
-            logger.debug('Response body:\n' + str(tree) + '\n')
 
         if raw_response:
             return tree, r

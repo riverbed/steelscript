@@ -44,17 +44,11 @@ class Application(BaseCommand):
         self.has_standard_options = True
         self.parser.add_option_group(group)
 
-        group = optparse.OptionGroup(self.parser, "HTTP Logging Parameters")
-        group.add_option(
-            "--httplib-debuglevel",
-            help="set httplib debug (low-level, lots of data)",
-            type=int,
-            default=0)
-        group.add_option(
-            "--debug-msg-body",
-            help="number of bytes of message body to log",
-            type=int,
-            default=0)
+        group = optparse.OptionGroup(self.parser, "REST Logging")
+        group.add_option("--rest-debug", type='int', default=0,
+                         help="Log REST info (1=hdrs, 2=body)")
+        group.add_option("--rest-body-lines", type=int, default=20,
+                         help="Number of lines of request/response body to log")
         self.parser.add_option_group(group)
 
     def validate_args(self):
@@ -74,11 +68,10 @@ class Application(BaseCommand):
                 self.auth = UserAuth(self.options.username,
                                      self.options.password)
 
-            steelscript.common.connection.Connection.HTTPLIB_DEBUGLEVEL = (
-                self.options.httplib_debuglevel)
-
-            steelscript.common.connection.Connection.DEBUG_MSG_BODY = (
-                self.options.debug_msg_body)
+            steelscript.common.connection.Connection.REST_DEBUG = (
+                self.options.rest_debug)
+            steelscript.common.connection.Connection.REST_BODY_LINES = (
+                self.options.rest_body_lines)
 
     def main(self):
         pass
