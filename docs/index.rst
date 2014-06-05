@@ -1,10 +1,13 @@
 Riverbed SteelScript for Python
 ===============================
 
-Welcome, this is the documentation for Riverbed SteelScript for Python.
-SteelScript is a collection of Python modules that build upon
-REST APIs and other interfaces to interact with Riverbed appliances
-and software.
+Welcome, this is the documentation for Riverbed SteelScript for Python
+and the SteelScript Appliation Framework.  The core SteelScript is a
+collection of Python modules that build upon REST APIs and other
+interfaces to interact with Riverbed appliances and software.
+The Application Framework is a Django-based web application infrastrucutre
+that makes it easy to built web applications mashing up configuration
+and statisics from throughout your network.
 
 Quick Start
 -----------
