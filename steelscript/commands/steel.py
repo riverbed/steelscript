@@ -55,6 +55,8 @@ STEELSCRIPT_APPFW = ['steelscript.appfwk',
                      'steelscript.appfwk.business-hours']
 
 
+logging_initialized = False
+
 class ShellFailed(Exception):
     def __init__(self, returncode):
         self.returncode = returncode
@@ -100,6 +102,7 @@ class BaseCommand(object):
 
         # Positional args
         self.positional_args = []
+        self._positional_args_initialized = False
 
         # options and args filled in by parse()
         self.args = None
@@ -134,13 +137,17 @@ class BaseCommand(object):
         # Customize the usage string based on whether there are any
         # subcommands
         if self.parent:
-            base = '%s %s' % (self.parent.usage(True), self.keyword)
+            parentusage = self.parent.usage(True)
+            if parentusage:
+                base = '%s %s' % (parentusage, self.keyword)
+            else:
+                base = self.keyword
         else:
             base = '%prog'
 
         if self.positional_args:
             for p in self.positional_args:
-                base = base + ' ' + p.keyword.upper()
+                base = base + ' <' + p.keyword.upper() + '>'
             return '%s [options] ...' % base
 
         elif self.subcommands:
@@ -157,21 +164,23 @@ class BaseCommand(object):
         # Customize the description.  If there are subcommands,
         # build a help table.
         if self.help is not None:
-            desc = self.help + '\n'
+            lines = self.help.strip()
+            desc = '\n'.join(['  ' + line for line in self.help.split('\n')]) + '\n'
         else:
             desc = ''
 
         def add_help_items(title, items, desc):
-            help_items = [(sc.keyword, sc.help) for sc in items]
+            help_items = [(sc.keyword, sc.help.split('\n')[0]) for sc in items]
             help_items.sort(key=lambda item: item[0])
             maxkeyword = max([len(sc.keyword) for sc in items])
             maxkeyword = max(10, maxkeyword)
 
+            if desc:
+                desc = desc + '\n'
             desc = desc + (
-                title + ':\n\n' +
+                title + ':\n' +
                 '\n'.join(['  %-*s  %s' % (maxkeyword, item[0], item[1] or '')
-                           for item in help_items]) +
-                '\n')
+                           for item in help_items]) + '\n')
 
             return desc
 
@@ -180,6 +189,7 @@ class BaseCommand(object):
 
         elif self.subcommands:
             desc = add_help_items('Sub Commands', self.subcommands, desc)
+
 
         return desc
 
@@ -203,6 +213,7 @@ class BaseCommand(object):
             i = importlib.import_module(self.submodule)
         except ImportError:
             return
+
         for f in glob.glob(os.path.join(os.path.dirname(i.__file__), '*.py')):
             base_f = os.path.basename(f)
 
@@ -213,10 +224,7 @@ class BaseCommand(object):
             n = '%s.%s' % (self.submodule,
                            os.path.splitext(base_f)[0])
 
-            try:
-                i = importlib.import_module(n)
-            except ImportError:
-                return None
+            i = importlib.import_module(n)
 
             self._load_command(i)
 
@@ -229,7 +237,9 @@ class BaseCommand(object):
         if self.parent is None:
             start_logging(args)
 
-        self.add_positional_args()
+        if not self._positional_args_initialized:
+            self._positional_args_initialized = True
+            self.add_positional_args()
 
         # Look for subcommands, strip off and pass of
         # remaining args to the subcommands.  If there are
@@ -244,16 +254,17 @@ class BaseCommand(object):
                 subcmds[0].parse(args[1:])
                 return
 
-        # Create a parser
-        self.parser = _Parser(usage=self.usage(),
-                              version=self.version(),
-                              description=self.description())
+        if not self.parser:
+            # Create a parser
+            self.parser = _Parser(usage=self.usage(),
+                                  version=self.version(),
+                                  description=self.description())
+
+            self.add_options(self.parser)
 
         if not self.positional_args and args and not args[0].startswith('-'):
-            self.parser.error('Unrecognized command: {cmd}'.
-                              format(cmd=args[0]))
-
-        self.add_options(self.parser)
+            self.parser.error('Unrecognized command: {cmd}'
+                              .format(cmd=args[0]))
 
         (self.options, self.args) = self.parser.parse_args(args)
 
@@ -264,6 +275,8 @@ class BaseCommand(object):
 
             for i, p in enumerate(self.positional_args):
                 setattr(self.options, p.dest, self.args[i])
+
+            self.args = self.args[len(self.positional_args):]
 
         self.validate_args()
         self.setup()
@@ -609,6 +622,12 @@ def start_logging(args):
 
     This must be called only once and it will not work
     if logging.basicConfig() was already called."""
+
+    global logging_initialized
+    if logging_initialized:
+        return
+
+    logging_initialized = True
 
     # Peek into the args for loglevel and logfile
     logargs = []

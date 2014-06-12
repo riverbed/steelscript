@@ -59,6 +59,7 @@ def scrub_passwords(data):
     else:
         return data
 
+
 class Connection(object):
     """ Handle authentication and communication to remote machines. """
 
@@ -136,10 +137,11 @@ class Connection(object):
             if params:
                 rest_logger.info('Parameters: ')
                 for k,v in params.iteritems():
-                    rest_logger.info('... %s: %s' % (k,v ))
+                    rest_logger.info('... %s: %s' % (k,v))
 
 
             #logger.debug('Body: %s' % (body))
+
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Extra request headers: ')
                 for k,v in extra_headers.iteritems():
