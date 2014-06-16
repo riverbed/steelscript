@@ -59,6 +59,8 @@ Documentation
   * :doc:`Linux / Mac <install/linuxmac>`
   * :doc:`Windows <install/windows>`
 
+* :doc:`steel`
+
 * Tutorials
 
 * Core modules

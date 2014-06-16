@@ -7,6 +7,7 @@ Table of Contents
 
    license
    install/toc
+   steel
    common/toc
    netprofiler/toc
    netshark/toc
