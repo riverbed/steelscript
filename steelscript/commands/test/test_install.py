@@ -8,13 +8,19 @@
 import os
 import re
 import logging
-import unittest
+import sys
 import tempfile
 import shutil
 import logging
 
 import steelscript.commands.steel
 from steelscript.commands.steel import shell, ShellFailed
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
+
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +51,7 @@ class TestVirtualEnv(unittest.TestCase):
         shell('virtualenv {venv}'.format(venv=self.venv),
               env=self.env, exit_on_fail=False)
 
-        self.steel = os.path.abspath(
+        self.steel = 'python ' + os.path.abspath(
             os.path.splitext(steelscript.commands.steel.__file__)[0]) + '.py'
 
 
@@ -56,7 +62,7 @@ class TestVirtualEnv(unittest.TestCase):
         else:
             opts=''
         logger.info("shell command: {cmd}{opts}".format(cmd=cmd, opts=opts))
-        return shell('source {venv}/bin/activate; {cmd}{opts}'
+        return shell('. {venv}/bin/activate; {cmd}{opts}'
                      .format(venv=self.venv, cmd=cmd, opts=opts),
                      env=self.env, exit_on_fail=False, save_output=True)
 
@@ -172,6 +178,8 @@ class TestInstallLocalGit(TestVirtualEnv):
             pkg = pkg.replace('.', '-')
             pkgdir = os.path.join(relpath, pkg)
             if not os.path.exists(pkgdir):
+                self.skipTest('Test skipped to avoid failure due to alternate '
+                              'directory structure.')
                 raise Exception('Cannot find git directory: {0}'.format(pkgdir))
             os.symlink(pkgdir, os.path.join(gitdir, pkg + '.git'))
 

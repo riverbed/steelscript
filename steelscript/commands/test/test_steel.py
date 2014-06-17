@@ -7,11 +7,16 @@
 
 import os
 import logging
-import unittest
+import sys
 import tempfile
 import shutil
 
 from steelscript.commands.steel import shell, ShellFailed
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
 
 class TestSteel(unittest.TestCase):
 

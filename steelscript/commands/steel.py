@@ -12,7 +12,7 @@ from optparse import OptionParser, OptionGroup
 from threading import Thread
 from functools import partial
 from collections import deque
-from pkg_resources import get_distribution, iter_entry_points
+from pkg_resources import get_distribution, iter_entry_points, DistributionNotFound
 
 try:
     import importlib
@@ -32,8 +32,10 @@ if __name__ == '__main__':
 else:
     logger = logging.getLogger(__name__)
 
-
-__VERSION__ = get_distribution('steelscript').version
+try:
+    __VERSION__ = get_distribution('steelscript').version
+except DistributionNotFound:
+    __VERSION__ = None
 
 
 LOG_LEVELS = {
