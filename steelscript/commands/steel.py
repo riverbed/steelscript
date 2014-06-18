@@ -456,33 +456,63 @@ class InstallCommand(BaseCommand):
         else:
             self.install_pip()
 
-    def pkg_installed(self, pkg):
-        try:
-            out = shell('pip show {pkg}'.format(pkg=pkg),
-                        allow_fail=True, save_output=True)
-            return pkg in out
-        except ShellFailed:
-            return False
+    def prepare_appfwk(self):
+        # Manually install django-admin-tools because it will
+        # die with recent versions of pip
+        shell(cmd=(('pip install {pip_options} '
+                    '--allow-unverified django-admin-tools '
+                    'django-admin-tools==0.5.1')
+                   .format(pip_options=self.options.pip_options)),
+              msg=('Installing django-admin-tools'))
+
+        if not all([pkg_installed('numpy'), pkg_installed('pandas')]):
+            import platform
+            if platform.system() == 'Windows':
+                console('Please install the packages `numpy` and `pandas`\n'
+                        'manually using the instructions found here:\n'
+                        'https://support.riverbed.com/apis/steelscript/'
+                        'appfwk/install.html#detailed-installation\n')
+                sys.exit(1)
+            elif not exe_installed('gcc'):
+                console('Unable to detect installed compiler `gcc`\n'
+                        'which is required for installation of\n'
+                        '`pandas` and `numpy` packages.')
+
+                base_msg = ('The following commands should install\n'
+                            'the dependencies, though they will need\n'
+                            'root privileges:\n')
+
+                if exe_installed('yum'):
+                    console(base_msg +
+                            '> sudo yum clean all\n'
+                            '> sudo yum groupinstall "Development tools"\n'
+                            '> sudo yum install python-devel\n')
+                elif exe_installed('apt-get'):
+                    console(base_msg +
+                            '> sudo apt-get update\n'
+                            '> sudo apt-get install build-essential python-dev\n')
+                else:
+                    console('Cannot determine appropriate package manager\n'
+                            'for your OS.  Please run the `steel about -v`\n'
+                            'command and post that information as a question\n'
+                            'to the Splash community here:\n'
+                            'https://splash.riverbed.com/community/'
+                            'product-lines/steelscript\n')
+                sys.exit(1)
 
     def install_git(self, baseurl):
         """Install packages from a git repository."""
         check_git()
         check_install_pip()
         for pkg in self.options.packages:
-            if self.pkg_installed(pkg) and not self.options.upgrade:
+            if pkg_installed(pkg) and not self.options.upgrade:
                 console('Package {pkg} already installed'.format(pkg=pkg))
                 continue
             repo = '{baseurl}/{pkg}.git'.format(
                 baseurl=baseurl, pkg=pkg.replace('.', '-'))
 
-            # Manually install django-admin-tools because it will
-            # die with recent versions of pip
             if pkg == 'steelscript.appfwk':
-                shell(cmd=(('pip install {pip_options} '
-                            '--allow-unverified django-admin-tools '
-                            'django-admin-tools==0.5.1')
-                           .format(pip_options=self.options.pip_options)),
-                      msg=('Installing django-admin-tools'.format(pkg=pkg)))
+                self.prepare_appfwk()
 
             if self.options.develop:
                 # Clone the git repo
@@ -529,18 +559,12 @@ class InstallCommand(BaseCommand):
             sys.exit(1)
 
         for pkg in self.options.packages:
-            if self.pkg_installed(pkg) and not self.options.upgrade:
+            if pkg_installed(pkg) and not self.options.upgrade:
                 console('Package {pkg} already installed'.format(pkg=pkg))
                 continue
 
-            # Manually install django-admin-tools because it will
-            # die with recent versions of pip
             if pkg == 'steelscript.appfwk':
-                shell(cmd=(('pip install {pip_options} '
-                            '--allow-unverified django-admin-tools '
-                            'django-admin-tools==0.5.1')
-                           .format(pip_options=self.options.pip_options)),
-                      msg=('Installing django-admin-tools'.format(pkg=pkg)))
+                self.prepare_appfwk()
 
             cmd = (('pip install {pip_options} {upgrade}--no-index '
                     '--find-links=file://{dir} {pkg}')
@@ -555,18 +579,12 @@ class InstallCommand(BaseCommand):
         check_install_pip()
         for pkg in self.options.packages:
 
-            if self.pkg_installed(pkg) and not self.options.upgrade:
+            if pkg_installed(pkg) and not self.options.upgrade:
                 console('Package {pkg} already installed'.format(pkg=pkg))
                 continue
 
-            # Manually install django-admin-tools because it will
-            # die with recent versions of pip
             if pkg == 'steelscript.appfwk':
-                shell(cmd=(('pip install {pip_options} '
-                            '--allow-unverified django-admin-tools '
-                            'django-admin-tools==0.5.1')
-                           .format(pip_options=self.options.pip_options)),
-                      msg=('Installing django-admin-tools'.format(pkg=pkg)))
+                self.prepare_appfwk()
 
             cmd = (('pip install {pip_options} {upgrade} {pkg}')
                    .format(pkg=pkg,
@@ -609,16 +627,19 @@ class UninstallCommand(BaseCommand):
         pkgs.sort()
 
         if not self.options.non_interactive:
-            console('The following packages will be removed:\n{pkgs}\n'
-                    .format(pkgs='\n'.join(pkgs)))
-            console('The `steel` command will be removed as part of this\n'
-                    'operation.  To reinstall steelscript you can run\n'
-                    '`pip install steelscript`, or follow an alternative\n'
-                    'method described at http://pythonhosted.com/steelscript\n')
+            if pkgs:
+                console('The following packages will be removed:\n{pkgs}\n'
+                        .format(pkgs='\n'.join(pkgs)))
+                console('The `steel` command will be removed as part of this\n'
+                        'operation.  To reinstall steelscript you can run\n'
+                        '`pip install steelscript`, or follow an alternative\n'
+                        'method described at http://pythonhosted.com/steelscript\n')
 
-            if not prompt_yn('Continue with uninstall?', default_yes=False):
-                console('\n*** Aborting uninstall ***\n')
-                sys.exit(1)
+                if not prompt_yn('Continue with uninstall?', default_yes=False):
+                    console('\n*** Aborting uninstall ***\n')
+                    sys.exit(1)
+            else:
+                console('Nothing to uninstall.')
 
         for pkg in pkgs:
             self.remove_pkg(pkg)
@@ -626,6 +647,24 @@ class UninstallCommand(BaseCommand):
     def remove_pkg(self, pkg):
         cmd = 'pip uninstall -y {pkg}'.format(pkg=pkg)
         shell(cmd=cmd, msg='Uninstalling {pkg}'.format(pkg=pkg))
+
+
+def pkg_installed(pkg):
+    try:
+        out = shell('pip show {pkg}'.format(pkg=pkg),
+                    allow_fail=True, save_output=True)
+        return pkg in out
+    except ShellFailed:
+        return False
+
+
+def exe_installed(exe):
+    # linux/mac only
+    try:
+        shell('which {exe}'.format(exe=exe), allow_fail=True)
+        return True
+    except ShellFailed:
+        return False
 
 
 def prompt_yn(msg, default_yes=True):
