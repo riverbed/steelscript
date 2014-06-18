@@ -12,7 +12,8 @@ from optparse import OptionParser, OptionGroup
 from threading import Thread
 from functools import partial
 from collections import deque
-from pkg_resources import get_distribution, iter_entry_points, DistributionNotFound
+from pkg_resources import (get_distribution, iter_entry_points,
+                           DistributionNotFound, AvailableDistributions)
 
 try:
     import importlib
@@ -575,6 +576,57 @@ class InstallCommand(BaseCommand):
                        .format(pkg=pkg, dir=self.options.dir)))
 
 
+class UninstallCommand(BaseCommand):
+
+    keyword = 'uninstall'
+    help = 'Uninstall all SteelScript packages'
+
+    def add_options(self, parser):
+        group = OptionGroup(parser, 'Package uninstall options')
+        group.add_option(
+            '--non-interactive', action='store_true', default=False,
+            help='Remove packages without prompting for input')
+        parser.add_option_group(group)
+
+    def main(self):
+        if not is_root() and not in_venv():
+            console(
+                ('Uninstallation as user {username} may not have \n'
+                 'correct privileges to remove packages.  Consider \n'
+                 'running as root or activating an existing virtualenv.\n')
+                .format(username=username()))
+            if not prompt_yn('Continue with installation anyway?',
+                             default_yes=False):
+                console('\n*** Aborting uninstall ***\n')
+                sys.exit(1)
+
+        self.uninstall()
+
+    def uninstall(self):
+        e = AvailableDistributions()
+        pkgs = [x for x in e if x.startswith('steel')]
+        pkgs.sort()
+
+        if not self.options.non_interactive:
+            console('The following packages will be removed:\n{pkgs}\n'
+                    .format(pkgs='\n'.join(pkgs)))
+            console('The `steel` command will be removed as part of this\n'
+                    'operation.  To reinstall steelscript you can run\n'
+                    '`pip install steelscript`, or follow an alternative\n'
+                    'method described at http://pythonhosted.com/steelscript\n')
+
+            if not prompt_yn('Continue with uninstall?', default_yes=False):
+                console('\n*** Aborting uninstall ***\n')
+                sys.exit(1)
+
+        for pkg in pkgs:
+            self.remove_pkg(pkg)
+
+    def remove_pkg(self, pkg):
+        cmd = 'pip uninstall -y {pkg}'.format(pkg=pkg)
+        shell(cmd=cmd, msg='Uninstalling {pkg}'.format(pkg=pkg))
+
+
 def prompt_yn(msg, default_yes=True):
     yn = prompt(msg, choices=['yes', 'no'],
                 default=('yes' if default_yes else 'no'))
@@ -664,6 +716,7 @@ def start_logging(args):
 
     logger.info("=" * 70)
     logger.info("==== Started logging: %s" % ' '.join(sys.argv))
+
 
 def try_import(m):
     """Try to import a module by name, return None on fail."""
@@ -837,6 +890,7 @@ def run():
 
     # Manually add commands in this module
     install = InstallCommand(cmd)
+    uninstall = UninstallCommand(cmd)
 
     try:
         cmd.parse(sys.argv[1:])
