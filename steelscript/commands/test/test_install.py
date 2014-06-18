@@ -10,8 +10,6 @@ import re
 import logging
 import sys
 import tempfile
-import shutil
-import logging
 
 import steelscript.commands.steel
 from steelscript.commands.steel import shell, ShellFailed
@@ -24,20 +22,21 @@ else:
 
 logger = logging.getLogger(__name__)
 
+
 class TestVirtualEnv(unittest.TestCase):
 
     def setUp(self):
         self.venv = tempfile.mkdtemp()
         self.env = {}
         current_venv = None
-        for k,v in os.environ.iteritems():
+        for k, v in os.environ.iteritems():
             if k == 'VIRTUAL_ENV':
                 current_venv = v
                 continue
 
-            elif ( 'VIRTUALENV' in k or
-                   'VIRTUAL_ENV' in k or
-                   k == 'PATH'):
+            elif ('VIRTUALENV' in k or
+                  'VIRTUAL_ENV' in k or
+                  k == 'PATH'):
                 continue
 
             self.env[k] = v
@@ -54,13 +53,12 @@ class TestVirtualEnv(unittest.TestCase):
         self.steel = 'python ' + os.path.abspath(
             os.path.splitext(steelscript.commands.steel.__file__)[0]) + '.py'
 
-
     def shell(self, cmd):
         cmd = cmd.replace('vsteel', self.steel)
         if cmd.startswith('steel' or cmd.startswith(self.steel)):
-            opts=' --loglevel debug --logfile -'
+            opts = ' --loglevel debug --logfile -'
         else:
-            opts=''
+            opts = ''
         logger.info("shell command: {cmd}{opts}".format(cmd=cmd, opts=opts))
         return shell('. {venv}/bin/activate; {cmd}{opts}'
                      .format(venv=self.venv, cmd=cmd, opts=opts),
@@ -96,6 +94,12 @@ class TestInstallGitlab(TestVirtualEnv):
         self.assertTrue('steelscript.netprofiler' in out)
         self.assertTrue('steelscript.netshark' in out)
 
+        # test uninstallation too
+        out = self.shell('vsteel uninstall --non-interactive')
+        self.assertTrue('Uninstalling steelscript' in out)
+        out = self.shell('pip freeze')
+        self.assertFalse('steel' in out)
+
     def test_install_just_steelscript(self):
         out = self.shell('pip freeze')
         self.assertFalse('steel' in out)
@@ -128,8 +132,8 @@ class TestInstallGitlab(TestVirtualEnv):
 
         # Install the rest of core packages, steelscript should be detected
         # as already installed
-        out = self.shell(('vsteel install -G --develop --dir {dir}')
-                          .format(dir=outdir))
+        out = self.shell('vsteel install -G --develop --dir {dir}'
+                         .format(dir=outdir))
         self.assertTrue('Package steelscript already installed' in out)
         self.assertTrue('Installing steelscript.netprofiler' in out)
 
@@ -151,9 +155,15 @@ class TestInstallGitlab(TestVirtualEnv):
         self.assertFalse('steel' in out)
 
         # Now reinstall just steelscript from the pkgs directory
-        out = self.shell(('vsteel install --dir {dir} -p steelscript')
-                          .format(dir=pkgdir))
+        out = self.shell('vsteel install --dir {dir} -p steelscript'
+                         .format(dir=pkgdir))
         self.assertTrue('Installing steelscript' in out)
+
+        # test uninstallation too
+        out = self.shell('vsteel uninstall --non-interactive')
+        self.assertTrue('Uninstalling steelscript' in out)
+        out = self.shell('pip freeze')
+        self.assertFalse('steel' in out)
 
 
 class TestInstallLocalGit(TestVirtualEnv):
@@ -193,6 +203,12 @@ class TestInstallLocalGit(TestVirtualEnv):
         out = self.shell('vsteel about')
         self.assertTrue('steelscript.netprofiler' in out)
         self.assertTrue('steelscript.netshark' in out)
+
+        # test uninstallation too
+        out = self.shell('vsteel uninstall --non-interactive')
+        self.assertTrue('Uninstalling steelscript' in out)
+        out = self.shell('pip freeze')
+        self.assertFalse('steel' in out)
 
 
 if __name__ == '__main__':
