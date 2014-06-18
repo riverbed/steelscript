@@ -12,7 +12,7 @@ from optparse import OptionParser, OptionGroup
 from threading import Thread
 from functools import partial
 from collections import deque
-from pkg_resources import (get_distribution, iter_entry_points,
+from pkg_resources import (get_distribution, iter_entry_points, parse_version,
                            DistributionNotFound, AvailableDistributions)
 
 try:
@@ -467,6 +467,7 @@ class InstallCommand(BaseCommand):
     def install_git(self, baseurl):
         """Install packages from a git repository."""
         check_git()
+        check_install_pip()
         for pkg in self.options.packages:
             if self.pkg_installed(pkg) and not self.options.upgrade:
                 console('Package {pkg} already installed'.format(pkg=pkg))
@@ -861,9 +862,14 @@ def check_git():
 
 def check_install_pip():
     try:
-        shell('pip --version',
-              msg='Checking if pip is installed',
-              allow_fail=True)
+        out = shell('pip --version',
+                    msg='Checking if pip is installed',
+                    allow_fail=True, save_output=True)
+        version = out.split()[1]
+
+        if parse_version(version) < parse_version('1.4.0'):
+            upgrade_pip()
+
         return
     except ShellFailed:
         pass
@@ -871,6 +877,18 @@ def check_install_pip():
     console('no')
     shell('easy_install pip',
           msg='Installing pip via easy_install')
+
+
+def upgrade_pip():
+    try:
+        shell('pip install --upgrade pip',
+              msg='Upgrading pip to compatible version',
+              allow_fail=True)
+    except ShellFailed:
+        console('unable to upgrade pip.  steelscript requires\n'
+                'at least version `1.4.0` to be installed.',
+                lvl=logging.ERROR)
+        sys.exit(1)
 
 
 def check_virtualenv():
