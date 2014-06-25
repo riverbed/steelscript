@@ -5,10 +5,15 @@
 # as set forth in the License.
 
 
-
+import os
+import sys
+import glob
+import shutil
 import httplib
+import pkg_resources
 
 from itertools import izip
+
 
 # http://goo.gl/zeJZl
 def bytes2human(n, fmt=None):
@@ -30,6 +35,7 @@ def bytes2human(n, fmt=None):
             return fmt % locals()
     return fmt % dict(symbol=symbols[0], value=n)
 
+
 # http://goo.gl/zeJZl
 def human2bytes(s):
     """
@@ -43,7 +49,7 @@ def human2bytes(s):
     offset = 0
     num = ''
     letter = 'B'
-    for i,c in enumerate(s):
+    for i, c in enumerate(s):
         if c == '.':
             offset = i
         elif not c.isdigit():
@@ -53,13 +59,106 @@ def human2bytes(s):
 
     if offset:
         num = str(int(float(num) * 1024))
-        letter = symbols[symbols.index(letter)-1]
+        letter = symbols[symbols.index(letter) - 1]
     assert num.isdigit() and letter in symbols
     num = float(num)
-    prefix = {symbols[0]:1}
+    prefix = {symbols[0]: 1}
     for i, s in enumerate(symbols[1:]):
-        prefix[s] = 1 << (i+1)*10
+        prefix[s] = 1 << (i + 1) * 10
     return int(num * prefix[letter])
+
+
+def link_pkg_dir(pkgname, src_path, dest_dir, symlink=True,
+                 replace=True, buf=None):
+    """Create a link from a resource within an installed package.
+
+    :param pkgname: name of installed package
+    :param src_path: relative path within package to resource
+    :param dest_dir: absolute path to location to link/copy
+    :param symlink: create a symlink or copy files
+    :param replace: if True, will unlink/delete before linking
+    :param buf: IO buffer to send debug statements, if None uses sys.stdout
+    """
+    if buf is None:
+        debug = sys.stdout.write
+    else:
+        debug = buf
+
+    src_dir = pkg_resources.resource_filename(pkgname, src_path)
+
+    if os.path.islink(dest_dir) and not os.path.exists(dest_dir):
+        debug(' unlinking %s ...\n' % dest_dir)
+        os.unlink(dest_dir)
+
+    if os.path.exists(dest_dir):
+        if not replace:
+            return
+
+        if os.path.islink(dest_dir):
+            debug(' unlinking %s ...\n' % dest_dir)
+            os.unlink(dest_dir)
+        else:
+            debug(' removing %s ...\n' % dest_dir)
+            shutil.rmtree(dest_dir)
+
+    if symlink:
+        debug(' linking %s --> %s\n' % (src_dir, dest_dir))
+        os.symlink(src_dir, dest_dir)
+    else:
+        debug(' copying %s --> %s\n' % (src_dir, dest_dir))
+        shutil.copytree(src_dir, dest_dir)
+
+
+def link_pkg_files(pkgname, src_pattern, dest_dir, symlink=True,
+                   replace=True, buf=None):
+    """Create links for files from a resource within an installed package.
+
+    :param pkgname: name of installed package
+    :param src_pattern: relative path within package to file resource,
+        can be a glob pattern
+    :param dest_dir: absolute path to location to link/copy, symlinks
+        will be made inside this dir rather than linking to the dir itself
+    :param symlink: create a symlink or copy files
+    :param replace: if True, will unlink/delete before linking
+    :param buf: IO buffer to send debug statements, if None uses sys.stdout
+    """
+    if buf is None:
+        debug = sys.stdout.write
+    else:
+        debug = buf
+
+    src_dir = pkg_resources.resource_filename(pkgname, src_pattern)
+    src_files = glob.glob(src_dir)
+
+    if os.path.islink(dest_dir):
+        # avoid putting files within a symlinked path
+        debug(' skipping linked directory %s ...\n' % dest_dir)
+        return
+
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+
+    for f in src_files:
+        fn = os.path.basename(f)
+        dest_file = os.path.join(dest_dir, fn)
+
+        if os.path.exists(dest_file) and not replace:
+            debug(' skipping file %s ...\n' % dest_file)
+            continue
+
+        if os.path.islink(dest_file):
+            debug(' unlinking %s ...\n' % dest_file)
+            os.unlink(dest_file)
+        elif os.path.exists(dest_file):
+            debug(' removing %s ...\n' % dest_file)
+            os.unlink(dest_file)
+
+        if symlink:
+            debug(' linking %s --> %s\n' % (f, dest_file))
+            os.symlink(f, dest_file)
+        else:
+            debug(' copying %s --> %s\n' % (f, dest_file))
+            shutil.copy(f, dest_file)
 
 
 class Formatter(object):
@@ -71,7 +170,7 @@ class Formatter(object):
     """
     @classmethod
     def print_table(cls, columns, headers, paginate=None, padding=4,
-                        max_width=None, long_column=1, wrap_columns=False):
+                    max_width=None, long_column=1, wrap_columns=False):
         """ Print formatted table with optional pagination
 
             `columns`      - list of data rows
@@ -85,21 +184,21 @@ class Formatter(object):
         """
         import textwrap
 
-        widths = [max(len(str(x))+padding for x in col) for col in izip(headers,
-                                                                        *columns)]
+        widths = [max(len(str(x)) + padding for x in col) for col in izip(headers,
+                                                                          *columns)]
 
         if max_width and sum(widths) > max_width:
             delta = sum(widths) - max_width
             if delta > widths[long_column]:
                 # issue warning then turn off wrapping so data is still printed
-                print ('WARNING: Formatting error: cannot truncate column %d to meet max_width %d, '
-                                'printing all data instead ...'
-                                % (long_column, max_width))
-                max_width=None
+                print ('WARNING: Formatting error: cannot truncate column %d '
+                       'to meet max_width %d, printing all data instead ...'
+                       % (long_column, max_width))
+                max_width = None
             else:
                 widths[long_column] -= delta
 
-        header = ''.join(s.ljust(x) for s,x in zip(headers, widths))
+        header = ''.join(s.ljust(x) for s, x in zip(headers, widths))
         for i, row in enumerate(columns):
             if i == 0 or (paginate and i % paginate == 0):
                 # print header at least once
@@ -113,18 +212,19 @@ class Formatter(object):
                 if not wrap_columns:
                     # truncate data with ellipsis if needed
                     row[long_column] = (column[:width] + '..') if len(column) > width else column
-                    print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
+                    print ''.join(str(s).ljust(x) for s, x in zip(row, widths))
                 else:
                     # take column and wrap it in place, creating new rows
                     wrapped = (r for r in textwrap.wrap(column, width=width))
                     row[long_column] = wrapped.next()
-                    print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
+                    print ''.join(str(s).ljust(x) for s, x in zip(row, widths))
                     for line in wrapped:
                         newrow = [''] * len(widths)
                         newrow[long_column] = line
-                        print ''.join(str(s).ljust(x) for s,x in zip(newrow, widths))
+                        print ''.join(str(s).ljust(x) for s, x in zip(newrow,
+                                                                      widths))
             else:
-                print ''.join(str(s).ljust(x) for s,x in zip(row, widths))
+                print ''.join(str(s).ljust(x) for s, x in zip(row, widths))
 
     @classmethod
     def get_csv(cls, columns, headers, delim=','):
@@ -233,6 +333,7 @@ class DictObject(dict):
         # XXX - don't think KeyError will ever be called here
         self[key] = value
 
+
 class ColumnProxy(object):
     """ a class to simplify creating a data structure that mirrors
     a structure that can be fetched at run-time from a server.
@@ -272,7 +373,6 @@ class ColumnProxy(object):
     def __init__(self, fn, callback):
         self._fn = fn
         self._callback = callback
-
 
     class Container(object):
         pass
@@ -322,10 +422,10 @@ class RecursiveUpdateDict(dict):
                         self[k] = E[k]
             else:
                 for (k, v) in E:
-                    self.r_update(k, {k:v})
+                    self.r_update(k, {k: v})
 
         for k in F:
-            self.r_update(k, {k:F[k]})
+            self.r_update(k, {k: F[k]})
 
     def r_update(self, key, other_dict):
         if isinstance(self[key], dict) and isinstance(other_dict[key], dict):
@@ -343,8 +443,8 @@ class ChunkedMixin(object):
         super(ChunkedMixin, self).__init__(self, *args, **kwargs)
 
     def request(self, method, url, body, headers):
-        chunks = [ body[s:self.chunk_size]
-                   for s in range(0, len(body), self.chunk_size) ]
+        chunks = [body[s:self.chunk_size]
+                  for s in range(0, len(body), self.chunk_size)]
         chunks.append('')
 
         def build(string, chunk):
