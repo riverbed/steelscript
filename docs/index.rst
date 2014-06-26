@@ -53,6 +53,7 @@ For more details, see the :doc:`complete documentation <appfwk/overview>`.
 Documentation
 -------------
 
+* :doc:`toc`
 * Installation
 
   * :doc:`Quick Guide <install/quick>`
@@ -63,6 +64,9 @@ Documentation
 
 * Tutorials
 
+  * :doc:`netprofiler/tutorial`
+  * :doc:`netshark/tutorial`
+
 * Core modules
 
   * :doc:`common/overview`
@@ -71,7 +75,6 @@ Documentation
 
 * :doc:`appfwk/overview`
 * :doc:`vmconfig/overview`
-* :doc:`toc`
 
 
 License
@@ -82,3 +85,9 @@ and without any warranty or indemnification.  Any sample code or
 scripts included in the documentation are licensed under the terms and
 conditions of the MIT License.  See the :doc:`license` page for more
 information.
+
+
+.. toctree::
+    :hidden:
+
+    toc
