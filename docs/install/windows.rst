@@ -41,33 +41,25 @@ It is usually easiest to install as administrator:
      the window with the following properties (assumes Python from Step 1 was
      installed into the default location).  If you already have an item named "Path"
      there, you can just add a semi-colon (";") and append the following text in the
-     dialog box:
-
-     .. code-block:: bash
+     dialog box::
 
         Name: Path
         Value: C:\Python27;C:\Python27\Scripts<br>
 
 4. Open command-line window (Start -> Search -> cmd.exe)
 
-5. Change to your Python Scripts directory and install pip.
-
-   .. code-block:: bash
+5. Change to your Python Scripts directory and install pip::
 
       > cd C:\Python27\Scripts
       > easy_install.exe pip
       ...
 
-6. Use pip to install steelscript:
-
-   .. code-block:: bash
+6. Use pip to install steelscript::
 
       > cd C:\Python27\Scripts
       > pip.exe install steelscript
 
-7. Install one or more product specific SteelScript modules:
-
-   .. code-block:: bash
+7. Install one or more product specific SteelScript modules::
 
       > pip.exe install steelscript.netprofiler
       > pip.exe install steelscript.netshark
@@ -76,9 +68,7 @@ It is usually easiest to install as administrator:
 
 8. At this point, you should be able to run the examples included in
    the SteelScript package.  Run the ``steel about`` script as a
-   simple test:
-
-   .. code-block:: bash
+   simple test::
 
       C:\Python27\Scripts>steel about
 
@@ -96,6 +86,14 @@ It is usually easiest to install as administrator:
 
       (add -v or --verbose for further information)
 
+9. Make a workspace to copy over the included example scripts and create
+   a sandbox to work around with::
+
+      > steel mkworkspace
+
+10. Take a look at your new files and start developing!
+
+
 Offline Installation
 --------------------
 
@@ -105,26 +103,22 @@ and 2 above.  With python and setuptools installed install steelscript
 using the following steps.  As above, it is usually recommended
 to run these commands as administrator.
 
-1. Double click on the requests package to extract the contents.
+1. Double click on the ``requests`` package to extract the contents.
 
 2. Install the requests package using the system python.  Open a
    command prompt and type the following commands (change the cd command
-   to match the directory requests is extracted into):
+   to match the directory requests is extracted into)::
 
-.. code-block:: bash
-
-   > cd c:\requests-2.1.0
-   > C:\Python27\python setup.py install
-   ...
+      > cd c:\requests-2.1.0
+      > C:\Python27\python setup.py install
+      ...
 
 3. Double click on the ``steelscript`` package to extract the contents.
    Extract all product specific packages of interest as well.
 
 4. Install the package using the system python.  Open a
    command prompt and type the following commands (change the cd command
-   to match the directory FlyScript is extracted into):
-
-   .. code-block:: bash
+   to match the directory FlyScript is extracted into)::
 
       > cd c:\steelscript-0.9.0
       > C:\Python27\python setup.py install
@@ -145,9 +139,7 @@ latest version alongside the older version.  Normally you do not need to delete
 the older version.
 
 With internet access, any package can be updated with ``pip install -U <package>``
-as follows:
-
-.. code-block:: bash
+as follows::
 
     > pip.exe install -U steelscript
 

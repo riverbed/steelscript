@@ -2,20 +2,18 @@ Riverbed SteelScript for Python
 ===============================
 
 Welcome, this is the documentation for Riverbed SteelScript for Python
-and the SteelScript Appliation Framework.  The core SteelScript is a
+and the SteelScript Application Framework.  The core SteelScript is a
 collection of Python modules that build upon REST APIs and other
 interfaces to interact with Riverbed appliances and software.
-The Application Framework is a Django-based web application infrastrucutre
+The Application Framework is a Django-based web application infrastructure
 that makes it easy to built web applications mashing up configuration
-and statisics from throughout your network.
+and statistics from throughout your network.
 
 Quick Start
 -----------
 
 If you already have pip, just run the following (in a
-`virtualenv <http://www.virtualenv.org/>`_):
-
-.. code:: bash
+`virtualenv <http://www.virtualenv.org/>`_)::
 
    $ pip install steelscript
    $ steel install
@@ -24,9 +22,7 @@ Not sure about pip, but you know you have Python?
 
 1. Download :download:`steel_bootstrap.py`
 
-2. Run it (in a `virtualenv <http://www.virtualenv.org/>`_):
-
-   .. code:: bash
+2. Run it (in a `virtualenv <http://www.virtualenv.org/>`_)::
 
       $ python steel_bootstrap.py install
 
@@ -38,9 +34,7 @@ custom web application that mashes up data from multiple sources.  It comes
 pre-configured with several reports for NetProfiler and NetShark.
 
 Once you have the base ``steelscript`` package installed, getting started
-is just a few commands away:
-
-.. code:: bash
+is just a few commands away::
 
    $ steel install --appfwk
    $ steel appfwk mkproject
@@ -54,11 +48,11 @@ Documentation
 -------------
 
 * :doc:`toc`
-* Installation
+* :doc:`Installation <install/toc>`
 
-  * :doc:`Quick Guide <install/quick>`
-  * :doc:`Linux / Mac <install/linuxmac>`
-  * :doc:`Windows <install/windows>`
+  * :doc:`Core Install Linux / Mac <install/linuxmac>`
+  * :doc:`Core Install Windows <install/windows>`
+  * :doc:`Install Application Framework <install/appfwk>`
 
 * :doc:`steel`
 

@@ -12,15 +12,11 @@ Dependencies
 * Python version 2.6.x or 2.7.x - see `python.org <http://python.org/download/>`_
 * Python `setuptools <https://pypi.python.org/pypi/setuptools>`_
 
-Python
-------
+You must already have Python and the setuptools package installed on your
+system to continue.  If not, please install Python from `python.org`_ or ask
+your system administrator to install it for you.
 
-You must already have Python installed on your system to continue.
-If not, please install Python from `python.org`_
-or ask your system adminstrator to install Python.  You will need
-either Python 2.6.x or 2.7.x to use the FlyScript SDK.
-
-Check that Python is installed and running the approriate version:
+You can check that Python is installed and running the appropriate version:
 
 .. code-block:: bash
 
@@ -29,74 +25,112 @@ Check that Python is installed and running the approriate version:
 
 .. _installsys-linuxmac-online:
 
-Online Installation
--------------------
+Online Installation - Virtualenv
+--------------------------------
 
-Use this method if the target system has access to the internet.  If
-access is limited, see below for :ref:`installsys-linuxmac-offline` instructions.
+This is the recommended approach when your target system has access to the
+internet.  If access is limited, see below for
+:ref:`installsys-linuxmac-offline` instructions.
 
-1. Install the ``pip`` utility via easy_install:
+These steps will install steelscript inside an isolated python environment
+called a ``virtualenv``.  The great thing about virtualenv's are how they can
+allow you to experiment and upgrade packages without worrying about overwriting
+any system requirements, and you can create as many as you'd like in order to
+separate different projects from one another.
 
-.. code-block:: bash
+1.  Install Virtualenv using one of the following methods::
 
-   $ sudo easy_install pip
+       $ sudo easy_install virtualenv
 
-   ``pip`` is manages Python package installation and upgrade.
 
-2. (optional) Take a look at `virtualenv <http://www.virtualenv.org/>`_ - a
-   tool that provides isolated Python environments.  This allows you
-   to install packages without admin privileges.
+    On a Ubuntu or Debian flavor of Linux, you can use your package manager::
 
-3. Install ``steelscript``:
+       $ sudo apt-get install python-virtualenv
 
-   .. code-block:: bash
 
-      $ sudo pip install steelscript
+    For Red Hat or CentOS flavors::
+
+       $ sudo yum install python-virtualenv
+
+.. _installsys-linuxmac-mkvirtualenv:
+
+2. Now create a fresh virtualenv to install the packages into.  Let's create a
+   working folder to hold all of your steelscript projects inside too, we will
+   create this folder in your home directory::
+
+       $ cd ~
+       $ mkdir steelscript
+       $ cd steelscript
+       $ virtualenv venv
+       New python executable in venv/bin/python
+       Installing setuptools, pip...done.
+
+
+3. Whenever you want to work on a steelscript project, you will need
+   to run the following command to activate this virtualenv in your
+   shell session::
+
+       $ . ~/steelscript/venv/bin/activate
+       (venv)$
 
    .. note::
-      Omit ``sudo`` if you are using virtualenv, as admin
-      privileges are not required
+      Note how your prompt changes to include the name of the virtual environment.
+      You can also confirm you are working within the new environment
+      by checking which python executable is in your path::
+
+          (venv)$ which python
+          ~/steelscript/venv/bin/python
+
+
+4. Since virtualenv comes with a built-in pip installer, we can easily
+   install the base steelscript package ``steelscript``::
+
+       (venv)$ pip install steelscript
 
    This package provides the common functions used by all other
    SteelScript product specific modules.  Additional Python
-   dependencies such as Python requests may also be installed
-   if it not already present.
+   dependencies such as Python requests will also be installed too.
 
-4. Install one or more product specific SteelScript modules:
 
-   .. code-block:: bash
+5. Included in this package was a new script called :doc:`steel </steel>` which can
+   install the rest of our core packages::
 
-      $ sudo pip install steelscript.netprofiler
-      $ sudo pip install steelscript.netshark
+      $ steel install
+      Checking if pip is installed...done
+      Package steelscript already installed
+      Installing steelscript.netprofiler...done
+      Installing steelscript.netshark...done
 
    See `<http://github.com/riverbed>`_ for a complete list of
    additional SteelScript packages available.
 
 .. _verify-linuxmac:
 
-5. Verify your installation by running a simple test (note, you may
-   have to refresh your path with `rehash` if the command is not
-   found):
-
-   .. code-block:: bash
+5. Verify your installation by running a simple test::
 
       $ steel about
 
       Installed SteelScript Packages
       Core packages:
-        steelscript                               0.9.0
-        steelscript.netprofiler                   0.9.0
-        steelscript.netshark                      0.9.0
+        steelscript                               0.9.2
+        steelscript.netprofiler                   0.9.2
+        steelscript.netshark                      0.9.2
 
       Application Framework packages:
         None
 
       Paths to source:
-        /ws/ss/steelscript
-        /ws/ss/steelscript-netprofiler
-        /ws/ss/steelscript-netshark
+        ~/steelscript/venv/lib/python2.7/site-packages
 
       (add -v or --verbose for further information)
+
+6. Make a workspace to copy over the included example scripts and create
+   a sandbox to work around with::
+
+      $ steel mkworkspace
+
+7. Take a look at your new files and start developing!
+
 
 .. _installsys-linuxmac-offline:
 
@@ -108,49 +142,79 @@ Use this method to install SteelScript when the target system:
 * does *not* have direct access to the internet
 * does have the ``pip`` command available
 
-Using ``pip`` is the preferred approach, as it will make upgrade
-easier down the road.
-
-Essentially you must transfer the necessary packages and dependencies
-to the target system manually and then install each package
-separately.
+The ``pip`` package tool has a helpful utility to download packages
+and their dependencies instead of directly installing them.
 
 .. _upload-packages:
 
-1. Upload the following packages to the target system:
+1. Make an archive directory::
 
-   Required:
+       $ mkdir steelscript_packages
 
-   * `requests <https://pypi.python.org/pypi/requests>`_
+2. Create a local archive of the core steelscript package and its
+   dependencies::
 
-   * ``steelscript`` - `PyPI <https://pypi.python.org/pypi/steelscript>`__,
-     `GitHub <https://github.com/riverbed/steelscript/releases>`__
+       $ pip install -d steelscript_packages steelscript
 
+   Inside the folder ``steelscript_packages`` you should see
+   archives for ``steelscript``, ``requests``, and ``importlib``.
 
-   Optional product specific packages:
+3. Add any additional steelscript packages of interest.  The following
+   will download both the netprofiler and netshark packages to the
+   same archive directory along with ``virtualenv``::
 
-   * ``steelscript.netprofiler`` -
-     `PyPI <https://pypi.python.org/pypi/steelscript.netprofiler>`__,
-     `GitHub <https://github.com/riverbed/steelscript-netprofiler/releases>`__
+       $ pip install --no-use-wheel -d steelscript_packages steelscript.netprofiler
+       $ pip install --no-use-wheel -d steelscript_packages steelscript.netshark
+       $ pip install --no-use-wheel -d steelscript_packages virtualenv
 
-   * ``steelscript.netshark`` -
-     `PyPI <https://pypi.python.org/pypi/steelscript.netshark>`__,
-     `GitHub <https://github.com/riverbed/steelscript-netshark/releases>`__
+   .. note::
+       The ``--no-use-wheel`` option makes sure the packages can be installed
+       on a barebones system that may not have ``pip`` available.
 
-2. Use ``pip`` to install each tarball:
+4. Add any other packages of interest you may need using the same approach
+   above with a ``pip install`` and the ``-d`` option.
 
-   .. code-block:: bash
+5. Tar up the packages directory::
 
-      $ sudo pip install requests-0.2.1.tar.gz
-      $ sudo pip install steelscript-0.9.0.tar.gz
+       $ tar cvzf steelscript_packages.tar.gz steelscript_packages
 
-   Repeat for each product specific steelscript package as well.
+6. Transfer it to your target system using whatever approach you choose
+   (scp, usb key, share drive, floppy ...).
+
+.. _installsys-linuxmac-manual-venv:
+
+7. (Optional) Depending on your system requirements, you can create a
+   virtualenv in this system as well and install the packages into that, as
+   :ref:`described above <installsys-linuxmac-mkvirtualenv>`.  Start off by
+   getting the package installed onto the system::
+
+      $ sudo pip install --no-index -f steelscript_packages virtualenv
+
+   If ``pip`` is not available on the target system, then install the
+   package manually::
+
+      $ pip install steelscript_packages/virtualenv*
+
+   From here you can setup a working directory, create your virtualenv,
+   and activate it for the remaining steps (just omit ``sudo`` from the
+   rest of the commands!)
+
+8. Use ``pip`` to install the base steelscript package, telling it
+   to use ``steelscript_packages`` as the place to find relevant files::
+
+      $ sudo pip install --no-index -f steelscript_packages steelscript
+
+   Repeat that command replacing the last ``steelscript`` name with the
+   name of any extra packages you want included.  Don't worry about
+   steelscript packages, those can be installed with the following::
+
+      $ sudo steel install --pip-options="--no-index -f pkgs"
 
    .. note::
       Omit ``sudo`` if you are using virtualenv, as admin
       privileges are not required
 
-3. :ref:`Verify <verify-linuxmac>` your installation with ``steel about``
+9. :ref:`Verify your installation <verify-linuxmac>` with ``steel about``
 
 Manual Installation without pip
 -------------------------------
@@ -160,48 +224,46 @@ Use this method to install SteelScript when the target system:
 * does *not* have direct access to the internet
 * does *not* have the ``pip`` command available
 
-1. Upload the packages to the target system as described in above in
-   :ref:`Step 1 <upload-packages>`.
+Follow the instructions from :ref:`installsys-linuxmac-offline`, to create
+the archive directory and transfer it over to the system.  Creating a virtualenv
+is still optional, but recommended.
 
-2. Create a suitable working directory and extract all packages:
+In case you would prefer to install system wide, then extract the steelscript_packages.tar.gz file, and manually install each package one by one::
 
-   .. code-block:: bash
+    $ tar xvzf steelscript_packages.tar.gz
+    $ cd steelscript_packages
 
-      $ mkdir /steelscript
-      $ tar xvzf requsts-0.2.1.tar.gz
-      $ tar xvzf steelscript-0.9.0.tar.gz
 
-   Extract all packages that were downloaded, including the product
-   specific packages.
+Repeat the following steps for each the following packages, in order:
 
-3. Next, install each package in order:
+1. importlib
+2. requests
+3. steelscript
+4. steelscript.netprofiler
+5. steelscript.netshark
 
-   .. code-block:: bash
+Replace ``<packagename>`` below with the filename from the tarball::
 
-      $ cd /steelscript/requests-0.2.1
-      $ python setup.py install
+    $ tar xvzf <packagename>.tar.gz
+    $ cd <packagename>
+    $ python setup.py install
 
-      $ cd /steelscript/steelscript-0.9.0
-      $ python setup.py install
 
-   Repeat for each package extracted.
+:ref:`Verify your installation <verify-linuxmac>` with ``steel about``
 
-4. :ref:`Verify <verify-linuxmac>` your installation with ``steel about``
 
-Upgrade
--------
+Upgrading SteelScript
+---------------------
 
-If you need to upgrade SteelScript package to a newer version, and you are
-offline, simply repeat the above installation steps.  This will install the
-latest version alongside the older version.  Normally you do not need to delete
-the older version.
+If you'd like to upgrade SteelScript package to a newer released version, and
+you are offline, simply repeat the above installation steps.  This will install
+the latest version alongside the older version.  Normally you do not need to
+delete the older version.
 
-With internet access, any package can be updated with ``pip install -U <package>``
-as follows:
+In other cases, you can simply use the built in :doc:`steel </steel>` to
+update the packages for you::
 
-.. code-block:: bash
+    $ steel install --upgrade
 
-    $ pip install -U steelscript
-
-The ``-U`` stands for upgrade -- this will check for a more recent version
-of the named package, and if available, it will download it and update.
+This will check for a more recent version of all the installed SteelScript
+packages and install newer versions if available.
