@@ -63,6 +63,7 @@ class TestWorkspace(unittest.TestCase):
     def setUpClass(cls):
         """Creates /examples in steelscript dir and makes a temp workspace"""
         # Create the directories that may or may not exist already
+        mkdir(os.path.join(sys.prefix, 'share'))
         mkdir(os.path.join(sys.prefix, 'share', 'doc'))
         mkdir(os.path.join(sys.prefix, 'share', 'doc', 'steelscript'))
         mkdir(os.path.join(sys.prefix, 'share', 'doc',
