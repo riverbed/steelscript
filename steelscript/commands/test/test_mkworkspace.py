@@ -67,6 +67,9 @@ class TestWorkspace(unittest.TestCase):
         mkdir(os.path.join(sys.prefix, 'share', 'doc', 'steelscript'))
         mkdir(os.path.join(sys.prefix, 'share', 'doc',
                            'steelscript', 'examples'))
+        # Make the directory which will contain all the examples. Then generate
+        # ten dummy files and put it inside. Then make a workspace inside that
+        # directory to be used for testing.
         mkdir(cls.tmp_examples_path)
         for i in range(10):
             mk_dummy_file(cls.tmp_examples_path, 'test_example_' + str(i) + '.py')
@@ -118,6 +121,11 @@ class TestWorkspaceFunctionality(TestWorkspace):
         self.shell(cd + 'python collect_examples.py')
         dummy_files = os.listdir(steel_ex_path)
         self.assertEqual(len(dummy_files), 10)
+
+
+    def test_overwrite_in_collect_reports_script(self):
+        steel_ex_path = os.path.join(self.tmp_workspace_path,
+                                     'steelscript-examples')
         # Test if the overwrite functionality works
         # First we will test that the file doesn't get overwritten
         file_path = os.path.join(steel_ex_path, 'test_example_1.py')
@@ -133,7 +141,7 @@ class TestWorkspaceFunctionality(TestWorkspace):
         self.shell(cd + 'python collect_examples.py --overwrite')
         test_file = open(file_path)
         self.assertNotEqual(test_file.read(), 'This file better not get overwritten')
-        # Now we celebrate because all the tests passed! :) 
+        # Now we celebrate because all the tests passed! :)
 
 if __name__ == '__main__':
     logging.basicConfig(filename="test.log",
