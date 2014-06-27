@@ -11,7 +11,6 @@ import ntpath
 import shutil
 import logging
 
-import steelscript
 from steelscript.commands.steel import shell, ShellFailed
 
 if sys.version_info < (2, 7):
@@ -41,30 +40,43 @@ def mk_dummy_file(dirpath, name):
     else:
         pass
 
-pkg_paths = (os.path.dirname(p) for p in steelscript.__path__)
-steel_path = (p for p in pkg_paths if path_leaf(p) == 'steelscript').next()
-
 
 class TestWorkspace(unittest.TestCase):
+    """Simple test class which creates a temporary workspace for testing
 
-    tmp_examples_path = os.path.join(steel_path, 'examples') 
-    tmp_workspace_path = os.path.join(steel_path, 'test-workspace')
+    Before the tests are run, this class will make a workspace in the root
+    directory of Steelscript as well as ten dummy example files to be used for
+    testing. Then when all tests have finished, it will delete both the
+    workspace and the examples files.
+
+    The examples path is stored in TestWorkspace.tmp_examples_path.
+    The workspace path is stored in TestWorkspace.tmp_workspace_path.
+    """
+
+    tmp_examples_path = os.path.join(sys.prefix, 'share', 'doc', 'steelscript',
+                          'examples', 'steelscript')
+    # The temporary workspace is located in the directory with all the temporary
+    # example files.
+    tmp_workspace_path = os.path.join(tmp_examples_path, 'test-workspace')
 
     @classmethod
     def setUpClass(cls):
         """Creates /examples in steelscript dir and makes a temp workspace"""
+        # Create the directories that may or may not exist already
+        mkdir(os.path.join(sys.prefix, 'share', 'doc'))
+        mkdir(os.path.join(sys.prefix, 'share', 'doc', 'steelscript'))
+        mkdir(os.path.join(sys.prefix, 'share', 'doc',
+                           'steelscript', 'examples'))
         mkdir(cls.tmp_examples_path)
         for i in range(10):
             mk_dummy_file(cls.tmp_examples_path, 'test_example_' + str(i) + '.py')
-        cd = 'cd ' + steel_path + ';'
+        cd = 'cd ' + cls.tmp_examples_path + ';'
         cls.shell(cd + 'steel mkworkspace -d ' + cls.tmp_workspace_path)
-        
 
     @classmethod
     def tearDownClass(cls):
         """Deletes /examples and /test-workspace in steelscript"""
         shutil.rmtree(cls.tmp_examples_path)
-        shutil.rmtree(cls.tmp_workspace_path)
 
     @classmethod
     def shell(cls, cmd):

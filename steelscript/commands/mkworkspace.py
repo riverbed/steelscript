@@ -5,10 +5,11 @@
 # as set forth in the License.
 
 import os
+import sys
 import shutil
-import ntpath
 import steelscript
-import pkg_resources
+from pkg_resources import (get_distribution, AvailableDistributions,
+                           DistributionNotFound)
 
 from steelscript.commands.steel import (BaseCommand, prompt, console, debug,
                                         shell, check_git, ShellFailed)
@@ -16,12 +17,12 @@ from steelscript.commands.steel import (BaseCommand, prompt, console, debug,
 
 README_CONTENT = """
 This is a workspace that you can use to run pre-created example scripts,
-or to create your own scripts interacting with the Steelscript modules.
+or to create your own scripts interacting with the Steelscript packages.
 
 To collect examples run 'python collect_examples.py.' You can also overwrite
 the examples you have already collected with the '--overwrite' option.
 
-If no examples are found, that means there are no Steelscript modules installed
+If no examples are found, that means there are no Steelscript packages installed
 with /examples in their root directory, or /examples contains no files.
 """
 
@@ -71,16 +72,17 @@ class Command(BaseCommand):
         if not os.path.exists(dirname):
             os.mkdir(dirname)
 
-    def create_readme(self, dirname):
-        """Creates local settings configuration."""
-        fname = os.path.join(dirname, 'README.md')
+    def create_file(self, dirname, filename, content):
+        """Creates a file according to some basic specifications"""
+        fname = os.path.join(dirname, filename)
         if not os.path.exists(fname):
-            console('Writing README file %s ... ' % fname, newline=False)
+            console('Writing {0} file {1} ... '.format(filename, fname),
+                    newline=False)
             with open(fname, 'w') as f:
-                f.write(README_CONTENT)
+                f.write(content)
             console('done.')
         else:
-            console('Skipping local settings generation.')
+            console('File already exists, skipping writing the file.')
 
     def create_workspace_directory(self, dirpath):
         """Creates workspace directory and copies/creates necessary files."""
@@ -88,25 +90,8 @@ class Command(BaseCommand):
         console('Creating project directory %s ...' % dirpath)
         self.mkdir(dirpath)
 
-        # Write README.md
-        fname = os.path.join(dirpath, 'README.md')
-        if not os.path.exists(fname):
-            console('Writing README file %s ... ' % fname, newline=False)
-            with open(fname, 'w') as f:
-                f.write(README_CONTENT)
-            console('done.')
-        else:
-            console('Skipping local settings generation.')
-
-        # Write collect_examples.py
-        fname = os.path.join(dirpath, 'collect_examples.py')
-        if not os.path.exists(fname):
-            console('Writing collect_examples file %s ... ' % fname, newline=False)
-            with open(fname, 'w') as f:
-                f.write(COLLECT_EXAMPLES_CONTENT)
-            console('done.')
-        else:
-            console('Skipping local settings generation.')
+        self.create_file(dirpath, 'README.md', README_CONTENT)
+        self.create_file(dirpath, 'collect_examples.py', COLLECT_EXAMPLES_CONTENT)
 
     def initialize_git(self, dirpath):
         """If git installed, initialize project folder as new repo.
@@ -131,26 +116,67 @@ class Command(BaseCommand):
 
     @classmethod
     def collect_examples(cls, dirpath, overwrite=False):
-        """Copies all examples from steelscript-*/examples into the workspace
+        """Copies examples from installed steelscript packages into the workspace
         :param dirpath: The absolute path to the directory the examples
         should be copied into.
         :param overwrite: If True, all edited examples will be overwritten with
-        examples found in the installed modules /examples directories.
+        examples found in the installed packages /examples directories.
         """
         try:
-            dist = pkg_resources.get_distribution('steelscript')
-        except pkg_resources.DistributionNotFound:
+            dist = get_distribution('steelscript')
+        except DistributionNotFound:
             console("Package not found: 'steelscript'")
             console("Check the installation")
             return
 
-        console("Collecting examples from installed modules ... ", newline=False)
+        console("Collecting examples from installed packages ... ", newline=False)
 
+        examples_root = os.path.join(sys.prefix, 'share', 'doc',
+                                     'steelscript', 'examples')
+        # If the packages were installed normally, examples will be located in
+        # the virtualenv/share/docs/steelscript/examples and if not they will
+        # be in the packages root directories in /examples
+        if os.path.exists(examples_root):
+            cls._cp_examples_from_docs(dirpath, overwrite)
+        else:
+            cls._cp_examples_from_src(dirpath, overwrite)
+
+    @classmethod
+    def _cp_examples_from_docs(cls, dirpath, overwrite):
+        """Copy all examples from the virtual enviornment's installed packages"""
+        examples_root = os.path.join(sys.prefix, 'share', 'doc',
+                                     'steelscript', 'examples')
+        e = AvailableDistributions()
+        # Get packages with prefix steel (ex. steelscript.netshark)
+        steel_pkgs = (x for x in e if x.startswith('steel'))
+        # Remove the 'steelscript.' prefix
+        no_prefix_pkgs = (x.split('.', 1)[1] if '.' in x else x for x in steel_pkgs )
+        # Turn those package names (ex. 'netshark') into full paths
+        example_paths = (os.path.join(examples_root, p) for p in no_prefix_pkgs
+                         if os.path.exists(os.path.join(examples_root, p)))
+        new_dir = None
+        for p in example_paths:
+            new_dir = cls.path_leaf(p) + '-examples'
+            new_dir_path = os.path.join(dirpath, new_dir)
+            cls.mkdir(new_dir_path)
+            cls.copy_all(p, new_dir_path, overwrite)
+
+        console("done")
+        if new_dir is None:
+            console("WARNING: No examples were found")
+
+    @classmethod
+    def _cp_examples_from_src(cls, dirpath, overwrite):
+        """Copy all examples from steelscript root directories"""
+        # Get the paths of installed packages (ex /src/steelscript-netprofiler)
         pkg_paths = (os.path.dirname(p) for p in steelscript.__path__)
+        # Get all the paths to the example files if the /examples folder exists
         example_paths = (p for p in pkg_paths if os.path.exists(os.path.join(p, 'examples')))
         new_dir = None
         for p in example_paths:
             new_dir = cls.path_leaf(p) + '-examples'
+            # Remove 'steelscript-' prefix
+            new_dir = new_dir.split('-', 1)[1]
             new_dir_path = os.path.join(dirpath, new_dir)
             cls.mkdir(new_dir_path)
             cls.copy_all(os.path.join(p, 'examples'), new_dir_path, overwrite)
@@ -162,8 +188,8 @@ class Command(BaseCommand):
     @classmethod
     def path_leaf(cls, path):
         """:returns the name of the last file/directory in the given path"""
-        head, tail = ntpath.split(path)
-        return tail or ntpath.basename(head)
+        head, tail = os.path.split(path)
+        return tail or os.path.basename(head)
 
     @classmethod
     def copy_all(cls, src_dir, dest_dir, overwrite):
