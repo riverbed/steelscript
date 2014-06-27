@@ -12,11 +12,10 @@ The base command from just ``steelscript`` provides the following subcommands:
 
 * ``steel about`` - Show information about SteelScript packages installed
 * ``steel install`` - Package installation
+* ``steel uninstall`` - Package removal
 * ``steel rest`` - Interactive shell for issuing REST commands
 
-Most subcommands accept two options that control logging:
-
-.. code-block:: bash
+Most subcommands accept two options that control logging::
 
    Logging Parameters:
      --loglevel=LOGLEVEL  log level: debug, warn, info, critical, error
@@ -25,9 +24,7 @@ Most subcommands accept two options that control logging:
 By default, the log level is set to ``info`` and logging is sent to
 the file ``~/.steelscript/steel.log``.
 
-In addition, many commands support detailed REST logging parameters:
-
-.. code-block:: bash
+In addition, many commands support detailed REST logging parameters::
 
    REST Logging:
      --rest-debug=REST_DEBUG
@@ -39,11 +36,9 @@ In addition, many commands support detailed REST logging parameters:
 -----------------
 
 The ``install`` subcommand is used to install and upgrade pacakges.  There
-are a number of installation options available:
+are a number of installation options available::
 
-.. code-block:: bash
-
-   $  steel install -h
+   $ steel install -h
    Usage: steel install [options]
 
      Package installation
@@ -63,6 +58,31 @@ are a number of installation options available:
        --pip-options=PIP_OPTIONS
                            Additional options to pass to pip
 
+
+``steel uninstall``
+-------------------
+
+The ``uninstall`` subcommand is used to remove all steelscript pacakges.
+This can be helpful as a debugging tool in order to quickly uninstall
+SteelScript in order to reinstall or upgrade.  This operation will
+only affect the steelscript packages themselves, not any of their
+installed dependencies (like requests or numpy or pandas).  The available
+options are::
+
+    $ steel uninstall -h
+    Usage: steel uninstall [options]
+
+      Uninstall all SteelScript packages
+
+    Options:
+      --version            show program's version number and exit
+      -h, --help           show this help message and exit
+
+      Package uninstall options:
+        --non-interactive  Remove packages without prompting for input
+
+
+
 ``steel rest``
 --------------
 
@@ -79,9 +99,7 @@ Use ``Ctrl-R`` to search backword for a command.
 Connecting
 ~~~~~~~~~~
 
-A connection must first be established using the ``connect`` command:
-
-.. code-block:: bash
+A connection must first be established using the ``connect`` command::
 
    $ steel rest
    REST Shell ('help' or 'quit' when done)
@@ -101,9 +119,7 @@ Methods
 ~~~~~~~
 
 The for basic HTTP methods are supported: GET, POST, PUT, DELETE.  Each
-method takes the same parameters:
-
-.. code-block:: bash
+method takes the same parameters::
 
    http://httpbin.org/> GET -h
    Usage: GET <PATH> [options] ...
@@ -120,9 +136,7 @@ method takes the same parameters:
      -h, --help  show this help message and exit
 
 Let's try a simple GET of the path ``/get``.  The full URL will be
-the current server plus the absolute path ``http://httpbin.org/get``:
-
-.. code-block:: bash
+the current server plus the absolute path ``http://httpbin.org/get``::
 
    http://httpbin.org/> GET /get
    Issuing GET
@@ -144,16 +158,14 @@ the current server plus the absolute path ``http://httpbin.org/get``:
 
 Once the REST request is issued, any response from the server is
 displayed.  Note that the above response including ``"origin"`` and
-``"headers"`` is in the body of the response from httpbin_ -- this
+``"headers"`` is in the body of the response from httpbin.org_ -- this
 server echos back information about the request in response to support
 testing.  So the ``"headers"`` shows the request headers that were
 automatically added to the outgoing request type.
 
 Notice that the content-type is application/json -- this is the default
 encoding for outgoing requests.  This applies primarily to PUT and POST
-which will prompt for a BODY:
-
-.. code-block:: bash
+which will prompt for a BODY::
 
    http://httpbin.org/> POST /post
    Provide body text, enter "." on a line by itself to finish
@@ -166,9 +178,7 @@ which will prompt for a BODY:
 
 The after entering that last line with a period "." by it self, the
 REST shell issues the POST request and displays the response from the
-server:
-
-.. code-block:: bash
+server::
 
    Issuing POST
    HTTP Status 200: 586 bytes
@@ -195,13 +205,12 @@ server:
        "data": "{\"last\": \"White\", \"first\": \"Chris\"}"
    }
 
+
 URL Parameters and Custom Headers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All methods support adding URL parameters and custom headers
-on the same line as the method:
-
-.. code-block:: bash
+on the same line as the method::
 
    http://httpbin.org/> GET /get x=1 y=2 X-Hdr:foo Y-Hdr:bar
 
@@ -213,9 +222,7 @@ JSON vs Text modes
 
 By default, the PUT/POST body is expected to be a JSON value.
 If the target server instead requires raw text, this can be changed
-by the ``mode`` command:
-
-.. code-block:: bash
+by the ``mode`` command::
 
    http://httpbin.org/> POST /post
    Provide body text, enter "." on a line by itself to finish
@@ -251,9 +258,7 @@ response.  This is achieved using ``--rest-debug=<num>`` and
 ``--rest-body-lines=<num>``.
 
 As a simple example, here's the full tracing for ``POST /post`` above
-with full logging enabled:
-
-.. code-block:: bash
+with full logging enabled::
 
     $ steel rest --logfile - --rest-debug=2 --rest-body-lines=10000
     2014-06-12 22:41:40,511 [INFO ] (steelscript.commands.steel) ======================================================================
