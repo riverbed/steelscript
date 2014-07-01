@@ -16,10 +16,12 @@ from xml.etree import ElementTree
 
 import requests
 import requests.exceptions
+from requests.utils import default_user_agent
 from requests.adapters import HTTPAdapter
 from requests.structures import CaseInsensitiveDict
 from requests.packages.urllib3.util import parse_url
 from requests.packages.urllib3.poolmanager import PoolManager
+from pkg_resources import get_distribution
 
 from steelscript.common.exceptions import RvbdException, RvbdHTTPException
 
@@ -113,6 +115,7 @@ class Connection(object):
         self.conn.auth = auth
         self.conn.verify = verify
         self._reauthenticate_handler = reauthenticate_handler
+        self.set_user_agent()
 
         # store last full response
         self.response = None
@@ -125,6 +128,13 @@ class Connection(object):
     def get_url(self, path):
         """ Returns a fully qualified URL given a path. """
         return urlparse.urljoin(self.hostname, path)
+
+    def set_user_agent(self, extra=None):
+        version = get_distribution('steelscript').version
+        ua = '%s SteelScript/%s' % (default_user_agent(), version)
+        if extra:
+            ua = '%s %s' % (ua, extra)
+        self.conn.headers['User-Agent'] = ua
 
     def _request(self, method, path, body=None, params=None,
                  extra_headers=None, raw_json=None, stream=False,
