@@ -825,6 +825,8 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
                 stalled = True
 
     lastdot = time.time()
+    interval = 0.002
+    max_interval = 0.5
     while t.isAlive():
         now = time.time()
         if now - lastdot > 4 and msg:
@@ -832,7 +834,8 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
             sys.stdout.flush()
             lastdot = now
         drain_to_log(q, output)
-        time.sleep(0.5)
+        time.sleep(interval)
+        interval = min(interval * 2, max_interval)
 
     t.join()
     proc.poll()
