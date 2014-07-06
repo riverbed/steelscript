@@ -61,9 +61,12 @@ STEELSCRIPT_APPFW = ['steelscript.appfwk',
 logging_initialized = False
 
 class ShellFailed(Exception):
-    def __init__(self, returncode):
+    def __init__(self, returncode, output=None):
         self.returncode = returncode
+        self.output = output
 
+class MainFailed(Exception):
+    pass
 
 class _Parser(OptionParser):
     """Custom OptionParser that does not re-flow the description."""
@@ -173,7 +176,8 @@ class BaseCommand(object):
             desc = ''
 
         def add_help_items(title, items, desc):
-            help_items = [(sc.keyword, sc.help.split('\n')[0]) for sc in items]
+            help_items = [(sc.keyword,
+                           (sc.help or '').split('\n')[0]) for sc in items]
             help_items.sort(key=lambda item: item[0])
             maxkeyword = max([len(sc.keyword) for sc in items])
             maxkeyword = max(10, maxkeyword)
@@ -283,7 +287,11 @@ class BaseCommand(object):
 
         self.validate_args()
         self.setup()
-        self.main()
+        try:
+            self.main()
+        except MainFailed as e:
+            console(e.message, logging.ERROR)
+            sys.exit(1)
 
     def validate_args(self):
         """Hook for validating parsed options/arguments.
@@ -854,7 +862,10 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
             if LOGFILE:
                 console('See log for details: %s' % (LOGFILE))
             sys.exit(1)
-        raise ShellFailed(proc.returncode)
+        if output is not None:
+            output = '\n'.join(output)
+
+        raise ShellFailed(proc.returncode, output)
 
     if msg:
         console('done')
