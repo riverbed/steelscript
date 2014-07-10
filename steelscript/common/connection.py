@@ -127,7 +127,8 @@ class Connection(object):
         return urlparse.urljoin(self.hostname, path)
 
     def _request(self, method, path, body=None, params=None,
-                 extra_headers=None, raw_json=None, **kwargs):
+                 extra_headers=None, raw_json=None, stream=False,
+                 **kwargs):
         p = parse_url(path)
         if not p.host:
             path = self.get_url(path)
@@ -162,7 +163,7 @@ class Connection(object):
                     rest_logger.info('... <truncated %d lines>' % (len(lines) - 20))
 
             r = self.conn.request(method, path, data=body, params=params,
-                                  headers=extra_headers, **kwargs)
+                                  headers=extra_headers, stream=stream, **kwargs)
 
             if r.request.url != path:
                 rest_logger.info('Full URL: %s' % r.request.url)
@@ -172,15 +173,19 @@ class Connection(object):
                 for k,v in scrub_passwords(r.request.headers).iteritems():
                     rest_logger.info('... %s: %s' % (k,v ))
 
-            rest_logger.info('Response Status %s, %d bytes' %
-                             (r.status_code, len(r.content)))
+            if stream:
+                rest_logger.info('Response Status %s, streaming content' %
+                                 (r.status_code))
+            else:
+                rest_logger.info('Response Status %s, %d bytes' %
+                                 (r.status_code, len(r.content)))
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Response headers: ')
                 for k,v in r.headers.iteritems():
                     rest_logger.info('... %s: %s' % (k,v ))
 
-            if self.REST_DEBUG >=2 and r.text:
+            if self.REST_DEBUG >=2 and not stream and r.text:
                 rest_logger.info('Response body: ')
                 try:
                     debug_body = json.dumps(r.json(), indent=2)
@@ -375,29 +380,34 @@ class Connection(object):
         extra_headers = CaseInsensitiveDict(Connection='Close')
         r = self._request(method, url, None, params, extra_headers, stream=True)
 
-        # Check if the user specified a file name
-        if filename is None:
-            # Retrieve the file name form the HTTP header
-            filename = r.headers.get('Content-Disposition', None)
-            if filename is not None:
-                filename = filename.split('=')[1]
+        try:
+            # Check if the user specified a file name
+            if filename is None:
+                # Retrieve the file name form the HTTP header
+                filename = r.headers.get('Content-Disposition', None)
+                if filename is not None:
+                    filename = filename.split('=')[1]
 
-        if not filename:
-            raise ValueError("{0} is not a valid path. Specify a full path "
-                             "for the file to be created".format(path))
-        # Compose the path
-        path = os.path.join(directory, filename)
+            if not filename:
+                raise ValueError("{0} is not a valid path. Specify a full path "
+                                 "for the file to be created".format(path))
+            # Compose the path
+            path = os.path.join(directory, filename)
 
-        # Check if the local file already exists
-        if os.path.isfile(path) and not overwrite:
-            raise RvbdException('the file %s already exists' % path)
+            # Check if the local file already exists
+            if os.path.isfile(path) and not overwrite:
+                raise RvbdException('the file %s already exists' % path)
 
-        # Stream the remote file to the local file
-        with open(path, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024):
-                if chunk:
-                    f.write(chunk)
-                    f.flush()
+            # Stream the remote file to the local file
+            with open(path, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+                        f.flush()
+
+        finally:
+            r.close()
+
         return path
 
     def add_headers(self, headers):
