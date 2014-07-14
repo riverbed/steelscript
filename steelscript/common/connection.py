@@ -136,6 +136,10 @@ class Connection(object):
             ua = '%s %s' % (ua, extra)
         self.conn.headers['User-Agent'] = ua
 
+    def request(self, method, path, body=None, params=None,
+                 extra_headers=None, **kwargs):
+        return self._request(method, path, body, params, extra_headers, **kwargs)
+
     def _request(self, method, path, body=None, params=None,
                  extra_headers=None, raw_json=None, stream=False,
                  **kwargs):
