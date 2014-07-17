@@ -44,8 +44,7 @@ are a number of installation options available::
      Package installation
 
    Options:
-     --version             show program's version number and exit
-     -h, --help            show this help message and exit
+     --version             show program's version number and exit -h, --help            show this help message and exit
 
      Package installation options:
        -U, --upgrade       Upgrade packages that are already installed
@@ -58,6 +57,29 @@ are a number of installation options available::
        --pip-options=PIP_OPTIONS
                            Additional options to pass to pip
 
+``steel mkworkspace``
+---------------------
+
+The ``mkworkspace`` subcommand is used to create a workspace in which you can
+develop and run Steelscript scripts. It will pull all scripts from
+the /examples folder in your installed Steelscript packages. Once you create a
+workspace you will notice it contains the Steelscript scripts, a README file 
+and ``collect_examples.py``. ``collect_examples.py`` can be used to collect any new
+examples from the Steelscript packages after the creation of the workspace.
+There are a number of workspace options available::
+
+   $ steel mkworkspace -h
+   Usage: steel mkworkspace [options]
+
+     Create new workspace for running and creating Steelscript scripts
+   
+    Options:
+      --version          show program's version number and exit
+      -h, --help         show this help message and exit
+
+      Make workspace options:
+        -d DIR, --dir=DIR  Optional path for new workspace location
+        --git              Initialize project as new git repo
 
 ``steel uninstall``
 -------------------

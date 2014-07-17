@@ -8,10 +8,11 @@ import os
 import sys
 import shutil
 import steelscript
+from optparse import OptionGroup
 from pkg_resources import (get_distribution, AvailableDistributions,
                            DistributionNotFound)
 
-from steelscript.commands.steel import (BaseCommand, prompt, console, debug,
+from steelscript.commands.steel import (BaseCommand, prompt, console,
                                         shell, check_git, ShellFailed)
 
 
@@ -22,8 +23,9 @@ or to create your own scripts interacting with the Steelscript packages.
 To collect examples run 'python collect_examples.py.' You can also overwrite
 the examples you have already collected with the '--overwrite' option.
 
-If no examples are found, that means there are no Steelscript packages installed
-with /examples in their root directory, or /examples contains no files.
+If no examples are found, that means there are no Steelscript packages
+installed with /examples in their root directory, or /examples contains no
+files.
 """
 
 COLLECT_EXAMPLES_CONTENT = """import os
@@ -55,16 +57,14 @@ class Command(BaseCommand):
     help = 'Create new workspace for running and creating Steelscript scripts'
 
     def add_options(self, parser):
-        parser.add_option('-d', '--dir', action='store',
-                          help='Optional path for new workspace location')
-        parser.add_option('-v', '--verbose', action='store_true',
-                          help='Extra verbose output')
-        parser.add_option('--git', action='store_true',
-                          help='Initialize project as new git repo')
+        group = OptionGroup(parser, 'Make workspace options')
 
-    def debug(self, msg, newline=False):
-        if self.options.verbose:
-            debug(msg, newline=newline)
+        group.add_option('-d', '--dir', action='store',
+                         help='Optional path for new workspace location')
+        group.add_option('--git', action='store_true',
+                         help='Initialize project as new git repo')
+
+        parser.add_option_group(group)
 
     @classmethod
     def mkdir(cls, dirname):
@@ -85,7 +85,7 @@ class Command(BaseCommand):
             console('File already exists, skipping writing the file.')
 
     def create_workspace_directory(self, dirpath):
-        """Creates workspace directory and copies/creates necessary files."""
+        """Creates a workspace directory with a readme and management script"""
         # Make directory
         console('Creating project directory %s ...' % dirpath)
         self.mkdir(dirpath)
@@ -123,7 +123,7 @@ class Command(BaseCommand):
         examples found in the installed packages /examples directories.
         """
         try:
-            dist = get_distribution('steelscript')
+            get_distribution('steelscript')
         except DistributionNotFound:
             console("Package not found: 'steelscript'")
             console("Check the installation")
