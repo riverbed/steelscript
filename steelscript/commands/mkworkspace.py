@@ -58,7 +58,6 @@ class Command(BaseCommand):
 
     def add_options(self, parser):
         group = OptionGroup(parser, 'Make workspace options')
-
         group.add_option('-d', '--dir', action='store',
                          help='Optional path for new workspace location')
         group.add_option('--git', action='store_true',
