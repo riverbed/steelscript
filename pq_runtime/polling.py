@@ -45,6 +45,6 @@ def do_poll(func, *args, **kwargs):
         now_time = time.time()
         if last_time and now_time < last_time + min_poll_interval:
             time.sleep(min_poll_interval + last_time - now_time)
+        last_time = time.time()
         yield func(*args, **kwargs)
         retries += 1
-        last_time = now_time
