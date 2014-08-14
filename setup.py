@@ -5,6 +5,7 @@
 # as set forth in the License.
 
 import os
+import sys
 
 try:
     from setuptools import setup, find_packages, Command
@@ -41,6 +42,15 @@ class MakeSteel(Command):
             f.writelines(lines)
 
         print '%s written.' % bootstrap
+
+
+install_requires = [
+    'requests>=2.1.0',
+    'importlib'
+]
+
+if sys.platform == 'win32':
+    install_requires.append('pyreadline') # readline subsitute for Windows
 
 
 setup_args = {
@@ -85,10 +95,7 @@ http://pythonhosted.org/steelscript/
         ]
     },
 
-    'install_requires': (
-        'requests>=2.1.0',
-        'importlib',
-    ),
+    'install_requires': install_requires,
 
     'cmdclass': {
         'mksteel': MakeSteel,
