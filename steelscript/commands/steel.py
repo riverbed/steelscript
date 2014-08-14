@@ -760,7 +760,7 @@ def start_logging(args):
     logging.basicConfig(
         level=LOG_LEVELS[options.loglevel],
         filename=LOGFILE,
-        format='%(asctime)s [%(levelname)-5.5s] (%(name)s) %(msg)s')
+        format='%(asctime)s [%(levelname)-5.5s] (%(name)s) %(message)s')
 
     logger.info("=" * 70)
     logger.info("==== Started logging: %s" % ' '.join(sys.argv))
@@ -792,7 +792,7 @@ debug = partial(console, lvl=logging.DEBUG)
 
 
 def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
-          env=None, cwd=None, save_output=False):
+          env=None, cwd=None, save_output=False, log_output=True):
     """Run `cmd` in a shell and return the result.
 
     :raises ShellFailed: on failure
@@ -827,7 +827,8 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
                 if output is not None:
                     output.append(line)
                 tail.append(line)
-                logger.info('shell: %s' % line.rstrip())
+                if log_output:
+                    logger.info('shell: %s' % line.rstrip())
 
             except Empty:
                 stalled = True
