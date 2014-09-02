@@ -4,8 +4,6 @@
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
-
-
 """
 This module defines the Service class and associated authentication classes.
 The Service class is not instantiated directly, but is instead subclassed
@@ -105,8 +103,8 @@ class Service(object):
             connection is not authenticated.
 
         `verify_ssl` when set to True will only allow verified SSL certificates
-            on any connections, False will not verify certs (useful for self-signed
-            certs on many test systems)
+            on any connections, False will not verify certs (useful for
+            self-signed certs on many test systems)
 
         `versions` is the API versions that the caller can use.
             if unspecified, this will use the latest version supported
@@ -118,12 +116,14 @@ class Service(object):
         self.host = host
         self.port = port
 
-        #Connection object.  Use this to make REST requests to the device.
+        # Connection object.  Use this to make REST requests to the device.
         self.conn = None
 
         self.verify_ssl = verify_ssl
 
         logger.info("New service %s for host %s" % (self.service, self.host))
+
+        self.support_dscp = False
 
         self.connect()
         self.check_api_versions(versions)
@@ -169,10 +169,14 @@ class Service(object):
         logger.debug("Server supports the following services: %s" %
                      (",".join([str(v) for v in supported_versions])))
 
+        if APIVersion("1.2") in supported_versions:
+            self.support_dscp = True
+
         for v in api_versions:
             if v in supported_versions:
                 self.api_version = v
-                logger.debug("Service '%s' supports version '%s'" % (self.service, v))
+                logger.debug("Service '%s' supports version '%s'" %
+                             (self.service, v))
                 return True
 
         raise RvbdException("API version(s) %s not supported (supported version(s): %s)" %
@@ -200,16 +204,16 @@ class Service(object):
             auth_info = self.conn.json_request('GET', path)
             logger.info("Supported authentication methods: %s" %
                         (','.join(auth_info['supported_methods'])))
-            self._supports_auth_basic  = ("BASIC" in auth_info['supported_methods'])
+            self._supports_auth_basic = ("BASIC" in auth_info['supported_methods'])
             self._supports_auth_cookie = ("COOKIE" in auth_info['supported_methods'])
-            self._supports_auth_oauth  = ("OAUTH_2_0" in auth_info['supported_methods'])
+            self._supports_auth_oauth = ("OAUTH_2_0" in auth_info['supported_methods'])
         except RvbdHTTPException as e:
             if e.status != 404:
                 raise
             logger.warning("Failed to retrieve auth_info, assuming basic")
-            self._supports_auth_basic  = True
+            self._supports_auth_basic = True
             self._supports_auth_cookie = False
-            self._supports_auth_oauth  = False
+            self._supports_auth_oauth = False
 
     def authenticate(self, auth):
         """Authenticate with device using the defined authentication method.
