@@ -110,9 +110,6 @@ class Service(object):
             if unspecified, this will use the latest version supported
             by both this implementation and service requested.  This does
             not apply to the "common" resource requests.
-        
-        `supported_versions` includes a list of supported profiler versions.
-            i.e. [APIVersion("1.0"), APIVersion("1.1"), APIVersion("1.2")]
         """
 
         self.service = service
