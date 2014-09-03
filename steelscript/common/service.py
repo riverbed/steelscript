@@ -181,7 +181,7 @@ class Service(object):
 
         raise RvbdException("API version(s) %s not supported (supported version(s): %s)" %
                            (', '.join([str(v) for v in api_versions]),
-                            ', '.join([str(v) for v in supported_versions])))
+                            ', '.join([str(v) for v in self.supported_versions])))
 
     def _get_supported_versions(self):
         """Get the common list of services and versions supported."""
