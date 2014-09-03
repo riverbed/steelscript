@@ -110,6 +110,9 @@ class Service(object):
             if unspecified, this will use the latest version supported
             by both this implementation and service requested.  This does
             not apply to the "common" resource requests.
+        
+        `supported_versions` includes a list of supported profiler versions.
+            i.e. [APIVersion("1.0"), APIVersion("1.1"), APIVersion("1.2")]
         """
 
         self.service = service
@@ -123,7 +126,7 @@ class Service(object):
 
         logger.info("New service %s for host %s" % (self.service, self.host))
 
-        self.support_dscp = False
+        self.supported_versions = None
 
         self.connect()
         self.check_api_versions(versions)
@@ -156,24 +159,21 @@ class Service(object):
             raise RvbdException("Not connected")
 
         try:
-            supported_versions = self._get_supported_versions()
+            self.supported_versions = self._get_supported_versions()
         except RvbdHTTPException as e:
             if e.status != 404:
                 raise
             logger.warning("Failed to retrieved supported versions")
-            supported_versions = None
+            self.supported_versions = None
 
-        if supported_versions is None:
+        if self.supported_versions is None:
             return False
 
         logger.debug("Server supports the following services: %s" %
-                     (",".join([str(v) for v in supported_versions])))
-
-        if APIVersion("1.2") in supported_versions:
-            self.support_dscp = True
+                     (",".join([str(v) for v in self.supported_versions])))
 
         for v in api_versions:
-            if v in supported_versions:
+            if v in self.supported_versions:
                 self.api_version = v
                 logger.debug("Service '%s' supports version '%s'" %
                              (self.service, v))
