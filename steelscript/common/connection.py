@@ -165,9 +165,13 @@ class Connection(object):
                 rest_logger.info('Request body: ')
                 if raw_json:
                     if (path.endswith('login')):
-                        debug_body = json.dumps(scrub_passwords(raw_json), indent=2)
+                        debug_body = json.dumps(
+                            scrub_passwords(raw_json), indent=2,
+                            cls=self.JsonEncoder)
                     else:
-                        debug_body = json.dumps(raw_json, indent=2)
+                        logger.debug("raw_json: %s" % raw_json)
+                        debug_body = json.dumps(
+                            raw_json, indent=2, cls=self.JsonEncoder)
                 else:
                     debug_body = body
                 lines = debug_body.split('\n')
@@ -202,7 +206,8 @@ class Connection(object):
             if self.REST_DEBUG >=2 and not stream and r.text:
                 rest_logger.info('Response body: ')
                 try:
-                    debug_body = json.dumps(r.json(), indent=2)
+                    debug_body = json.dumps(r.json(), indent=2,
+                                            cls=self.JsonEncoder)
                     lines = debug_body.split('\n')
                 except:
                     lines = r.text.split('\n')
