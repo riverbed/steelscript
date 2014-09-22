@@ -9,7 +9,6 @@ from steelscript.common.jsondict import JsonDict
 
 import unittest
 import logging
-import datetime
 
 try:
     from testconfig import config
@@ -21,6 +20,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG,
                     format="%(asctime)s [%(levelname)-5.5s] %(msg)s")
+
 
 class JsonDictTest(unittest.TestCase):
 
@@ -63,12 +63,27 @@ class JsonDictTest(unittest.TestCase):
         self.assertEqual(j.name.last, 'Doe')
         self.assertEqual(j.age, 1)
 
-    def test_bad_key(self):
+    def test_bad_attr(self):
         def try_foo(obj):
             return obj.foo
 
         j = JsonDict(first='John', last='Doe', age=1)
+        self.assertRaises(AttributeError, try_foo, j)
+
+    def test_bad_key(self):
+        def try_foo(obj):
+            return obj['foo']
+
+        j = JsonDict(first='John', last='Doe', age=1)
         self.assertRaises(KeyError, try_foo, j)
+
+    def test_getattr(self):
+        j = JsonDict(first='John', last='Doe', age=1)
+        v = getattr(j, 'foo', 42)
+        self.assertEqual(v, 42)
+
+        v = getattr(j, 'first', 42)
+        self.assertEqual(v, 'John')
 
     def test_class_default1(self):
         class Widget(JsonDict):
@@ -94,8 +109,8 @@ class JsonDictTest(unittest.TestCase):
     def test_class_default2(self):
         class Widget(JsonDict):
             _default = {'name': None,
-                        'size' : {'width': 100,
-                                  'height': 200}}
+                        'size': {'width': 100,
+                                 'height': 200}}
 
         w1 = Widget(name='Box')
         self.assertEqual(w1.name, 'Box')
@@ -115,8 +130,8 @@ class JsonDictTest(unittest.TestCase):
     def test_class_required1(self):
         class Widget(JsonDict):
             _default = {'name': None,
-                        'size' : {'width': 100,
-                                  'height': 200}}
+                        'size': {'width': 100,
+                                 'height': 200}}
             _required = ['name']
 
         def try_create():
@@ -129,8 +144,8 @@ class JsonDictTest(unittest.TestCase):
     def test_class_required2(self):
         class Widget(JsonDict):
             _default = {'name': None,
-                        'size' : {'width': None,
-                                  'height': 200}}
+                        'size': {'width': None,
+                                 'height': 200}}
             _required = ['name',
                          'size__width']
 

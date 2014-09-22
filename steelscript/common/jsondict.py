@@ -8,6 +8,7 @@
 import json
 import inspect
 
+
 class JsonDict(dict):
     _default = None
     _required = None
@@ -68,7 +69,7 @@ class JsonDict(dict):
                 if cd is not None:
                     if default is None:
                         default = {}
-                    for key,value in cd.iteritems():
+                    for key, value in cd.iteritems():
                         default[key] = value
             self._default = default
 
@@ -79,7 +80,8 @@ class JsonDict(dict):
         if self._required is not None:
             for key in self._required:
                 if self.__getattr__(key) is None:
-                    raise KeyError("Required key not specified: %s" % '.'.join(key.split("__")))
+                    raise KeyError("Required key not specified: %s" %
+                                   '.'.join(key.split("__")))
 
     def __dir__(self):
         return self.keys()
@@ -103,7 +105,7 @@ class JsonDict(dict):
     def update(self, dict):
         """Update the object from a dict."""
         if dict is not None:
-            for k,v in dict.iteritems():
+            for k, v in dict.iteritems():
                 self.__setattr__(k, v)
     
     def __getattr__(self, key):
@@ -145,11 +147,11 @@ class JsonDict(dict):
             if isinstance(obj, list):
                 obj = obj[int(k)]
             elif isinstance(obj, dict):
-                if (k not in obj):
-                    raise KeyError(key)
+                if k not in obj:
+                    raise AttributeError(key)
                 obj = obj[k]
             else:
-                raise KeyError(key)
+                raise AttributeError(key)
                 
         return obj
     
@@ -183,7 +185,7 @@ class JsonDict(dict):
         for key in keyparts[:-1]:
             if ((not isinstance(obj, dict)) or
                 ((obj._default is not None) and (key not in obj._default))):
-                raise KeyError("Invalid key: '%s'" % key)
+                raise AttributeError("Invalid key: '%s'" % key)
 
             if (key not in obj) or (not isinstance(obj[key], dict)):
                 obj[key] = JsonDict()
@@ -196,9 +198,10 @@ class JsonDict(dict):
 
         if ((not isinstance(obj, dict)) or
             ((obj._default is not None) and (key not in obj._default))):
-            raise KeyError("Invalid key: '%s'" % key)
+            raise AttributeError("Invalid key: '%s'" % key)
 
-        obj[key] = self._decode(value, obj._default[key] if obj._default is not None else None)
+        obj[key] = self._decode(value, obj._default[key]
+                                if obj._default is not None else None)
 
     def _decode(self, value, default):
         """Internal function to decode a value, replacing standard dicts with
@@ -217,4 +220,3 @@ class JsonDict(dict):
                 newvalue = value
         
         return newvalue
-
