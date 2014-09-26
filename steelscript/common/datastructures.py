@@ -37,7 +37,7 @@ class JsonDict(dict):
                 'frobble': 'Flounder'}}
 
       >>> type(d.baz)
-      steelscript.common.jsondict.JsonDict
+      steelscript.common.datastructures.JsonDict
       >>> d.baz.fozzle
       10
     """
@@ -85,7 +85,7 @@ class JsonDict(dict):
 
     def __dir__(self):
         return self.keys()
-        
+
     def __str__(self):
         """Return the json-encoded form of the dictionary."""
         return json.dumps(self)
@@ -96,18 +96,18 @@ class JsonDict(dict):
         o = cls()
         o.parse(s)
         return o
-    
+
     def parse(self, s):
         """Update the object from a json-encoded string."""
         d = json.loads(s)
         self.update(d)
-        
+
     def update(self, dict):
         """Update the object from a dict."""
         if dict is not None:
             for k, v in dict.iteritems():
                 self.__setattr__(k, v)
-    
+
     def __getattr__(self, key):
         """
         Return the value associated with the specified key.  Keys starting
@@ -135,7 +135,7 @@ class JsonDict(dict):
             return object.__getattr__(self, key)
 
         # All other keys are assumed to be part of the dictionary
-        
+
         # Treat "__" as a separator like a '.'
         #   so x.a__b ==> x.a.b
         keyparts = key.split("__")
@@ -143,7 +143,7 @@ class JsonDict(dict):
         # Navigate to the right nested object
         obj = self
         for k in keyparts:
-            #print "looking at %s" % k
+            # print "looking at %s" % k
             if isinstance(obj, list):
                 obj = obj[int(k)]
             elif isinstance(obj, dict):
@@ -154,7 +154,7 @@ class JsonDict(dict):
                 raise AttributeError(key)
                 
         return obj
-    
+
     def __setattr__(self, key, value):
         """
         Set the value associated with the specified key.  Keys starting
@@ -166,8 +166,8 @@ class JsonDict(dict):
 
         See __getattr__ as an example.
         """
-        
-        #print "setattr: self <<%s>> : setattr(%s => %s)" % (str(self), key, value)
+
+        # print "setattr: self <<%s>> : setattr(%s => %s)" % (str(self), key, value)
 
         # Turn "obj.<key> = <value>" into "obj['<key>'] = <value>
         if key[0] == '_':
@@ -180,7 +180,7 @@ class JsonDict(dict):
             key = key.encode('utf-8')
         keyparts = key.split("__")
 
-        # Navigate to the parent object to be set. 
+        # Navigate to the parent object to be set.
         obj = self
         for key in keyparts[:-1]:
             if ((not isinstance(obj, dict)) or
@@ -206,7 +206,7 @@ class JsonDict(dict):
     def _decode(self, value, default):
         """Internal function to decode a value, replacing standard dicts with
         JsonDict."""
-        #print "decode(%s, %s)" % (value, default)
+        # print "decode(%s, %s)" % (value, default)
         if isinstance(value, dict):
             newvalue = JsonDict(dict=value, default=default)
         elif isinstance(value, list):
@@ -218,5 +218,200 @@ class JsonDict(dict):
                 newvalue = value.encode('utf-8')
             else:
                 newvalue = value
-        
+
         return newvalue
+
+
+class DictObject(dict):
+    """
+    Creates an object from a custom dictionary, setting attributes
+    for each toplevel key in the dictionary.  This allows simpler
+    access to the top-level keys:
+
+    Example:
+      >>> d = DictObject({'foo': 1,
+                          'bar': 'This is the bar',
+                          'baz': { 'fozzle': 10,
+                                   'frobble': 'Flounder'}})
+      >>> d.foo
+      1
+      >>> d['foo']
+      1
+      >>> d
+      {'foo': 1,
+       'bar': 'This is the bar',
+       'baz': { 'fozzle': 10,
+                'frobble': 'Flounder'}}
+
+    The object is dict and can be maniuplated and iterated just like a dict.
+    Note that only the top-level keys are converted to attributes.  Values that
+    are dicts are still stored as dicts, thus must be accessed using [].
+
+      >>> type(d.baz)
+      dict
+      >>> d.baz['fozzle']
+      10
+    """
+    # This works by overriding the
+    # the 'getattr' and 'setattr' methods.
+
+    # We do not need to override the 'hasattr' as internally this
+    # method invokes 'getattr' method and if 'getattr' returns
+    # AttributeError then 'hasattr' returns False else it returns True.
+
+    @staticmethod
+    def create_from_dict(data):
+        '''Converts a dictionary into a DictObject instance, in the
+           process converting all unicode strings to regular strings.'''
+
+        if data is None:
+            # if we aren't given a dict, just return an empty object
+            return DictObject()
+
+        def _decode_list(data):
+            rv = []
+            for item in data:
+                if isinstance(item, unicode):
+                    item = item.encode('utf-8')
+                elif isinstance(item, list):
+                    item = _decode_list(item)
+                elif isinstance(item, dict):
+                    item = _decode_dict(item)
+                rv.append(item)
+            return rv
+
+        def _decode_dict(data):
+            rv = DictObject()
+            for key, value in data.iteritems():
+                if isinstance(key, unicode):
+                    key = key.encode('utf-8')
+                if isinstance(value, unicode):
+                    value = value.encode('utf-8')
+                elif isinstance(value, list):
+                    value = _decode_list(value)
+                elif isinstance(value, dict):
+                    value = _decode_dict(value)
+                rv[key] = value
+            return rv
+
+        return _decode_dict(data)
+
+    def __init__(self, d=None):
+        if not d: d = {}
+        super(DictObject, self).__init__(d)
+
+    def __dir__(self):
+        return self.keys()
+
+    def __getattr__(self, key):
+        try:
+            return self.__getitem__(key)
+        except KeyError:
+            raise AttributeError(key)
+
+    def __setattr__(self, key, value):
+        # XXX - don't think KeyError will ever be called here
+        self[key] = value
+
+
+class ColumnProxy(object):
+    """ a class to simplify creating a data structure that mirrors
+    a structure that can be fetched at run-time from a server.
+
+    This class is used for structures like the list of valid
+    extractor fields on NetShark or the list of valid columns on
+    NetProfiler.  These are very long lists of names so we don't want
+    to hard-code the list in steelscript but we would also like the
+    list to be available at run-time so interactive tools like
+    bpython or eclipse can do automatic completion.  At the same
+    time, non-interactive scripts have no need to fetch and parse
+    the list of field names so we only want the list to be fetched
+    if needed.
+
+    We achieve the goals listed above by using this proxy object.
+    For non-interactive scripts, it simply implements __getattr__
+    to echo back strings including those containing periods.
+    So if columns is an instance of this class, then trivial uses are:
+
+    >>> columns.foo
+    foo
+    >>> columns.x.y.z
+    x.y.z
+
+    For interactive scripts, the entry point for doing auto-completion
+    (from something like a tab keypress in bpython) is __dir__.
+    __dir__() calls a supplied function to get a list of valid names
+    and builds a data structure that reflects the list of provided names.
+    It calls a second callback so that this data structure can be stored
+    in the parent object so future references do not need another fetch
+    from the server.
+
+    See the columns field in steelscript.netshark.NetShark objects for a typical
+    example of how it is used.
+    """
+
+    def __init__(self, fn, callback):
+        self._fn = fn
+        self._callback = callback
+
+    class Container(object):
+        pass
+
+    def __dir__(self):
+        root = self.Container()
+        for (name, value) in self._fn():
+            o = root
+
+            components = name.split('.')
+            for component in components[:-1]:
+                try:
+                    o = getattr(o, component)
+                except AttributeError:
+                    n = self.Container()
+                    setattr(o, component, n)
+                    o = n
+
+            setattr(o, components[-1], value)
+
+        self._callback(root)
+        return dir(root)
+
+    class FakeColumn(str):
+        def __getattribute__(self, n):
+            if n == 'count':
+                return str('%s.%s' % (self, n))
+            return str.__getattribute__(self, n)
+        def __getattr__(self, n):
+            return self.__class__('%s.%s' % (self, n))
+
+    def __getattr__(self, n):
+        return self.FakeColumn(n)
+
+class RecursiveUpdateDict(dict):
+    """ XXX this needs documentation """
+    def __init__(self, *args, **kw):
+        super(RecursiveUpdateDict, self).__init__(*args, **kw)
+
+    def update(self, E=None, **F):
+        if E is not None:
+            if 'keys' in dir(E) and callable(getattr(E, 'keys')):
+                for k in E:
+                    if k in self:  # existing ...must recurse into both sides
+                        self.r_update(k, E)
+                    else:  # doesn't currently exist, just update
+                        self[k] = E[k]
+            else:
+                for (k, v) in E:
+                    self.r_update(k, {k: v})
+
+        for k in F:
+            self.r_update(k, {k: F[k]})
+
+    def r_update(self, key, other_dict):
+        if isinstance(self[key], dict) and isinstance(other_dict[key], dict):
+            od = RecursiveUpdateDict(self[key])
+            nd = other_dict[key]
+            od.update(nd)
+            self[key] = od
+        else:
+            self[key] = other_dict[key]

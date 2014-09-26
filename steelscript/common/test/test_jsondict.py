@@ -5,7 +5,7 @@
 # as set forth in the License.
 
 
-from steelscript.common.jsondict import JsonDict
+from steelscript.common.datastructures import JsonDict
 
 import unittest
 import logging
@@ -140,7 +140,7 @@ class JsonDictTest(unittest.TestCase):
         self.assertRaises(KeyError, try_create)
         w = Widget(name='Box')
         self.assertEqual(w.name, 'Box')
-        
+
     def test_class_required2(self):
         class Widget(JsonDict):
             _default = {'name': None,
