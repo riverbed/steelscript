@@ -25,9 +25,9 @@ logging.basicConfig(level=logging.DEBUG,
 class JsonDictTest(unittest.TestCase):
 
     def test_init_dict1(self):
-        j = JsonDict(dict={'first' : 'John',
-                           'last' : 'Doe',
-                           'age' : 1})
+        j = JsonDict(dict={'first': 'John',
+                           'last': 'Doe',
+                           'age': 1})
         self.assertEqual(j.first, 'John')
         self.assertEqual(j.last, 'Doe')
         self.assertEqual(j.age, 1)
@@ -38,17 +38,17 @@ class JsonDictTest(unittest.TestCase):
         self.assertEqual(j.last, 'Doe')
 
     def test_init_dict2(self):
-        j = JsonDict(dict={'name' : {'first' : 'John',
-                                     'last' : 'Doe'},
-                           'age' : 1})
+        j = JsonDict(dict={'name': {'first': 'John',
+                                    'last': 'Doe'},
+                           'age': 1})
         self.assertEqual(j.name.first, 'John')
         self.assertEqual(j.name.last, 'Doe')
         self.assertEqual(j.age, 1)
-        self.assertEqual(j.name, {'first' : 'John', 'last' : 'Doe'})
+        self.assertEqual(j.name, {'first': 'John', 'last': 'Doe'})
 
         j.name.first = 'Joe'
         j.name.last = 'Blow'
-        self.assertEqual(j.name, {'first' : 'Joe', 'last' : 'Blow'})
+        self.assertEqual(j.name, {'first': 'Joe', 'last': 'Blow'})
         self.assertEqual(j.age, 1)
 
     def test_init_kw1(self):
@@ -135,7 +135,7 @@ class JsonDictTest(unittest.TestCase):
             _required = ['name']
 
         def try_create():
-            w = Widget()
+            Widget()
 
         self.assertRaises(KeyError, try_create)
         w = Widget(name='Box')
@@ -150,7 +150,7 @@ class JsonDictTest(unittest.TestCase):
                          'size__width']
 
         def try_create():
-            w = Widget(name='Foo')
+            Widget(name='Foo')
 
         self.assertRaises(KeyError, try_create)
         w = Widget(name='Box', size__width=100)

@@ -78,14 +78,14 @@ class Formatter(object):
             `paginate`     - number of rows to insert new header
             `padding`      - extra spaces between columns
             `max_width`    - number of characters to restrict output to
-            `long_column`  - column number to either truncate or wrap to meet max_width
-                             (defaults to second column)
+            `long_column`  - column number to either truncate or wrap to meet
+                             max_width (defaults to second column)
             `wrap_columns` - indicate whether to wrap or truncate long_column
         """
         import textwrap
 
-        widths = [max(len(str(x)) + padding for x in col) for col in izip(headers,
-                                                                          *columns)]
+        widths = [max(len(str(x)) + padding for x in col)
+                  for col in izip(headers, *columns)]
 
         if max_width and sum(widths) > max_width:
             delta = sum(widths) - max_width
@@ -111,7 +111,8 @@ class Formatter(object):
                 width = widths[long_column] - padding - 2
                 if not wrap_columns:
                     # truncate data with ellipsis if needed
-                    row[long_column] = (column[:width] + '..') if len(column) > width else column
+                    row[long_column] = ((column[:width] + '..')
+                                        if len(column) > width else column)
                     print ''.join(str(s).ljust(x) for s, x in zip(row, widths))
                 else:
                     # take column and wrap it in place, creating new rows

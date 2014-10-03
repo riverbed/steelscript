@@ -19,7 +19,7 @@ class JsonDict(dict):
     using dotted notation rather than the square brackets access
 
     The object is dict and can be maniuplated and iterated just like a
-    dict, including nested dictionaries.  
+    dict, including nested dictionaries.
 
     Example:
       >>> d = JsonDict({'foo': 1,
@@ -54,7 +54,7 @@ class JsonDict(dict):
             as well as validate future assignments
 
         Additional keyword arguments are parsed as if passed
-        to __setattr__.  
+        to __setattr__.
         """
         super(JsonDict, self).__init__()
         if default:
@@ -126,7 +126,7 @@ class JsonDict(dict):
         'John'
         >>> d.name__first
         'John'
-        
+
         This last form using '__' is useful as part of initialization.
         """
 
@@ -152,14 +152,14 @@ class JsonDict(dict):
                 obj = obj[k]
             else:
                 raise AttributeError(key)
-                
+
         return obj
 
     def __setattr__(self, key, value):
         """
         Set the value associated with the specified key.  Keys starting
         with an underscore are assigned as standard attributes.  All others
-        are assigned to the dictionary object.  
+        are assigned to the dictionary object.
 
         The key may also reference nested dictionaries using '__' to split
         key names at each level.
@@ -167,7 +167,8 @@ class JsonDict(dict):
         See __getattr__ as an example.
         """
 
-        # print "setattr: self <<%s>> : setattr(%s => %s)" % (str(self), key, value)
+        # print "setattr: self <<%s>> : setattr(%s => %s)" % (str(self), key,
+        #                                                     value)
 
         # Turn "obj.<key> = <value>" into "obj['<key>'] = <value>
         if key[0] == '_':
@@ -184,7 +185,8 @@ class JsonDict(dict):
         obj = self
         for key in keyparts[:-1]:
             if ((not isinstance(obj, dict)) or
-                ((obj._default is not None) and (key not in obj._default))):
+                    ((obj._default is not None) and
+                     (key not in obj._default))):
                 raise AttributeError("Invalid key: '%s'" % key)
 
             if (key not in obj) or (not isinstance(obj[key], dict)):
@@ -197,7 +199,7 @@ class JsonDict(dict):
         key = keyparts[-1]
 
         if ((not isinstance(obj, dict)) or
-            ((obj._default is not None) and (key not in obj._default))):
+                ((obj._default is not None) and (key not in obj._default))):
             raise AttributeError("Invalid key: '%s'" % key)
 
         obj[key] = self._decode(value, obj._default[key]
@@ -297,7 +299,8 @@ class DictObject(dict):
         return _decode_dict(data)
 
     def __init__(self, d=None):
-        if not d: d = {}
+        if not d:
+            d = {}
         super(DictObject, self).__init__(d)
 
     def __dir__(self):
@@ -346,8 +349,8 @@ class ColumnProxy(object):
     in the parent object so future references do not need another fetch
     from the server.
 
-    See the columns field in steelscript.netshark.NetShark objects for a typical
-    example of how it is used.
+    See the columns field in steelscript.netshark.NetShark objects for
+    a typical example of how it is used.
     """
 
     def __init__(self, fn, callback):
@@ -381,11 +384,13 @@ class ColumnProxy(object):
             if n == 'count':
                 return str('%s.%s' % (self, n))
             return str.__getattribute__(self, n)
+
         def __getattr__(self, n):
             return self.__class__('%s.%s' % (self, n))
 
     def __getattr__(self, n):
         return self.FakeColumn(n)
+
 
 class RecursiveUpdateDict(dict):
     """ XXX this needs documentation """
