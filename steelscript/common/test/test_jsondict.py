@@ -10,12 +10,6 @@ from steelscript.common.datastructures import JsonDict
 import unittest
 import logging
 
-try:
-    from testconfig import config
-except ImportError:
-    if __name__ != '__main__':
-        raise
-    config = {}
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG,

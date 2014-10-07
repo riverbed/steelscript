@@ -153,7 +153,7 @@ class Command(BaseCommand):
         steel_pkgs = (x for x in e if x.startswith('steel'))
         # Remove the 'steelscript.' prefix
         no_prefix_pkgs = (x.split('.', 1)[1]
-                          if '.' in x else x for x in steel_pkgs )
+                          if '.' in x else x for x in steel_pkgs)
         # Turn those package names (ex. 'netshark') into full paths
         example_paths = (os.path.join(examples_root, p) for p in no_prefix_pkgs
                          if os.path.exists(os.path.join(examples_root, p)))
