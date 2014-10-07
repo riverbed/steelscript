@@ -18,12 +18,12 @@ from steelscript.commands.steel import (BaseCommand, prompt, console,
 
 README_CONTENT = """
 This is a workspace that you can use to run pre-created example scripts,
-or to create your own scripts interacting with the Steelscript packages.
+or to create your own scripts interacting with the SteelScript packages.
 
 To collect examples run 'python collect_examples.py.' You can also overwrite
 the examples you have already collected with the '--overwrite' option.
 
-If no examples are found, that means there are no Steelscript packages
+If no examples are found, that means there are no SteelScript packages
 installed with /examples in their root directory, or /examples contains no
 files.
 """
@@ -54,7 +54,7 @@ GITIGNORE = """
 
 
 class Command(BaseCommand):
-    help = 'Create new workspace for running and creating Steelscript scripts'
+    help = 'Create new workspace for running and creating SteelScript scripts'
 
     def add_options(self, parser):
         group = OptionGroup(parser, 'Make workspace options')
@@ -67,12 +67,12 @@ class Command(BaseCommand):
 
     @classmethod
     def mkdir(cls, dirname):
-        """Creates directory if it doesn't already exist."""
+        """Create directory if it doesn't already exist."""
         if not os.path.exists(dirname):
             os.mkdir(dirname)
 
     def create_file(self, dirname, filename, content):
-        """Creates a file according to some basic specifications"""
+        """Create a file according to some basic specifications."""
         fname = os.path.join(dirname, filename)
         if not os.path.exists(fname):
             console('Writing {0} file {1} ... '.format(filename, fname),
@@ -84,17 +84,17 @@ class Command(BaseCommand):
             console('File already exists, skipping writing the file.')
 
     def create_workspace_directory(self, dirpath):
-        """Creates a workspace directory with a readme and management script"""
+        """Create a workspace directory with a readme and management script."""
         # Make directory
         console('Creating project directory %s ...' % dirpath)
         self.mkdir(dirpath)
 
         self.create_file(dirpath, 'README.md', README_CONTENT)
-        self.create_file(dirpath, 'collect_examples.py', COLLECT_EXAMPLES_CONTENT)
+        self.create_file(dirpath, 'collect_examples.py',
+                         COLLECT_EXAMPLES_CONTENT)
 
     def initialize_git(self, dirpath):
-        """If git installed, initialize project folder as new repo.
-        """
+        """If git installed, initialize project folder as new repo."""
         try:
             check_git()
         except ShellFailed:
@@ -115,7 +115,8 @@ class Command(BaseCommand):
 
     @classmethod
     def collect_examples(cls, dirpath, overwrite=False):
-        """Copies examples from installed steelscript packages into the workspace
+        """Copy examples from installed steelscript packages into workspace.
+
         :param dirpath: The absolute path to the directory the examples
         should be copied into.
         :param overwrite: If True, all edited examples will be overwritten with
@@ -128,7 +129,8 @@ class Command(BaseCommand):
             console("Check the installation")
             return
 
-        console("Collecting examples from installed packages ... ", newline=False)
+        console("Collecting examples from installed packages ... ",
+                newline=False)
 
         examples_root = os.path.join(sys.prefix, 'share', 'doc',
                                      'steelscript', 'examples')
@@ -142,14 +144,16 @@ class Command(BaseCommand):
 
     @classmethod
     def _cp_examples_from_docs(cls, dirpath, overwrite):
-        """Copy all examples from the virtual enviornment's installed packages"""
+        """Copy all examples from the virtual environment's installed packages.
+        """
         examples_root = os.path.join(sys.prefix, 'share', 'doc',
                                      'steelscript', 'examples')
         e = AvailableDistributions()
         # Get packages with prefix steel (ex. steelscript.netshark)
         steel_pkgs = (x for x in e if x.startswith('steel'))
         # Remove the 'steelscript.' prefix
-        no_prefix_pkgs = (x.split('.', 1)[1] if '.' in x else x for x in steel_pkgs )
+        no_prefix_pkgs = (x.split('.', 1)[1]
+                          if '.' in x else x for x in steel_pkgs )
         # Turn those package names (ex. 'netshark') into full paths
         example_paths = (os.path.join(examples_root, p) for p in no_prefix_pkgs
                          if os.path.exists(os.path.join(examples_root, p)))
@@ -166,11 +170,12 @@ class Command(BaseCommand):
 
     @classmethod
     def _cp_examples_from_src(cls, dirpath, overwrite):
-        """Copy all examples from steelscript root directories"""
+        """Copy all examples from steelscript root directories."""
         # Get the paths of installed packages (ex /src/steelscript-netprofiler)
         pkg_paths = (os.path.dirname(p) for p in steelscript.__path__)
         # Get all the paths to the example files if the /examples folder exists
-        example_paths = (p for p in pkg_paths if os.path.exists(os.path.join(p, 'examples')))
+        example_paths = (p for p in pkg_paths
+                         if os.path.exists(os.path.join(p, 'examples')))
         new_dir = None
         for p in example_paths:
             new_dir = cls.path_leaf(p) + '-examples'
@@ -192,7 +197,7 @@ class Command(BaseCommand):
 
     @classmethod
     def copy_all(cls, src_dir, dest_dir, overwrite):
-        """Copies all files inside src_dir into dest_dir"""
+        """Copy all files inside src_dir into dest_dir."""
         src_files = os.listdir(src_dir)
         if not overwrite:
             dest_files = os.listdir(dest_dir)
@@ -204,7 +209,7 @@ class Command(BaseCommand):
                 shutil.copy(full_file_name, dest_dir)
 
     def main(self):
-        console('Generating new Steelscript workspace...')
+        console('Generating new SteelScript workspace...')
 
         dirpath = self.options.dir
         while not dirpath:
@@ -223,4 +228,4 @@ class Command(BaseCommand):
             self.initialize_git(dirpath)
 
         console('\n*****\n')
-        console('Steelscript workspace created.')
+        console('SteelScript workspace created.')

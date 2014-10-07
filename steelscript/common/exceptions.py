@@ -5,19 +5,22 @@
 # as set forth in the License.
 
 
-
-import xml.etree.ElementTree as ElementTree
 import json
+import xml.etree.ElementTree as ElementTree
 
-__all__ = [ 'RvbdException', 'RvbdHTTPException' ]
+__all__ = ['RvbdException', 'RvbdHTTPException']
 
-class RvbdException(Exception): pass
+
+class RvbdException(Exception):
+    pass
+
 
 class RvbdHTTPException(RvbdException):
     def __init__(self, result, data, method, urlpath):
-        RvbdException.__init__(self,
-                               'HTTP %s on %s returned status %s (%s)' %
-                               (method, urlpath, result.status_code, result.reason))
+        RvbdException.__init__(
+            self, ('HTTP %s on %s returned status %s (%s)' %
+                   (method, urlpath, result.status_code, result.reason))
+        )
 
         self.status = result.status_code
         self.reason = result.reason
@@ -31,7 +34,8 @@ class RvbdHTTPException(RvbdException):
                         self.error_id = None
                         self.error_text = e.get('Cause')
                     else:
-                        raise ValueError('Unable to parse error message from server')
+                        msg = 'Unable to parse error message from server'
+                        raise ValueError(msg)
                 else:
                     self.error_id = e.get('error_id')
                     self.error_text = e.get('error_text')
@@ -54,9 +58,11 @@ class RvbdHTTPException(RvbdException):
                 self.error_text = self.reason
 
             if self.error_text == "Not authorized":
-                self.error_text += " You are not logged in. " \
-                       "use the auth parameter to enter valid credentials or" \
-                       "authenticate using the .authenticate(auth) method"
+                self.error_text += (
+                    " You are not logged in. "
+                    "use the auth parameter to enter valid credentials or"
+                    "authenticate using the .authenticate(auth) method"
+                )
 
         except Exception, e:
             self.error_id = 'INVALID_ERROR_IDENTIFIER'

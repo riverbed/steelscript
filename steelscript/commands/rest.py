@@ -1,3 +1,10 @@
+# Copyright (c) 2014 Riverbed Technology, Inc.
+#
+# This software is licensed under the terms and conditions of the MIT License
+# accompanying the software ("License").  This software is distributed "AS IS"
+# as set forth in the License.
+
+
 import os
 import re
 import base64
@@ -19,6 +26,7 @@ from steelscript.commands.steel import BaseCommand
 logger = logging.getLogger(__name__)
 
 HistoryContext = namedtuple('HistoryContext', 'name filename obj')
+
 
 class HistoryManager(object):
     """Manage multiple readline history contexts.
@@ -121,6 +129,7 @@ class RestCommand(BaseCommand):
     def version(self):
         return None
 
+
 class Connect(RestCommand):
     keyword = 'connect'
     help = 'Establish a new connection to a remote server'
@@ -139,8 +148,8 @@ class Connect(RestCommand):
         # OAuth is currently part of the Service class which is not used
         # here -- need to rework the code a bit to get that working
 
-        #group.add_option("--oauth", help="OAuth Access Code, in place of "
-        #                 "username/password")
+        # group.add_option("--oauth", help="OAuth Access Code, in place of "
+        #                  "username/password")
         group.add_option("-A", "--api_version", dest="api_version",
                          help="api version to use unconditionally")
         parser.add_option_group(group)
@@ -176,9 +185,11 @@ Add custom headers as <header>:<value>"""
             if self.readbody:
                 lines = []
                 if self.rest.interactive:
-                    print 'Provide body text, enter "." on a line by itself to finish'
+                    print ('Provide body text, enter "." on a line '
+                           'by itself to finish')
                     if self.rest.jsonmode:
-                        print 'Request must be JSON, use double quotes for strings'
+                        print ('Request must be JSON, use double quotes '
+                               'for strings')
 
                 while True:
                     try:
@@ -217,10 +228,10 @@ Add custom headers as <header>:<value>"""
                 for arg in self.args:
                     m = re.match('[^:=]*([:=])', arg)
                     if not m or m.group(1) not in ':=':
-                        raise ('Invalid argument, expected either k=v for URL param, '
-                               'or k:v for header')
+                        raise ('Invalid argument, expected either k=v for '
+                               'URL param, or k:v for header')
 
-                    (k,v) = arg.split(m.group(1), 1)
+                    (k, v) = arg.split(m.group(1), 1)
                     if m.group(1) == ':':
                         headers[k] = v
                     else:
@@ -233,24 +244,27 @@ Add custom headers as <header>:<value>"""
             outputlines = None
             if self.rest.jsonmode:
                 (data, resp) = self.rest.conn.json_request(
-                    self.keyword, path=self.options.path, body=body, params=params,
-                    extra_headers=headers, raw_response=True)
+                    self.keyword, path=self.options.path, body=body,
+                    params=params, extra_headers=headers, raw_response=True)
 
                 if data is not None:
                     outputlines = json.dumps(data, indent=4)
 
             else:
-                resp = self.rest.conn._request(self.keyword, path=self.options.path,
+                resp = self.rest.conn._request(self.keyword,
+                                               path=self.options.path,
                                                body=body, params=params,
                                                extra_headers=headers)
                 if resp.content:
-                    if (  'content-type' in resp.headers and
-                          resp.headers['content-type'] == 'application/json'):
-                        outputlines = json.dumps(json.loads(resp.content), indent=4)
+                    ctype = resp.headers.get('content-type', '')
+                    if ctype == 'application/json':
+                        outputlines = json.dumps(json.loads(resp.content),
+                                                 indent=4)
                     else:
                         outputlines = resp.text
 
-            print "HTTP Status %s: %s bytes" % (resp.status_code, len(resp.content))
+            print "HTTP Status %s: %s bytes" % (resp.status_code,
+                                                len(resp.content))
             if outputlines is not None:
                 count = len(outputlines.split('\n'))
                 try:
@@ -280,7 +294,6 @@ class DELETE(Method):
 
 
 class POST(Method):
-
     keyword = 'POST'
     help = """Perform an HTTP POST.
 
@@ -292,7 +305,6 @@ change the defulat request body format as 'json' or 'text'.
 
 
 class PUT(Method):
-
     keyword = 'PUT'
     help = """Perform an HTTP PUT.
 
@@ -304,7 +316,6 @@ change the defulat request body format as 'json' or 'text'.
 
 
 class Help(RestCommand):
-
     keyword = 'help'
     help = 'Verbose instructions'
 
@@ -330,8 +341,8 @@ Available commands:
             print "  %-*s  %s" % (w, sub.keyword, sub.help.split('\n')[0])
         print ""
 
-class Mode(RestCommand):
 
+class Mode(RestCommand):
     keyword = 'mode'
     help = 'Change default body encoding'
 
@@ -344,7 +355,6 @@ class Mode(RestCommand):
 
 
 class Command(Application):
-
     help = "Interactive shell for issuing REST commands"
 
     def __init__(self, *args, **kwargs):
@@ -359,7 +369,7 @@ class Command(Application):
 
     def add_positional_args(self):
         super(Command, self).add_positional_args()
-        #self.add_positional_arg('host', 'Rest hostname or IP address')
+        # self.add_positional_arg('host', 'Rest hostname or IP address')
 
     def add_options(self, parser):
         parser.add_option('-f', '--file', help='Read commands from a file')
@@ -380,17 +390,21 @@ class Command(Application):
             return self.filelines.pop(0)
         else:
             input = raw_input(prompt)
-            readline.remove_history_item(readline.get_current_history_length()-1)
+            readline.remove_history_item(
+                readline.get_current_history_length() - 1
+            )
             return input
 
     def main(self):
-
         self.history = HistoryManager()
         history = self.history
-        history.add_context('cmd', os.path.join(os.path.expanduser('~'),
-                                                '.steelscript/rest-cmd-history'))
-        history.add_context('body', os.path.join(os.path.expanduser('~'),
-                                                 '.steelscript/rest-obj-history'), obj=True)
+        history.add_context('cmd',
+                            os.path.join(os.path.expanduser('~'),
+                                         '.steelscript/rest-cmd-history'))
+        history.add_context('body',
+                            os.path.join(os.path.expanduser('~'),
+                                         '.steelscript/rest-obj-history'),
+                            obj=True)
 
         history.set_context('cmd')
         atexit.register(HistoryManager.save, history)
@@ -442,5 +456,6 @@ class Command(Application):
             except SystemExit as e:
                 pass
             except Exception as e:
-                print "Command raised an error, see log for traceback:\n%s\n" % str(e)
+                print ('Command raised an error, see log for traceback:\n%s\n'
+                       % str(e))
                 logger.exception("Command raised an error")

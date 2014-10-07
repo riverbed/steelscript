@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+# Copyright (c) 2014 Riverbed Technology, Inc.
+#
+# This software is licensed under the terms and conditions of the MIT License
+# accompanying the software ("License").  This software is distributed "AS IS"
+# as set forth in the License.
+
+
+import re
 import os
 import sys
 import time
@@ -7,7 +15,6 @@ import glob
 import getpass
 import optparse
 import subprocess
-import re
 from optparse import OptionParser, OptionGroup
 from threading import Thread
 from functools import partial
@@ -60,13 +67,16 @@ STEELSCRIPT_APPFW = ['steelscript.appfwk',
 
 logging_initialized = False
 
+
 class ShellFailed(Exception):
     def __init__(self, returncode, output=None):
         self.returncode = returncode
         self.output = output
 
+
 class MainFailed(Exception):
     pass
+
 
 class _Parser(OptionParser):
     """Custom OptionParser that does not re-flow the description."""
@@ -170,8 +180,8 @@ class BaseCommand(object):
         # Customize the description.  If there are subcommands,
         # build a help table.
         if self.help is not None:
-            lines = self.help.strip()
-            desc = '\n'.join(['  ' + line for line in self.help.split('\n')]) + '\n'
+            lines = self.help.strip().split('\n')
+            desc = '\n'.join(['  ' + line for line in lines]) + '\n'
         else:
             desc = ''
 
@@ -192,11 +202,12 @@ class BaseCommand(object):
             return desc
 
         if self.positional_args:
-            desc = add_help_items('Required Arguments', self.positional_args, desc)
+            desc = add_help_items('Required Arguments',
+                                  self.positional_args, desc)
 
         elif self.subcommands:
-            desc = add_help_items('Sub Commands', self.subcommands, desc)
-
+            desc = add_help_items('Sub Commands',
+                                  self.subcommands, desc)
 
         return desc
 
@@ -251,9 +262,9 @@ class BaseCommand(object):
         # Look for subcommands, strip off and pass of
         # remaining args to the subcommands.  If there are
         # positional args, skip this step
-        if (  not self.positional_args and
-              len(args) > 0 and
-              not args[0].startswith('-')):
+        if (not self.positional_args and
+                len(args) > 0 and
+                not args[0].startswith('-')):
             subcmds = [subcmd for subcmd in self.subcommands
                        if subcmd.keyword == args[0]]
             if subcmds:
@@ -359,7 +370,8 @@ class SteelCommand(BaseCommand):
                     cmd = BaseCommand(self)
                     cmd.keyword = obj.name
                     cmd.submodule = i.__name__
-                    cmd.help = 'Commands for {mod} module'.format(mod=i.__name__)
+                    cmd.help = ('Commands for {mod} module'
+                                .format(mod=i.__name__))
 
         return self._subcommands
 
@@ -471,7 +483,7 @@ class InstallCommand(BaseCommand):
                     '--allow-unverified django-admin-tools '
                     'django-admin-tools==0.5.1')
                    .format(pip_options=self.options.pip_options)),
-              msg=('Installing django-admin-tools'))
+              msg='Installing django-admin-tools')
 
         if not all([pkg_installed('numpy'), pkg_installed('pandas')]):
             import platform
@@ -496,9 +508,11 @@ class InstallCommand(BaseCommand):
                             '> sudo yum groupinstall "Development tools"\n'
                             '> sudo yum install python-devel\n')
                 elif exe_installed('apt-get'):
-                    console(base_msg +
-                            '> sudo apt-get update\n'
-                            '> sudo apt-get install build-essential python-dev\n')
+                    console(
+                        base_msg +
+                        '> sudo apt-get update\n'
+                        '> sudo apt-get install build-essential python-dev\n'
+                    )
                 else:
                     console('Cannot determine appropriate package manager\n'
                             'for your OS.  Please run the `steel about -v`\n'
@@ -532,11 +546,12 @@ class InstallCommand(BaseCommand):
                 # Install the requirements.txt
                 reqfile = os.path.join(outdir, 'requirements.txt')
                 if os.path.exists(reqfile):
-                    shell(cmd=('pip install -r {reqfile} {pip_options} '
-                               .format(reqfile=reqfile,
-                                       pip_options=self.options.pip_options)),
-
-                          msg=('Installing {pkg} requirements'.format(pkg=pkg)))
+                    shell(
+                        cmd=('pip install -r {reqfile} {pip_options} '
+                             .format(reqfile=reqfile,
+                                     pip_options=self.options.pip_options)),
+                        msg=('Installing {pkg} requirements'.format(pkg=pkg))
+                    )
 
                 # Now install this git repo in develop mode
                 shell(cmd=('cd {outdir}; python setup.py develop'
@@ -577,7 +592,8 @@ class InstallCommand(BaseCommand):
             cmd = (('pip install {pip_options} {upgrade}--no-index '
                     '--find-links=file://{dir} {pkg}')
                    .format(dir=self.options.dir, pkg=pkg,
-                           upgrade=('-U --no-deps' if self.options.upgrade else ''),
+                           upgrade=('-U --no-deps'
+                                    if self.options.upgrade else ''),
                            pip_options=self.options.pip_options))
             shell(cmd=cmd,
                   msg=('Installing {pkg}'
@@ -594,9 +610,10 @@ class InstallCommand(BaseCommand):
             if pkg == 'steelscript.appfwk':
                 self.prepare_appfwk()
 
-            cmd = (('pip install {pip_options} {upgrade} {pkg}')
+            cmd = ('pip install {pip_options} {upgrade} {pkg}'
                    .format(pkg=pkg,
-                           upgrade=('-U --no-deps' if self.options.upgrade else ''),
+                           upgrade=('-U --no-deps'
+                                    if self.options.upgrade else ''),
                            pip_options=self.options.pip_options))
             shell(cmd=cmd,
                   msg=('Installing {pkg}'
@@ -641,9 +658,11 @@ class UninstallCommand(BaseCommand):
                 console('The `steel` command will be removed as part of this\n'
                         'operation.  To reinstall steelscript you can run\n'
                         '`pip install steelscript`, or follow an alternative\n'
-                        'method described at http://pythonhosted.com/steelscript\n')
+                        'method described at '
+                        'http://pythonhosted.com/steelscript\n')
 
-                if not prompt_yn('Continue with uninstall?', default_yes=False):
+                if not prompt_yn('Continue with uninstall?',
+                                 default_yes=False):
                     console('\n*** Aborting uninstall ***\n')
                     sys.exit(1)
             else:
@@ -713,9 +732,11 @@ def prompt(msg, choices=None, default=None, password=False):
 
 def add_log_options(parser):
     group = optparse.OptionGroup(parser, "Logging Parameters")
-    group.add_option("--loglevel", help="log level: debug, warn, info, critical, error",
+    group.add_option("--loglevel",
+                     help="log level: debug, warn, info, critical, error",
                      choices=LOG_LEVELS.keys(), default="info")
-    group.add_option("--logfile", help="log file, use '-' for stdout", default=None)
+    group.add_option("--logfile",
+                     help="log file, use '-' for stdout", default=None)
     parser.add_option_group(group)
 
 
@@ -751,7 +772,9 @@ def start_logging(args):
         if options.logfile is not None:
             LOGFILE = options.logfile
         else:
-            LOGFILE = os.path.join(os.path.expanduser('~'), '.steelscript', 'steel.log')
+            LOGFILE = os.path.join(os.path.expanduser('~'),
+                                   '.steelscript',
+                                   'steel.log')
 
         logdir = os.path.dirname(LOGFILE)
         if logdir and not os.path.exists(logdir):
@@ -861,7 +884,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
             for line in tail:
                 print '  ', line
             if LOGFILE:
-                console('See log for details: %s' % (LOGFILE))
+                console('See log for details: %s' % LOGFILE)
             sys.exit(1)
         if output is not None:
             output = '\n'.join(output)

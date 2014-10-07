@@ -5,10 +5,8 @@
 # as set forth in the License.
 
 
-
 class APIVersion:
-    """Simple class to wrap information
-    about the client-side supported API versions"""
+    """Wraps information about the client-side supported API versions"""
 
     def __init__(self, v):
         if isinstance(v, basestring):

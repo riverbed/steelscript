@@ -5,7 +5,6 @@
 # as set forth in the License.
 
 
-
 import os
 import json
 import platform

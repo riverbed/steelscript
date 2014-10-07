@@ -141,9 +141,11 @@ class Service(object):
         if self.conn is not None and hasattr(self.conn, 'close'):
             self.conn.close()
 
-        self.conn = connection.Connection(self.host, port=self.port,
-                                          verify=self.verify_ssl,
-                                          reauthenticate_handler=self.reauthenticate)
+        self.conn = connection.Connection(
+            self.host, port=self.port,
+            verify=self.verify_ssl,
+            reauthenticate_handler=self.reauthenticate
+        )
 
     def logout(self):
         """End the authenticated session with the device."""
@@ -176,9 +178,10 @@ class Service(object):
                              (self.service, v))
                 return True
 
-        raise RvbdException("API version(s) %s not supported (supported version(s): %s)" %
-                           (', '.join([str(v) for v in api_versions]),
-                            ', '.join([str(v) for v in self.supported_versions])))
+        msg = ("API version(s) %s not supported (supported version(s): %s)" %
+               (', '.join([str(v) for v in api_versions]),
+                ', '.join([str(v) for v in self.supported_versions])))
+        raise RvbdException(msg)
 
     def _get_supported_versions(self):
         """Get the common list of services and versions supported."""
@@ -199,11 +202,12 @@ class Service(object):
 
         try:
             auth_info = self.conn.json_request('GET', path)
+            supported_methods = auth_info['supported_methods']
             logger.info("Supported authentication methods: %s" %
-                        (','.join(auth_info['supported_methods'])))
-            self._supports_auth_basic = ("BASIC" in auth_info['supported_methods'])
-            self._supports_auth_cookie = ("COOKIE" in auth_info['supported_methods'])
-            self._supports_auth_oauth = ("OAUTH_2_0" in auth_info['supported_methods'])
+                        (','.join(supported_methods)))
+            self._supports_auth_basic = ("BASIC" in supported_methods)
+            self._supports_auth_cookie = ("COOKIE" in supported_methods)
+            self._supports_auth_oauth = ("OAUTH_2_0" in supported_methods)
         except RvbdHTTPException as e:
             if e.status != 404:
                 raise
@@ -240,7 +244,8 @@ class Service(object):
             elif len(st) == 3:
                 auth_header = 'SignedBearer %s' % token
             else:
-                raise RvbdException('Unknown OAuth response from server: %s' % st)
+                msg = 'Unknown OAuth response from server: %s' % st
+                raise RvbdException(msg)
             self.conn.add_headers({'Authorization': auth_header})
             logger.info('Authenticated using OAUTH2.0')
 
@@ -251,8 +256,9 @@ class Service(object):
                 "password": self.auth.password
             }
 
-            response_body, http_response = self.conn.json_request('POST', path, body=data,
-                                                                  raw_response=True)
+            body, http_response = self.conn.json_request('POST', path,
+                                                         body=data,
+                                                         raw_response=True)
 
             # we're good, set up our http headers for subsequent
             # requests!
@@ -264,7 +270,8 @@ class Service(object):
         elif self._supports_auth_basic and Auth.BASIC in self.auth.methods:
 
             # Use HTTP Basic authentication
-            s = base64.b64encode("%s:%s" % (self.auth.username, self.auth.password))
+            s = base64.b64encode("%s:%s" % (self.auth.username,
+                                            self.auth.password))
             self.conn.add_headers({'Authorization': 'Basic %s' % s})
 
             logger.info("Authenticated using BASIC")

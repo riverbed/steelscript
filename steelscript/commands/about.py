@@ -39,7 +39,8 @@ class Command(BaseCommand):
         print ""
         print "Installed SteelScript Packages"
         print "Core packages:"
-        core_pkgs = [x for x in e if x.startswith('steel') and 'appfwk' not in x]
+        core_pkgs = [x for x in e
+                     if x.startswith('steel') and 'appfwk' not in x]
         core_pkgs.sort()
         for p in core_pkgs:
             pkg = pkg_resources.get_distribution(p)
@@ -48,7 +49,8 @@ class Command(BaseCommand):
         print ""
         print "Application Framework packages:"
 
-        appfwk_pkgs = [x for x in e if x.startswith('steel') and 'appfwk' in x]
+        appfwk_pkgs = [x for x in e
+                       if x.startswith('steel') and 'appfwk' in x]
         if appfwk_pkgs:
             appfwk_pkgs.sort()
             for p in appfwk_pkgs:

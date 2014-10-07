@@ -4,15 +4,12 @@
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
+import sys
+import optparse
 
 from steelscript.common.service import UserAuth, OAuth
 import steelscript.common.connection
 from steelscript.commands.steel import BaseCommand
-
-import optparse
-import logging
-import sys
-import os
 
 
 class Application(BaseCommand):
@@ -38,8 +35,10 @@ class Application(BaseCommand):
             group = optparse.OptionGroup(self.parser, "Connection Parameters")
             group.add_option("-P", "--port", dest="port",
                              help="connect on this port")
-            group.add_option("-u", "--username", help="username to connect with")
-            group.add_option("-p", "--password", help="password to connect with")
+            group.add_option(
+                "-u", "--username", help="username to connect with")
+            group.add_option(
+                "-p", "--password", help="password to connect with")
             group.add_option("--oauth", help="OAuth Access Code, in place of "
                              "username/password")
             group.add_option("-A", "--api_version", dest="api_version",
@@ -49,10 +48,14 @@ class Application(BaseCommand):
 
         if log:
             group = optparse.OptionGroup(self.parser, "REST Logging")
-            group.add_option("--rest-debug", type='int', default=0,
-                             help="Log REST info (1=hdrs, 2=body)")
-            group.add_option("--rest-body-lines", type=int, default=20,
-                             help="Number of lines of request/response body to log")
+            group.add_option(
+                "--rest-debug", type='int', default=0,
+                help="Log REST info (1=hdrs, 2=body)"
+            )
+            group.add_option(
+                "--rest-body-lines", type=int, default=20,
+                help="Number of request/response body lines to log"
+            )
             self.parser.add_option_group(group)
             self.has_log_options = True
 
@@ -81,36 +84,3 @@ class Application(BaseCommand):
 
     def main(self):
         print ("Not implemented")
-
-
-class Logger(object):
-
-    @classmethod
-    def add_options(cls, parser):
-        group = optparse.OptionGroup(parser, "Logging Parameters")
-        group.add_option("--loglevel", help="log level",
-                         choices=_log_levels.keys(), default="warning")
-        group.add_option("--logfile", help="log file", default=None)
-        parser.add_option_group(group)
-
-    @classmethod
-    def start_logging(cls, options):
-        """Start up logging.
-
-        This must be called only once and it will not work
-        if logging.basicConfig() was already called."""
-
-        cfg_options = {
-            'level': _log_levels[options.loglevel],
-            'format': "%(asctime)s [%(levelname)-5.5s] (%(name)s) %(msg)s"
-        }
-
-        if options.logfile is not None:
-            cfg_options['filename'] = options.logfile
-
-        logging.basicConfig(**cfg_options)
-
-        logger = logging.getLogger(__name__)
-
-        logger.info("=" * 70)
-        logger.info("==== Started logging: %s" % ' '.join(sys.argv))

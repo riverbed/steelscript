@@ -263,8 +263,10 @@ class DictObject(dict):
 
     @staticmethod
     def create_from_dict(data):
-        '''Converts a dictionary into a DictObject instance, in the
-           process converting all unicode strings to regular strings.'''
+        """Convert a dictionary into a DictObject instance.
+
+        In the process, this converts all unicode strings to regular strings.
+        """
 
         if data is None:
             # if we aren't given a dict, just return an empty object

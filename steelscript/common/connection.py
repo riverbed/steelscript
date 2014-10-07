@@ -8,7 +8,6 @@
 import os
 import ssl
 import json
-import httplib
 import logging
 import tempfile
 import urlparse
@@ -27,6 +26,7 @@ from steelscript.common.exceptions import RvbdException, RvbdHTTPException
 
 logger = logging.getLogger(__name__)
 rest_logger = logging.getLogger('REST')
+
 
 class SSLAdapter(HTTPAdapter):
     """ An HTTPS Transport Adapter that uses an arbitrary SSL version. """
@@ -47,7 +47,7 @@ class SSLAdapter(HTTPAdapter):
 def scrub_passwords(data):
     if hasattr(data, 'iteritems'):
         result = {}
-        for (k,v) in data.iteritems():
+        for (k, v) in data.iteritems():
             if k.lower() in ('password', 'authenticate', 'cookie'):
                 result[k] = "********"
             else:
@@ -137,8 +137,9 @@ class Connection(object):
         self.conn.headers['User-Agent'] = ua
 
     def request(self, method, path, body=None, params=None,
-                 extra_headers=None, **kwargs):
-        return self._request(method, path, body, params, extra_headers, **kwargs)
+                extra_headers=None, **kwargs):
+        return self._request(method, path, body, params,
+                             extra_headers, **kwargs)
 
     def _request(self, method, path, body=None, params=None,
                  extra_headers=None, raw_json=None, stream=False,
@@ -151,20 +152,17 @@ class Connection(object):
             rest_logger.info('%s %s' % (method, str(path)))
             if params:
                 rest_logger.info('Parameters: ')
-                for k,v in params.iteritems():
-                    rest_logger.info('... %s: %s' % (k,v))
-
-
-            #logger.debug('Body: %s' % (body))
+                for k, v in params.iteritems():
+                    rest_logger.info('... %s: %s' % (k, v))
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Extra request headers: ')
-                for k,v in extra_headers.iteritems():
-                    rest_logger.info('... %s: %s' % (k,v ))
-            if self.REST_DEBUG >=2 and body:
+                for k, v in extra_headers.iteritems():
+                    rest_logger.info('... %s: %s' % (k, v))
+            if self.REST_DEBUG >= 2 and body:
                 rest_logger.info('Request body: ')
                 if raw_json:
-                    if (path.endswith('login')):
+                    if path.endswith('login'):
                         debug_body = json.dumps(
                             scrub_passwords(raw_json), indent=2,
                             cls=self.JsonEncoder)
@@ -178,32 +176,34 @@ class Connection(object):
                 for line in lines[:self.REST_BODY_LINES]:
                     rest_logger.info('... %s' % line)
                 if len(lines) > self.REST_BODY_LINES:
-                    rest_logger.info('... <truncated %d lines>' % (len(lines) - 20))
+                    rest_logger.info('... <truncated %d lines>'
+                                     % (len(lines) - 20))
 
             r = self.conn.request(method, path, data=body, params=params,
-                                  headers=extra_headers, stream=stream, **kwargs)
+                                  headers=extra_headers,
+                                  stream=stream, **kwargs)
 
             if r.request.url != path:
                 rest_logger.info('Full URL: %s' % r.request.url)
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Request headers: ')
-                for k,v in scrub_passwords(r.request.headers).iteritems():
-                    rest_logger.info('... %s: %s' % (k,v ))
+                for k, v in scrub_passwords(r.request.headers).iteritems():
+                    rest_logger.info('... %s: %s' % (k, v))
 
             if stream:
                 rest_logger.info('Response Status %s, streaming content' %
-                                 (r.status_code))
+                                 r.status_code)
             else:
                 rest_logger.info('Response Status %s, %d bytes' %
                                  (r.status_code, len(r.content)))
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Response headers: ')
-                for k,v in r.headers.iteritems():
-                    rest_logger.info('... %s: %s' % (k,v ))
+                for k, v in r.headers.iteritems():
+                    rest_logger.info('... %s: %s' % (k, v))
 
-            if self.REST_DEBUG >=2 and not stream and r.text:
+            if self.REST_DEBUG >= 2 and not stream and r.text:
                 rest_logger.info('Response body: ')
                 try:
                     debug_body = json.dumps(r.json(), indent=2,
@@ -215,7 +215,8 @@ class Connection(object):
                 for line in lines[:self.REST_BODY_LINES]:
                     rest_logger.info('... %s' % line)
                 if len(lines) > self.REST_BODY_LINES:
-                    rest_logger.info('... <truncated %d lines>' % (len(lines) - 20))
+                    rest_logger.info('... <truncated %d lines>'
+                                     % (len(lines) - 20))
 
         except (requests.exceptions.SSLError,
                 requests.exceptions.ConnectionError):
@@ -287,7 +288,7 @@ class Connection(object):
         if r.status_code == 204 or len(r.content) == 0:
             return None  # no data
         if raw_response:
-            return json.loads(r.text),r
+            return json.loads(r.text), r
         return json.loads(r.text)
 
     def xml_request(self, method, path, body=None,
@@ -320,7 +321,8 @@ class Connection(object):
 
         return tree
 
-    def upload(self, path, data, method="POST", params=None, extra_headers=None):
+    def upload(self, path, data, method="POST", params=None,
+               extra_headers=None):
         """Upload raw data to the given URL path with the given content type.
 
         `data` may be either a string or a python file object.
@@ -386,7 +388,7 @@ class Connection(object):
                 msg = "{0} directory does not exist.".format(path)
                 raise ValueError(msg)
             else:
-                #last case, we got a full path of a file
+                # last case, we got a full path of a file
                 directory, filename = os.path.split(path)
 
         # Initiate the request
@@ -397,7 +399,8 @@ class Connection(object):
         # implementation)
         #
         extra_headers = CaseInsensitiveDict(Connection='Close')
-        r = self._request(method, url, None, params, extra_headers, stream=True)
+        r = self._request(method, url, None, params, extra_headers,
+                          stream=True)
 
         try:
             # Check if the user specified a file name
@@ -408,8 +411,8 @@ class Connection(object):
                     filename = filename.split('=')[1]
 
             if not filename:
-                raise ValueError("{0} is not a valid path. Specify a full path "
-                                 "for the file to be created".format(path))
+                raise ValueError("{0} is not a valid path. Specify a full path"
+                                 " for the file to be created".format(path))
             # Compose the path
             path = os.path.join(directory, filename)
 
