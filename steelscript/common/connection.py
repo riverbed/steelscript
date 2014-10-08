@@ -266,13 +266,16 @@ class Connection(object):
                     res = obj.__dict__
             return res
 
+    def _prepare_headers(self, headers):
+        if headers:
+            return CaseInsensitiveDict(headers)
+        else:
+            return CaseInsensitiveDict()
+
     def json_request(self, method, path, body=None,
                      params=None, extra_headers=None, raw_response=False):
         """ Send a JSON request and receive JSON response. """
-        if extra_headers:
-            extra_headers = CaseInsensitiveDict(extra_headers)
-        else:
-            extra_headers = CaseInsensitiveDict()
+        extra_headers = self._prepare_headers(extra_headers)
         extra_headers['Content-Type'] = 'application/json'
         extra_headers['Accept'] = 'application/json'
 
@@ -300,11 +303,7 @@ class Connection(object):
         is assumed to be an XML encoded text string and is inserted into the
         HTTP payload as-is.
         """
-        if extra_headers:
-            extra_headers = CaseInsensitiveDict(extra_headers)
-        else:
-            extra_headers = CaseInsensitiveDict()
-
+        extra_headers = self._prepare_headers(extra_headers)
         extra_headers['Content-Type'] = 'text/xml'
         extra_headers['Accept'] = 'text/xml'
 
@@ -398,7 +397,8 @@ class Connection(object):
         # our connection until the system timeout (defaults to 100sec in one
         # implementation)
         #
-        extra_headers = CaseInsensitiveDict(Connection='Close')
+        extra_headers = self._prepare_headers(extra_headers)
+        extra_headers['Connection'] = 'Close'
         r = self._request(method, url, None, params, extra_headers,
                           stream=True)
 
