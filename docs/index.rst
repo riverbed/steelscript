@@ -60,12 +60,14 @@ Documentation
 
   * :doc:`netprofiler/tutorial`
   * :doc:`netshark/tutorial`
+  * :doc:`cmdline/tutorial`
 
 * Core modules
 
   * :doc:`common/overview`
   * :doc:`netprofiler/overview`
   * :doc:`netshark/overview`
+  * :doc:`cmdline/overview`
 
 * :doc:`appfwk/overview`
 * :doc:`vmconfig/overview`

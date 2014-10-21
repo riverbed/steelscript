@@ -8,6 +8,7 @@ PROJECTS = [
     ('netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'),
     ('netshark', 'SteelScript NetShark', '../../steelscript-netshark'),
     ('appfwk', 'SteelScript Application Framework', '../../steelscript-appfwk'),
+    ('cmdline', 'SteelScript Command Line', '../../steelscript-cmdline'),
     ('vmconfig', 'SteelScript VM', '../../steelscript-vm-config'),
 ]
 

@@ -12,4 +12,5 @@ Table of Contents
    netprofiler/toc
    netshark/toc
    appfwk/toc
+   cmdline/toc
    vmconfig/toc
