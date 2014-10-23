@@ -131,9 +131,12 @@ class Formatter(object):
     def get_csv(cls, columns, headers, delim=','):
         """ Return list using `delim` as separator (defaults to comma-separated list)
         """
-        output = [delim.join(s for s in headers)]
+        def tostr(x):
+            return (x.encode('utf-8') if type(x) in [str, unicode] else str(x))
+
+        output = [delim.join(tostr(s) for s in headers)]
         for row in columns:
-            output.append(delim.join(str(x) for x in row))
+            output.append(delim.join(tostr(x) for x in row))
         return output
 
     @classmethod
