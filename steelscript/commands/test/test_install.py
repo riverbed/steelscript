@@ -155,7 +155,8 @@ class TestInstallGitlab(TestVirtualEnv):
         self.assertFalse('steel' in out)
 
         # Now reinstall just steelscript from the pkgs directory
-        out = self.shell('vsteel install --dir {dir} -p steelscript'
+        out = self.shell('vsteel install --dir {dir} -p steelscript '
+                         '--pip-options=--pre'
                          .format(dir=pkgdir))
         self.assertTrue('Installing steelscript' in out)
 
