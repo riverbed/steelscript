@@ -11,6 +11,7 @@ Table of Contents
    common/toc
    netprofiler/toc
    netshark/toc
+   steelhead/toc
    appfwk/toc
    cmdline/toc
    vmconfig/toc

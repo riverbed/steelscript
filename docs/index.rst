@@ -61,6 +61,7 @@ Documentation
   * :doc:`netprofiler/tutorial`
   * :doc:`netshark/tutorial`
   * :doc:`cmdline/tutorial`
+  * :doc:`steelhead/tutorial`
 
 * Core modules
 
@@ -68,6 +69,7 @@ Documentation
   * :doc:`netprofiler/overview`
   * :doc:`netshark/overview`
   * :doc:`cmdline/overview`
+  * :doc:`steelhead/overview`
 
 * :doc:`appfwk/overview`
 * :doc:`vmconfig/overview`
