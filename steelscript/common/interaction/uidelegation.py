@@ -94,7 +94,7 @@ class CLIDelegatee(object):
         Lazily gets a handle to the corresponding model class.
         """
         if self._model is None:
-            from steelscript.common import Model
+            from steelscript.common.interaction.model import Model
 
             # Will raise as error if anything goes wrong.
             self._model = Model.get(resource=self._resource,
