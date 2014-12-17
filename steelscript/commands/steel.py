@@ -64,6 +64,8 @@ STEELSCRIPT_APPFW = ['steelscript.appfwk',
                      'steelscript.wireshark',
                      'steelscript.appfwk.business-hours']
 
+STEELSCRIPT_STEELHEAD = ['steelscript.cmdline',
+                         'steelscript.steelhead']
 
 logging_initialized = False
 
@@ -423,6 +425,10 @@ class InstallCommand(BaseCommand):
             '--pip-options', default='',
             help='Additional options to pass to pip')
 
+        group.add_option(
+            '--steelhead', action='store_true',
+            help='Install steelhead packages')
+
         parser.add_option_group(group)
 
     def validate_args(self):
@@ -430,6 +436,8 @@ class InstallCommand(BaseCommand):
             self.options.packages = STEELSCRIPT_CORE
             if self.options.appfwk:
                 self.options.packages.extend(STEELSCRIPT_APPFW)
+            if self.options.steelhead:
+                self.options.packages.extend(STEELSCRIPT_STEELHEAD)
 
         if self.options.develop:
             if not self.options.dir:
@@ -522,6 +530,18 @@ class InstallCommand(BaseCommand):
                             'product-lines/steelscript\n')
                 sys.exit(1)
 
+    def prepare_cmdline(self):
+        # Manually install pycrypto if it is a windows platform
+        if not pkg_installed('pycrypto'):
+            import platform
+            if platform.system() == 'Windows':
+                console('Please install the package `pycrypto`\n'
+                        'manually using the instructions found here:\n'
+                        'http://blog.victorjabur.com/2011/06/05/'
+                        'compiling-python-2-7-modules-on-windows-32'
+                        '-and-64-using-msvc-2008-express/')
+                sys.exit(1)
+
     def install_git(self, baseurl):
         """Install packages from a git repository."""
         check_git()
@@ -535,6 +555,9 @@ class InstallCommand(BaseCommand):
 
             if pkg == 'steelscript.appfwk':
                 self.prepare_appfwk()
+
+            if pkg == 'steelscript.cmdline':
+                self.prepare_cmdline()
 
             if self.options.develop:
                 # Clone the git repo
@@ -589,6 +612,9 @@ class InstallCommand(BaseCommand):
             if pkg == 'steelscript.appfwk':
                 self.prepare_appfwk()
 
+            if pkg == 'steelscript.cmdline':
+                self.prepare_cmdline()
+
             cmd = (('pip install {pip_options} {upgrade}--no-index '
                     '--find-links=file://{dir} {pkg}')
                    .format(dir=self.options.dir, pkg=pkg,
@@ -609,6 +635,9 @@ class InstallCommand(BaseCommand):
 
             if pkg == 'steelscript.appfwk':
                 self.prepare_appfwk()
+
+            if pkg == 'steelscript.cmdline':
+                self.prepare_cmdline()
 
             cmd = ('pip install {pip_options} {upgrade} {pkg}'
                    .format(pkg=pkg,
