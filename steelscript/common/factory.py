@@ -142,10 +142,6 @@ def get_by_standard_fwk_layout(build_info, module_name,
     :raises ImportError: if a module exists but fails to import.  This is the
         import error triggered by attempting to import the module in question.
     """
-    # TODO: build_info should be used to pass the following information:
-    #   sub_products:  list of products on this appliance.
-    #   package:  e.g. "steelscript.steelhead"
-    #   version:  Current product version.  e.g. '8.5.1a'
     args = {
         'base_package': 'steelscript.steelhead',
         'module_name': module_name,
@@ -155,9 +151,6 @@ def get_by_standard_fwk_layout(build_info, module_name,
         'first_fail': first_fail
     }
     if versioned:
-        # TODO:  Finding the 'search_list' is a TODO that may be left until
-        # after the 12/15 deliverable.  The search_start_value should come
-        # from the build_info.
         args['search_list'] = ['v9_0', 'v8_6', 'v8_5', 'v8_0']
         args['search_start_value'] = 'v9_0'
     return get_by_standard_layout(**args)
@@ -263,7 +256,7 @@ def _attempt_import_and_check(searched, mod_path, check, first_fail):
             return thing
 
     except ImportError as ie:
-        # TODO: Is this message the same in Python 3?
+        # Is this message the same in Python 3?
         # Last token is the import name that failed, which may just be
         # the tail of our attempted module if parts of the module path
         # exist.

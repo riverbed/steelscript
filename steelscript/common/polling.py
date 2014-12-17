@@ -29,7 +29,7 @@ def do_poll(func, *args, **kwargs):
         # Verify dict key
         all(x['rate'] > 1000 for x in do_poll(show_download_stats))
 
-    :param func:  Function ojbect to be called on each iteration
+    :param func:  Function object to be called on each iteration
     :param max_poll_retries:  Max times to call func.  Default 10.
     :param min_poll_interval:  Min seconds between calls.  Default 3.
 

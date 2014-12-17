@@ -247,7 +247,6 @@ def string_to_datetime(s):
         raise TypeError('Unable to determine units of s: %s' % s)
 
 
-# XXX/demmer remove this
 nsec_string_to_datetime = nsec_to_datetime
 
 

@@ -229,7 +229,6 @@ class Service(object):
         self._detect_auth_methods()
 
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
-            # TODO fix for future support to handle appropriate triplets
             code = self.auth.access_code
             path = '/api/common/1.0/oauth/token'
             data = {

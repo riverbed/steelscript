@@ -33,8 +33,7 @@ class UIDelegator(object):
 
         Uses Depth-First Search style lookup using the preference order.
         """
-        # TODO:  Delegate to all of CLI, REST, and Web.  Only CLI is currently
-        # supported.
+        # Only CLI is currently supported.
         return getattr(self.cli_delegatee, name)
 
     def _get_ui_delegatee(self, class_hint, module_name=None):
@@ -47,8 +46,7 @@ class UIDelegator(object):
         check_class = lambda c: type(c) is type and c.__name__ == class_hint
         check_class.__doc__ = 'class name is "%s"' % class_hint
 
-        # TODO: Read the build_info from the resource.  Right now 'None'
-        # just means 'use the latest'.
+        # Right now 'None' just means 'use the latest'.
         build_info = None
 
         ui_class = factory.get_by_standard_fwk_layout(

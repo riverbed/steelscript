@@ -64,8 +64,7 @@ class Action(uidelegation.UIDelegator):
             properly.  Other errors that Python may raise while importing
             a module may also be raised out of this method.
         """
-        # TODO: Read the build_info from the resource.  Right now 'None'
-        # just means 'use the latest'.
+        # Right now 'None' just means 'use the latest'.
         build_info = None
 
         action_callable = factory.get_by_standard_fwk_layout(

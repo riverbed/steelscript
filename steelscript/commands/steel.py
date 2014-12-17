@@ -328,7 +328,7 @@ class BaseCommand(object):
           super(<subclass>, self).setup()
 
         This will ensure the any setup required of the parent
-        classes is perfomed as well.
+        classes is performed as well.
 
         """
         pass
@@ -457,7 +457,7 @@ class InstallCommand(BaseCommand):
                             '$ sudo pip install virtualenv\n\n'
                             'Create a new virtual environment\n'
                             '$ virtualenv <name>\n\n'
-                            'Activate the new virtal environment\n'
+                            'Activate the new virtual environment\n'
                             '$ source <name>/bin/activate\n\n')
                 sys.exit(1)
 

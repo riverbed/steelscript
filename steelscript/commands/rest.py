@@ -298,7 +298,7 @@ class POST(Method):
     help = """Perform an HTTP POST.
 
 You will be prompted to enter the request body.  Use 'mode' to
-change the defulat request body format as 'json' or 'text'.
+change the default request body format as 'json' or 'text'.
 
 """ + Method.help
     readbody = True
@@ -309,7 +309,7 @@ class PUT(Method):
     help = """Perform an HTTP PUT.
 
 You will be prompted to enter the request body.  Use 'mode' to
-change the defulat request body format as 'json' or 'text'.
+change the default request body format as 'json' or 'text'.
 
 """ + Method.help
     readbody = True
