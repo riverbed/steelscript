@@ -53,6 +53,7 @@ Documentation
   * :doc:`Core Install Linux / Mac <install/linuxmac>`
   * :doc:`Core Install Windows <install/windows>`
   * :doc:`Install Application Framework <install/appfwk>`
+  * :doc:`Install SteelScript SteelHead <install/steelhead>`
 
 * :doc:`steel`
 

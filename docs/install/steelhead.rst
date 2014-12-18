@@ -1,7 +1,7 @@
 SteelScript SteelHead Installation
-==============================================
+==================================
 
-The SteelScript Application Framework is distributed entirely as
+The SteelScript SteelHead Package is distributed entirely as
 Python packages via the Python Package Index `PyPI
 <https://pypi.python.org/pypi>`_.  This makes it easy to install
 and upgrade the steelhead pacakge.
@@ -111,7 +111,7 @@ instructions are listed as follows (Assume the Operation System is 64-bit).
 Other than the special case described above, the installation is identical
 to installation for core SteelScript.  Follow the directions described in
 one of the guides below to install ``steelscript`` along with any
-product specific packages.   Then install ``steelscript.appfwk`` in the
+product specific packages.   Then install ``steelscript.steelhead`` in the
 same manner:
 
 * :doc:`/install/toc`
