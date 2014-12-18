@@ -33,7 +33,7 @@ class UIDelegator(object):
 
         Uses Depth-First Search style lookup using the preference order.
         """
-        # TODO:  Delegate to all of CLI, REST, and Web.  Only CLI is currently 
+        # TODO:  Delegate to all of CLI, REST, and Web.  Only CLI is currently
         # supported.
         return getattr(self.cli_delegatee, name)
 
