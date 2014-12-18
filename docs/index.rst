@@ -44,6 +44,21 @@ the server in "dev" mode on your local system.
 
 For more details, see the :doc:`complete documentation <appfwk/overview>`.
 
+SteelScript SteelHead
+---------------------
+
+The SteelScript SteelHead offers a set of interfaces to control and work
+with a SteelHead appliance. It comes pre-configured with a couple of example
+scripts showing how to interact with a SteelHead appliance using interfaces
+provided in this package.
+
+Once you have the base ``steelscript`` package installed, getting started
+is just one command away::
+
+   $ steel install --steelhead
+
+For more details, see the :doc:`complete documentation <steelhead/overview>`.
+
 Documentation
 -------------
 
@@ -69,12 +84,12 @@ Documentation
   * :doc:`common/overview`
   * :doc:`netprofiler/overview`
   * :doc:`netshark/overview`
-  * :doc:`cmdline/overview`
-  * :doc:`steelhead/overview`
 
 * :doc:`appfwk/overview`
 * :doc:`vmconfig/overview`
 
+* :doc:`cmdline/overview`
+* :doc:`steelhead/overview`
 
 License
 -------
