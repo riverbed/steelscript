@@ -24,6 +24,7 @@ class SteelScriptDir(object):
     """Manages the user dependent steelscript directory used
     to store user relevant configuration and data
     """
+    # TODO - add cleanup operations
     def __init__(self, *components, **kwargs):
         self.basedir = kwargs.get('directory')
         self.component = os.path.join(*components)
@@ -53,11 +54,13 @@ class SteelScriptDir(object):
     def get_config(self, filename):
         """Return SteelScriptConfig file for the filename specified
         """
+        # TODO: support subdirectories
         return SteelScriptConfig(self.basedir, filename)
 
     def get_data(self, filename):
         """Return SteelScriptData file for the filename specified
         """
+        # TODO: support subdirectories
         return SteelScriptData(self.basedir, filename)
 
 
