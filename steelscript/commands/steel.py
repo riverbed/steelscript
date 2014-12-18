@@ -537,9 +537,8 @@ class InstallCommand(BaseCommand):
             if platform.system() == 'Windows':
                 console('Please install the package `pycrypto`\n'
                         'manually using the instructions found here:\n'
-                        'http://blog.victorjabur.com/2011/06/05/'
-                        'compiling-python-2-7-modules-on-windows-32'
-                        '-and-64-using-msvc-2008-express/')
+                        'https://support.riverbed.com/apis/steelscript/'
+                        'install/steelhead.html#detailed-installation')
                 sys.exit(1)
 
     def install_git(self, baseurl):
