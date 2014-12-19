@@ -50,7 +50,7 @@ The following packages are related to the SteelScript SteelHead:
   <https://github.com/riverbed/steelscript-cmdline/releases>`__) -
   python modules for interacting with transport types, such as telnet and ssh. 
 
-The primary package is ``steelscript-steelhead``.  Installing this will
+The primary package is ``steelscript.steelhead``.  Installing this will
 pull in a number of dependencies.  The exact dependencies will change
 over time as new features are added.  When installing via ``pip``,
 the dependencies will be installed automatically.
@@ -69,7 +69,7 @@ usually sufficient just to ensure that the developer tools are installed.
 For Windows, it is best to install the package from pre-compiled
 distributions, such as `here <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`__.
 
-If compiling pycrypto for windows is preferred over downloading pre-bulit package,
+If compiling pycrypto for windows is preferred over downloading pre-built package,
 instructions are listed as follows (Assume the Operation System is 64-bit).
 
 * Install the Python 64 bits version, downloaded from `here <http://www.python.org/ftp/python/2.7.1/python-2.7.1.amd64.msi>`__.
