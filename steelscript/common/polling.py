@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
+# Copyright (c) 2014 Riverbed Technology, Inc.
 #
-# Copyright 2014 Riverbed Technology, Inc.
-# All Rights Reserved. Confidential.
+# This software is licensed under the terms and conditions of the MIT License
+# accompanying the software ("License").  This software is distributed "AS IS"
+# as set forth in the License.
+
 
 from __future__ import (unicode_literals, print_function, division,
                         absolute_import)
