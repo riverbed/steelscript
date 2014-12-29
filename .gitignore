@@ -12,6 +12,8 @@ docs/netshark
 docs/wireshark
 docs/appfwk
 docs/vmconfig
+docs/steelhead
+docs/cmdline
 
 *~
 *.pyc

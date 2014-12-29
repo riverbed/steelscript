@@ -55,6 +55,8 @@ pull in a number of dependencies.  The exact dependencies will change
 over time as new features are added.  When installing via ``pip``,
 the dependencies will be installed automatically.
 
+.. _pycrypto:
+
 There is one package dependency that deserves special attention:
 
 * `pycrypto <http://www.pycrypto.org/>`_ (
