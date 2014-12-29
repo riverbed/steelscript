@@ -45,7 +45,7 @@ class MakeSteel(Command):
 
 
 install_requires = [
-    'requests>=2.1.0',
+    'requests>=2.1.0,<2.5',
     'importlib'
 ]
 
