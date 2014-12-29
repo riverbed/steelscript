@@ -128,18 +128,18 @@ You can check your installation using ``steel about``:
 
    Installed SteelScript Packages
    Core packages:
-     steelscript                               0.6.0.post43
-     steelscript.netprofiler                   0.6.0.post23
-     steelscript.netshark                      0.6.0.post21
-     steelscript.wireshark                     0.0.1
+     steelscript                               0.9.6
+     steelscript.cmdline                       0.5.0
+     steelscript.netprofiler                   0.9.4
+     steelscript.netshark                      0.9.4
+     steelscript.steelhead                     0.5.0
+     steelscript.wireshark                     0.9.4
 
-   Application Framework Packages:
-     steelscript.appfwk                        0.1.0.post34
-     steelscript.appfwk.business-hours         0.1.0.post17
-
-   SteelHead Packages:
-     steelscript.cmdline                       0.0.1
-     steelscript.steelhead                     0.0.1
+   Application Framework packages:
+     steelscript.appfwk                        0.9.7.1
+     steelscript.appfwk.business-hours         0.9.6
 
    Paths to source:
-     /Users/admin/env/ss/lib/python2.7/site-packages
+     /Users/wguo/virtualenvs/ss/lib/python2.7/site-packages
+
+   (add -v or --verbose for further information)
