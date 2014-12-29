@@ -140,6 +140,6 @@ You can check your installation using ``steel about``:
      steelscript.appfwk.business-hours         0.9.6
 
    Paths to source:
-     /Users/wguo/virtualenvs/ss/lib/python2.7/site-packages
+     ~/steelscript/venv/lib/python2.7/site-packages
 
    (add -v or --verbose for further information)
