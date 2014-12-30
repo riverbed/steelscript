@@ -72,7 +72,9 @@ For Windows, it is best to install the package from pre-compiled
 distributions, such as `here <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`__.
 
 If compiling pycrypto for windows is preferred over downloading pre-built package,
-instructions are listed as follows (Assume the Operation System is 64-bit).
+instructions are listed as follows for Windows 64-bit operating systems.
+`Here <http://blog.victorjabur.com/2011/06/05/compiling-python-2-7-modules-on-windows-32-and-64-using-msvc-2008-express/>`_
+describes how to build pycrypto package on Windows 32-bit operating systems.
 
 * Install the Python 64 bits version, downloaded from `here <http://www.python.org/ftp/python/2.7.1/python-2.7.1.amd64.msi>`__.
 
@@ -108,7 +110,11 @@ instructions are listed as follows (Assume the Operation System is 64-bit).
     $ python setup.py bdist_wininst
 
 * As a result you will get an executable file created inside the "dist" folder, which can be used to install
-  pycrypto package on 64-bit Windows Systems.
+  pycrypto package on 64-bit Windows Systems, shown as follows.
+  
+  .. code:: bash
+
+    $ easy_install dist/pycrypto*.exe
 
 Other than the special case described above, the installation is identical
 to installation for core SteelScript.  Follow the directions described in
