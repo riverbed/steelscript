@@ -83,9 +83,12 @@ There are two package dependencies that deserve special attention:
 These packages are heavily used for data tables and manipulation.
 Both packages have large portions written in C for performance, thus
 they must be compiled.  For Linux / Mac, it is usually sufficient just
-to insure that the developer tools are installed.  For Windows, it is
-best to install these packages from pre-compiled distributions (see
-their respective web sites).
+to ensure that the developer tools are installed.  For Windows, there
+are two ways to install these packages.  One way is to install
+the Microsoft Visual C++ Compiler for Python 2.7 which you can download
+from `here <http://sourceforge.net/projects/numpy/files/>`__. This package
+compiles the source code of the `numpy` and `pandas` packages.  Another way
+is to install these packages from pre-compiled distributions (see their respective web sites).
 
 .. note::
 

@@ -68,53 +68,11 @@ The pycrypto package contains a collection of cryptographic modules
 implementing various algorithms and protocols.  The package has a large
 portion written in C, thus it must be compiled.  For Linux / Mac, it is
 usually sufficient just to ensure that the developer tools are installed.
-For Windows, it is best to install the package from pre-compiled
-distributions, such as `here <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`__.
-
-If compiling pycrypto for windows is preferred over downloading pre-built package,
-instructions are listed as follows for Windows 64-bit operating systems.
-`Here <http://blog.victorjabur.com/2011/06/05/compiling-python-2-7-modules-on-windows-32-and-64-using-msvc-2008-express/>`_
-describes how to build pycrypto package on Windows 32-bit operating systems.
-
-* Install the Python 64 bits version, downloaded from `here <http://www.python.org/ftp/python/2.7.1/python-2.7.1.amd64.msi>`__.
-
-* Install the C Compiler for Windows - Microsoft Visual C++ Express Edition 2008. The reason
-  is that Python 2.7 was built using the 2008 version.
-
-* Install the Microsoft Windows SDK for Windows 7 and .NET Framework 3.5 SP1, available
-  at `here <http://www.microsoft.com/downloads/en/details.aspx?FamilyID=c17ba869-9671-4330-a63e-1fd44e0e2505>`__.
-  The ISO file to download (64bit) can be found at `here <http://download.microsoft.com/download/2/E/9/2E911956-F90F-4BFB-8231-E292A7B6F287/GRMSDKX_EN_DVD.iso>`__.
-  This is required because the Micorsoft Visual C++ Express Edition 2008 does not contain the 64-bit
-  compiler. Don't use the "Microsoft Windows SDK for Windows 7 and .NET Framework 4", because it is not compatible with Microsoft Visual
-  C++ Express Edition 2008.
-
-* Include in your Advanced Variables Environment the path of Python binaries. Left click the "Start" tab, 
-  right click at "My Computer" icon, then left click "Properties", then click on "Advanced System Settings",
-  then click on "Environment Variables. Edit your Path Variable to include two directories:
-  ``C:\Python27`` and ``C:\Python27\Scripts``.
-
-* Install Git BASH which can be downloaded from `here <https://msysgit.github.io>`__. Git BASH provides a lightweight
-  BASH emulation used to run commands from shell. 
-
-* There is a bug about building 64-bit binaries using Microsoft Visual C++ Express Edition 2008. A diff file
-  ``vcvars4.diff`` can be downloaded at `here <http://bugs.python.org/file17959/vcvars4.diff>`__, which fixes the bug. To apply the fix,
-  start Git BASH, grab the diff file and apply it to your Python main directory at ``C:\Python27`` by executing the command
-  ``patch -p0 <vcvars4.diff``.
-
-* Now it is time to build your pycrypto windows executable (.exe) file. Download the
-  pycrypto-2.6.1.tar.gz from `here <https://pypi.python.org/pypi/pycrypto>`__. Unpack it, enter
-  the pycrypto-2.6.1 directory and run the command as follows.
-
-  .. code:: bash
-
-    $ python setup.py bdist_wininst
-
-* As a result you will get an executable file created inside the "dist" folder, which can be used to install
-  pycrypto package on 64-bit Windows Systems, shown as follows.
-  
-  .. code:: bash
-
-    $ easy_install dist/pycrypto*.exe
+For Windows, there are two ways to install the package.  One way is to install
+the Microsoft Visual C++ Compiler for Python 2.7 which you can download
+from `here <http://sourceforge.net/projects/numpy/files/>`__. This package
+compiles the source code of the `pycrypto` package. Another way is to install
+the package from pre-compiled distributions, such as `here <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`__.
 
 Other than the special case described above, the installation is identical
 to installation for core SteelScript.  Follow the directions described in

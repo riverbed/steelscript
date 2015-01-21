@@ -492,15 +492,17 @@ class InstallCommand(BaseCommand):
                     'django-admin-tools==0.5.1')
                    .format(pip_options=self.options.pip_options)),
               msg='Installing django-admin-tools')
-
+        
+        import platform
+        
         if not all([pkg_installed('numpy'), pkg_installed('pandas')]):
             import platform
             if platform.system() == 'Windows':
-                console('Please install the packages `numpy` and `pandas`\n'
-                        'manually using the instructions found here:\n'
-                        'https://support.riverbed.com/apis/steelscript/'
-                        'appfwk/install.html#detailed-installation\n')
-                sys.exit(1)
+                if not check_vcpython27():
+                    console('Please follow the instructions found here:\n'
+                            'https://support.riverbed.com/apis/steelscript/'
+                            'appfwk/install.html#detailed-installation\n')
+                    sys.exit(1)
             elif not exe_installed('gcc'):
                 console('Unable to detect installed compiler `gcc`\n'
                         'which is required for installation of\n'
@@ -534,9 +536,8 @@ class InstallCommand(BaseCommand):
         # Manually install pycrypto if it is a windows platform
         if not pkg_installed('pycrypto'):
             import platform
-            if platform.system() == 'Windows':
-                console('Please install the package `pycrypto`\n'
-                        'manually using the instructions found here:\n'
+            if platform.system() == 'Windows' and not check_vcpython27():
+                console('Please follow the instructions found here:\n'
                         'https://support.riverbed.com/apis/steelscript/'
                         'install/steelhead.html#detailed-installation')
                 sys.exit(1)
@@ -1004,11 +1005,19 @@ def check_virtualenv():
         return False
 
 
+def check_wherethon27():
+    try:
+        shell(cmd='where /R C:\Users Visual*C++*2008*-bit*Command*Prompt.lnk',
+              allow_fail=True)
+        return True
+    except ShellFailed:
+        return False
+    
 def run():
     # Main entry point as a script from setup.py
     # If run as a script directly
 
-    # Create the main command
+    # Create the main commanddef
     cmd = SteelCommand()
 
     # Manually add commands in this module
