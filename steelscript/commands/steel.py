@@ -492,9 +492,7 @@ class InstallCommand(BaseCommand):
                     'django-admin-tools==0.5.1')
                    .format(pip_options=self.options.pip_options)),
               msg='Installing django-admin-tools')
-        
-        import platform
-        
+
         if not all([pkg_installed('numpy'), pkg_installed('pandas')]):
             import platform
             if platform.system() == 'Windows':
@@ -1005,19 +1003,20 @@ def check_virtualenv():
         return False
 
 
-def check_wherethon27():
+def check_vcpython27():
     try:
         shell(cmd='where /R C:\Users Visual*C++*2008*-bit*Command*Prompt.lnk',
               allow_fail=True)
         return True
     except ShellFailed:
         return False
-    
+
+
 def run():
     # Main entry point as a script from setup.py
     # If run as a script directly
 
-    # Create the main commanddef
+    # Create the main command
     cmd = SteelCommand()
 
     # Manually add commands in this module
