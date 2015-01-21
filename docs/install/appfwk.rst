@@ -83,12 +83,15 @@ There are two package dependencies that deserve special attention:
 These packages are heavily used for data tables and manipulation.
 Both packages have large portions written in C for performance, thus
 they must be compiled.  For Linux / Mac, it is usually sufficient just
-to ensure that the developer tools are installed.  For Windows, there
-are two ways to install these packages.  One way is to install
-the Microsoft Visual C++ Compiler for Python 2.7 which you can download
-from `here <http://aka.ms/vcpython27>`__. This package
-compiles the source code of the `numpy` and `pandas` packages.  Another way
-is to install these packages from pre-compiled distributions (see their respective web sites).
+to ensure that the developer tools are installed.  For Windows, one way
+is to install a special compiler, Microsoft Visual C++ Compiler
+for Python 2.7, which you can download from
+`here <http://aka.ms/vcpython27>`__.  This package allows compiling
+from the source code of the Numpy and Pandas packages.  Another way
+is to install Numpy and Pandas from pre-compiled distributions (see their
+respective web sites). Once the compiler is installed or both Numpy and Pandas
+are installed, executing again the command ``steelscript install --appfwk`` will
+install all packages related to the Application Framework.
 
 .. note::
 

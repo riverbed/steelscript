@@ -59,20 +59,24 @@ the dependencies will be installed automatically.
 
 There is one package dependency that deserves special attention:
 
-* `pycrypto <http://www.pycrypto.org/>`_ (
+* `Pycrypto <http://www.pycrypto.org/>`_ (
   `PyPI <https://pypi.python.org/pypi/crypto>`__
   `downloads <https://github.com/dlitz/pycrypto>`__) -
   Python Cryptography Toolkit
 
-The pycrypto package contains a collection of cryptographic modules
+The Pycrypto package contains a collection of cryptographic modules
 implementing various algorithms and protocols.  The package has a large
 portion written in C, thus it must be compiled.  For Linux / Mac, it is
 usually sufficient just to ensure that the developer tools are installed.
-For Windows, there are two ways to install the package.  One way is to install
-the Microsoft Visual C++ Compiler for Python 2.7 which you can download
-from `here <http://aka.ms/vcpython27>`__. This package
-compiles the source code of the `pycrypto` package. Another way is to install
-the package from pre-compiled distributions, such as `here <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`__.
+For Windows, it is recommended to install a special compiler,
+Microsoft Visual C++ Compiler for Python 2.7, which you can download from
+`here <http://aka.ms/vcpython27>`__.  This package provides the means
+to compile the Pycrypto package from source.  Alternatively, you can
+install the package from pre-compiled distributions, available from
+`here <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`__.
+Once the compiler or Pycrypto is installed, executing again the command
+``steelscript install --steelhead`` will install all packages related
+to the SteelScript Steelhead.
 
 Other than the special case described above, the installation is identical
 to installation for core SteelScript.  Follow the directions described in
