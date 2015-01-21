@@ -86,7 +86,7 @@ they must be compiled.  For Linux / Mac, it is usually sufficient just
 to ensure that the developer tools are installed.  For Windows, there
 are two ways to install these packages.  One way is to install
 the Microsoft Visual C++ Compiler for Python 2.7 which you can download
-from `here <http://sourceforge.net/projects/numpy/files/>`__. This package
+from `here <http://aka.ms/vcpython27>`__. This package
 compiles the source code of the `numpy` and `pandas` packages.  Another way
 is to install these packages from pre-compiled distributions (see their respective web sites).
 

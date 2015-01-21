@@ -70,7 +70,7 @@ portion written in C, thus it must be compiled.  For Linux / Mac, it is
 usually sufficient just to ensure that the developer tools are installed.
 For Windows, there are two ways to install the package.  One way is to install
 the Microsoft Visual C++ Compiler for Python 2.7 which you can download
-from `here <http://sourceforge.net/projects/numpy/files/>`__. This package
+from `here <http://aka.ms/vcpython27>`__. This package
 compiles the source code of the `pycrypto` package. Another way is to install
 the package from pre-compiled distributions, such as `here <http://www.voidspace.org.uk/python/modules.shtml#pycrypto>`__.
 
