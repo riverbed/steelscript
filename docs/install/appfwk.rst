@@ -72,7 +72,7 @@ There are two package dependencies that deserve special attention:
 
 * `NumPy <http://www.numpy.org/>`_ (
   `PyPI <https://pypi.python.org/pypi/numpy>`__
-  `downloads <http://sourceforge.net/projects/numpy/files/>`__) -
+  `downloads <http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy>`__) -
   scientific computing with Python
 
 * `Python Pandas <http://pandas.pydata.org/>`_ (
