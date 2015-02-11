@@ -69,11 +69,11 @@ class Formatter(object):
         `csv` module may be more suitable.
     """
     @classmethod
-    def print_table(cls, columns, headers, paginate=None, padding=4,
+    def print_table(cls, data, headers, paginate=None, padding=4,
                     max_width=None, long_column=1, wrap_columns=False):
         """ Print formatted table with optional pagination
 
-            `columns`      - list of data rows
+            `data`         - list of data rows
             `headers`      - list of strings for table header
             `paginate`     - number of rows to insert new header
             `padding`      - extra spaces between columns
@@ -84,8 +84,8 @@ class Formatter(object):
         """
         import textwrap
 
-        widths = [max(len(str(x)) + padding for x in col)
-                  for col in izip(headers, *columns)]
+        widths = [max(len(unicode(x)) + padding for x in col)
+                  for col in izip(headers, *data)]
 
         if max_width and sum(widths) > max_width:
             delta = sum(widths) - max_width
@@ -99,7 +99,7 @@ class Formatter(object):
                 widths[long_column] -= delta
 
         header = ''.join(s.ljust(x) for s, x in zip(headers, widths))
-        for i, row in enumerate(columns):
+        for i, row in enumerate(data):
             if i == 0 or (paginate and i % paginate == 0):
                 # print header at least once
                 print ''
@@ -113,34 +113,36 @@ class Formatter(object):
                     # truncate data with ellipsis if needed
                     row[long_column] = ((column[:width] + '..')
                                         if len(column) > width else column)
-                    print ''.join(str(s).ljust(x) for s, x in zip(row, widths))
+                    print ''.join(unicode(s).ljust(x)
+                                  for s, x in zip(row, widths))
                 else:
                     # take column and wrap it in place, creating new rows
                     wrapped = (r for r in textwrap.wrap(column, width=width))
                     row[long_column] = wrapped.next()
-                    print ''.join(str(s).ljust(x) for s, x in zip(row, widths))
+                    print ''.join(unicode(s).ljust(x)
+                                  for s, x in zip(row, widths))
                     for line in wrapped:
                         newrow = [''] * len(widths)
                         newrow[long_column] = line
-                        print ''.join(str(s).ljust(x) for s, x in zip(newrow,
-                                                                      widths))
+                        print ''.join(unicode(s).ljust(x)
+                                      for s, x in zip(newrow, widths))
             else:
-                print ''.join(str(s).ljust(x) for s, x in zip(row, widths))
+                print ''.join(unicode(s).ljust(x)
+                              for s, x in zip(row, widths))
 
     @classmethod
-    def get_csv(cls, columns, headers, delim=','):
-        """ Return list using `delim` as separator (defaults to comma-separated list)
-        """
+    def get_csv(cls, data, headers, delim=','):
+        """Return list of lists using `delim` as separator."""
         def tostr(x):
-            return (x.encode('utf-8') if type(x) in [str, unicode] else str(x))
+            return x.encode('utf-8') if type(x) in [str, unicode] else str(x)
 
         output = [delim.join(tostr(s) for s in headers)]
-        for row in columns:
+        for row in data:
             output.append(delim.join(tostr(x) for x in row))
         return output
 
     @classmethod
-    def print_csv(cls, columns, headers, delim=','):
+    def print_csv(cls, data, headers, delim=','):
         """ Print table to stdout using `delim` as separator
         """
-        print '\n'.join(cls.get_csv(columns, headers, delim))
+        print '\n'.join(cls.get_csv(data, headers, delim))
