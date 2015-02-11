@@ -485,14 +485,9 @@ class InstallCommand(BaseCommand):
             self.install_pip()
 
     def prepare_appfwk(self):
-        # Manually install django-admin-tools because it will
-        # die with recent versions of pip
-        shell(cmd=(('pip install {pip_options} '
-                    '--allow-unverified django-admin-tools '
-                    'django-admin-tools==0.5.1')
-                   .format(pip_options=self.options.pip_options)),
-              msg='Installing django-admin-tools')
+        # Any special-case appfwk packages should be handled here.
 
+        # Check for numpy/pandas and check for prerequisites
         if not all([pkg_installed('numpy'), pkg_installed('pandas')]):
             import platform
             if platform.system() == 'Windows':
