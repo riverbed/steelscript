@@ -537,7 +537,13 @@ class InstallCommand(BaseCommand):
 
     def install_git(self, baseurl):
         """Install packages from a git repository."""
-        check_git()
+        try:
+            check_git()
+        except ShellFailed:
+            console('no\ngit is not installed, please install git to continue',
+                    lvl=logging.ERROR)
+            sys.exit(1)
+
         check_install_pip()
         for pkg in self.options.packages:
             if pkg_installed(pkg) and not self.options.upgrade:
@@ -948,15 +954,14 @@ def in_venv():
 
 
 def check_git():
+    """Checks if git installed, raises ShellFailed if not."""
     try:
         shell(cmd='git --version',
               msg='Checking if git is installed',
               allow_fail=True)
         return True
     except ShellFailed:
-        console('no\ngit is not installed, please install git to continue',
-                lvl=logging.ERROR)
-        sys.exit(1)
+        raise ShellFailed('git is not installed')
 
 
 def check_install_pip():
