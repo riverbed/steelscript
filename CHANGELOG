@@ -1,0 +1,215 @@
+CHANGELOG
+----------------------
+
+[0.9.7]
+ * Support unicode with Formatter; update print_table signature
+ * Narrow down requests dependency
+ * Fix output of steel about in docs, steelhead and cmdline should be core packages
+ * Rearrange check_git to raise instead of exit
+ * Remove special case for django-admin-tools
+ * Update download link for numpy windows binaries
+ * Check vcpython27 when install appfwk and steelhead
+ * Remove username from steel about command in steelhead docs
+
+[0.9.7rc1]
+
+[0.9.6]
+ * Add support for steelhead and cmdline packages
+ * Add steelhead and cmdline to documentation
+ * Add steelhead and cmdline installation instructions
+ * Exit steel install if steelhead is true, pycrypto is not installed and platform is windows
+ * Fixing bug where model import was using un-checked in namespace clean-up
+
+[0.9.6rc1]
+
+[0.9.5]
+ * Update to gitpy 0.2.1; fix dev test
+ * Fix csv output for unicode
+ * Minor connection refactor, fix download header bug
+ * Fix unneeded test import and extra space
+ * refactor steelscript.common.utils modules to be more cohesive
+ * move polling.py from pq_runtime to steelscript/common
+ * Fix issue setting last_time in do_poll
+ * Adding Helper for polling a method.
+ * Fix JsonDict getattr behavior
+ * Fix REST debug logging with custom JsonEncoder
+
+[0.9.4]
+ * fix a small issue regarding supported_versions
+ * change supported_versions to be attribute of service, so that netprofiler can use the version info
+ * add support_dscp flag to show whether the profiler supports 'dscp'
+
+[0.9.3]
+ * Add docs for mkworkspace
+ * Fix log messaging; add optional log output for shell
+ * Readline support for Windows
+ * Created public alias for Connection request method
+ * Add method to set User-Agent
+ * Fix for logging with streaming connections
+ * Minor tweaks to steel.py: save output on error, gracefully handle MainFailed
+ * Improve the speed of short commands using an exponential backoff timer
+ * Docs: Added SharkFest 2014 slides
+ * Fix bug in test_mkworkspace
+ * Clean up mkworkspace test
+ * Fix mkworkspace when pkgs installed non-edit
+ * Add mkworkspace command and tests
+ * Cleanup installation docs
+ * Update docs - add steel uninstall
+ * Cleanup table of contents in docs
+ * Migrate link_pkg_files/link_pkg_dir from appfwk
+
+[0.9.2]
+ * Add uninstall operation to some tests
+ * Inspect system for appfwk dependencies numpy/pandas
+ * Upgrade pip automatically to correct version
+ * Add uninstall option to steel.py
+ * All tests passing on Jenkins by adding Py 2.6 support and more.
+ * Docs: Added steel and steel rest docs
+ * Implement 'steel rest' - REST shell
+ * Docs: Minor tweaks to style
+ * Fix logging of rest calls
+ * Fix --loglevel/logfile args using =
+ * Cleanup and fix example scripts
+
+[0.9.1]
+ * Update setup.py info
+
+[0.9.0]
+ * Clean up steel_bootstrap.py link
+ * Fix links
+ * Update download link
+ * Add quick start
+ * Update README
+ * Force --no-deps for steel install -U
+ * Docs: cleanup some windows installation instructions
+ * Fix handling of positional arguments
+ * Docs: automatically create steel_bootstrap.py
+ * Docs: automatically create appfwk_project as needed
+ * Docs: added support for crawling django app docs
+ * Docs: fix sidebar link to overview
+ * Docs: clean up warnings
+ * Docs: update to index, some install changes
+ * Updated templates
+ * Tweaks to docs so init.py happens as part of make, added link to vm-config
+ * Add license link to sidebar, update copyright
+ * Ignore html build files
+ * Handle core installation on Windows
+ * Add favicon and logo
+ * Added common/toc
+ * Cleaned up docs, references to steelscript.common package
+ * Add steel.py versioning and mksteel setup.py cmd
+ * Add steelscript-wireshark and provide help for virtualenv
+
+[0.9.0rc2]
+ * Add support to install via pip by default
+ * Eliminate dependence on importlib for initial install
+
+[0.9.0rc1]
+ * Minor setup.py cleanup
+
+[0.6.1]
+ * Rename to steelscript
+ * Refactor shark to netshark
+ * Additional netprofiler renames
+ * Refactor profiler to netprofiler
+ * Update README, LICENSE, and documentation
+ * Enable checkout from github
+ * Better error handling when passing an invalid arg to a steel command
+ * Fix steel tests, allow '-' for logfile to stdout
+ * Handle Control-C during execution
+ * Tweaks to steel.py, add prompt_yn
+ * More responsive output and logging for long commands in steel.py
+ * Merge App and BaseCommand
+ * Update prompt with choices, add debug function
+ * Add prompt method to BaseCommand
+ * Support 'steel install' with --develop to checkout via git
+ * Support 'steel install' via git
+ * Fix 'steel about' when installed via pip
+ * Remove data_files from setup.py because docs are recursive
+ * Added new 'steel' command and refactored steelscript_about as 'steel about'
+ * Fix up docs after steelscript-common merge
+ * Add base documentation and build scripts
+ * Fix problem with requests.json() and unicode
+ * Enhance about script to report all steelscript pkgs
+ * Make versioning a submodule of gitpy-versioning
+ * Changes to cookie based authenticaion to allow for proxy servers and improving access to raw http reponses.
+ * Add trim option to round_time
+ * Handle timezones when rounding
+ * Add round_time function
+ * Added timedelta_str
+ * Clean up exception handling around connections with the initial request on a session
+
+[0.6.0]
+ * Update docs for installing requests package too
+ * Update setup.py to add requests dependency
+ * Remove response as instance variable, report.py no longer looks to header for report ID
+ * Incorporate reviewboard comments.
+ * Include Connection:Close header for download requests.
+ * Connection and exception enhancements
+ * Refactor connection to use requests package
+ * Fix some method signatures in Service
+ * Converted shark, mostly.
+ * Switch to sleepwalker Connection class - all Profiler tests passing
+ * Fix total_seconds python2.6 issue, add test
+ * Set error_id in RvbdHTTPException
+
+[0.5.8]
+ * Support for sub-second sampling times for a view
+ * Fix setup.py using core distutils
+ * Some pep8 standardizzation
+ * Added documentation in how to run tests
+ * making test directory under rvbd.common being a standard python module
+ * Merge branch 'master' of git+ssh://git.lab.nbttech.com/flyscript-github
+ * Added better __repr__ for common/connection.py
+
+[0.5.7]
+ * Refactor post_raw/upload_file to single upload method
+ * Fix wierd edge case for shark Value(shark.columns.dns.query.count)
+ * Cleanup shark example scripts
+ * Add execute bit for utility scripts
+ * Fix password hiding to handle 'None' and file-like-objects for body
+ * Handle HTTP debug level for http_pool objects
+ * Make attempts to obscure password when logging
+
+[0.5.6]
+ * Fix tests for WAN summary and jsondict
+ * Support subclassing JsonDict and merging defaults
+ * Fix jsondict testname
+ * Comments for DictObject
+ * Better error message on fail to parse time message
+ * Added new JsonDict class in rvbd.common.jsondict
+
+[0.5.5]
+ * Fix encoding and setup config
+ * Move example scripts to docs directory
+ * Update README and LICENSE
+ * Update handling of Boolean column types plus odds n' ends
+ * Add wan_report example script to setup.py
+
+[0.5.4]
+ * Add new scripts to setup.py
+ * Add traffic example scripts for flowlist, summary and timeseries
+ * Add support for parsing two-digit years in timeutils
+ * Job and Clip exports
+ * Restored debug body message to 0 as before previous commit
+ * ARX support
+ * Add max_width and wrapping to Formatter class
+ * Update MANIFEST
+
+[0.5.3]
+ * Remove references to virtualenv's from install docs
+ * Update README for FlyScript regarding docs/html/index.html
+ * Cleanup docstrings, and tearDowns.  Uncomment two live_view tests.
+ * Fill in appresponse_setup.py script to complete integration of Opnet ARX and Stingray.
+ * Update setup.py to include better metadata
+
+[0.5.2]
+ * Better timeutils.parse_timedelta support for different syntax
+ * Change default logging level to WARNING
+ * Add simple CSV handler for Formatter class
+ * Add gitignore file
+
+[0.5.1]
+ * Setup LICENSE and AUTHORS files
+ * Initial import of project files
+ * Initial commit
