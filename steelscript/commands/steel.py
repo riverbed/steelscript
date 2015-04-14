@@ -391,7 +391,7 @@ class InstallCommand(BaseCommand):
 
         group.add_option(
             '-d', '--dir', action='store', default=None,
-            help='Directory to use for installation')
+            help='Directory to use for offline installation')
 
         group.add_option(
             # Install packages from gitlab
@@ -580,12 +580,8 @@ class InstallCommand(BaseCommand):
                            .format(outdir=outdir)),
                       msg=('Installing {pkg}'.format(pkg=pkg)))
             else:
-                shell(cmd=('pip install {pip_options} {upgrade}git+{repo}'
-                           .format(repo=repo,
-                                   upgrade=('-U --no-deps '
-                                            if self.options.upgrade else ''),
-                                   pip_options=self.options.pip_options)),
-                      msg=('Installing {pkg}'.format(pkg=pkg)))
+                suffix = 'git+{repo} '.format(repo=repo)
+                self.pip_install_pkg_with_upgrade(pkg, suffix=suffix)
 
     def install_gitlab(self):
         """Install packages from gitlab internal to riverbed."""
@@ -614,15 +610,29 @@ class InstallCommand(BaseCommand):
             if pkg == 'steelscript.cmdline':
                 self.prepare_cmdline()
 
-            cmd = (('pip install {pip_options} {upgrade}--no-index '
-                    '--find-links=file://{dir} {pkg}')
-                   .format(dir=self.options.dir, pkg=pkg,
-                           upgrade=('-U --no-deps'
-                                    if self.options.upgrade else ''),
-                           pip_options=self.options.pip_options))
-            shell(cmd=cmd,
-                  msg=('Installing {pkg}'
-                       .format(pkg=pkg, dir=self.options.dir)))
+            suffix = ('--no-index --find-links=file://{dir} {pkg}'.
+                      format(dir=self.options.dir, pkg=pkg))
+            self.pip_install_pkg_with_upgrade(pkg, suffix=suffix)
+
+    def pip_install_pkg_with_upgrade(self, pkg, suffix=''):
+        """Perform "Only if needed" recursive upgrade install for pkg and
+        its dependencies.
+
+        https://pip.pypa.io/en/latest/user_guide.html
+        #only-if-needed-recursive-upgrade
+        """
+        if self.options.upgrade:
+            self.pip_install_pkg(pkg, upgrade=True, suffix=suffix)
+        self.pip_install_pkg(pkg, suffix=suffix)
+
+    def pip_install_pkg(self, pkg, upgrade=False, suffix=''):
+        cmd = (('pip install {pip_options} {upgrade} {suffix}')
+               .format(suffix=suffix,
+                       upgrade=('-U --no-deps'
+                                if upgrade else ''),
+                       pip_options=self.options.pip_options))
+        shell(cmd=cmd,
+              msg=('Installing {pkg}'.format(pkg=pkg)))
 
     def install_pip(self):
         check_install_pip()
@@ -638,14 +648,7 @@ class InstallCommand(BaseCommand):
             if pkg == 'steelscript.cmdline':
                 self.prepare_cmdline()
 
-            cmd = ('pip install {pip_options} {upgrade} {pkg}'
-                   .format(pkg=pkg,
-                           upgrade=('-U --no-deps'
-                                    if self.options.upgrade else ''),
-                           pip_options=self.options.pip_options))
-            shell(cmd=cmd,
-                  msg=('Installing {pkg}'
-                       .format(pkg=pkg, dir=self.options.dir)))
+            self.pip_install_pkg_with_upgrade(pkg, suffix=pkg)
 
 
 class UninstallCommand(BaseCommand):
