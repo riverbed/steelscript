@@ -320,6 +320,13 @@ class Connection(object):
 
         return tree
 
+    def urlencoded_request(self, method, path, body=None, params=None,
+                           extra_headers=None, raw_response=False):
+        extra_headers = self._prepare_headers(extra_headers)
+        extra_headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        extra_headers['Accept'] = 'application/json'
+        return self._request(method, path, body, params, extra_headers)
+
     def upload(self, path, data, method="POST", params=None,
                extra_headers=None):
         """Upload raw data to the given URL path with the given content type.

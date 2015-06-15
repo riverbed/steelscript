@@ -229,15 +229,17 @@ class Service(object):
         self._detect_auth_methods()
 
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
-            # TODO fix for future support to handle appropriate triplets
-            code = self.auth.access_code
+            assertion = '.'.join([
+                base64.urlsafe_b64encode('{"alg":"none"}'),
+                self.auth.access_code,
+                ''
+            ])
             path = '/api/common/1.0/oauth/token'
-            data = {
-                'grant_type': 'access_code',
-                'assertion': code
-            }
-            answer = self.conn.json_request('POST', path, 'POST', params=data)
-            token = answer['access_token']
+            token_req_data = ('grant_type=%s&assertion=%s&state=%s'
+                              % ('access_code', assertion, 'random_str'))
+            answer = self.conn.urlencoded_request('POST', path,
+                                                  body=token_req_data)
+            token = answer.json()['access_token']
             st = token.split('.')
             if len(st) == 1:
                 auth_header = 'Bearer %s' % token
