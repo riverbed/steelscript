@@ -25,6 +25,8 @@ from __future__ import absolute_import
 
 import base64
 import logging
+import md5
+import time
 
 from steelscript.common import connection
 from steelscript.common.exceptions import RvbdException, RvbdHTTPException
@@ -229,15 +231,24 @@ class Service(object):
         self._detect_auth_methods()
 
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
-            # TODO fix for future support to handle appropriate triplets
-            code = self.auth.access_code
             path = '/api/common/1.0/oauth/token'
-            data = {
-                'grant_type': 'access_code',
-                'assertion': code
-            }
-            answer = self.conn.json_request('POST', path, 'POST', params=data)
-            token = answer['access_token']
+            assertion = '.'.join([
+                base64.urlsafe_b64encode('{"alg":"none"}'),
+                self.auth.access_code,
+                ''
+            ])
+            state = md5.md5(str(time.time())).hexdigest()
+            data = {'grant_type': 'access_code',
+                    'assertion': assertion,
+                    'state': state}
+            answer = self.conn.urlencoded_request('POST', path,
+                                                  body=data)
+
+            if answer.json()['state'] != state:
+                msg = "Inconsistent state value in OAuth response"
+                raise RvbdException(msg)
+
+            token = answer.json()['access_token']
             st = token.split('.')
             if len(st) == 1:
                 auth_header = 'Bearer %s' % token
