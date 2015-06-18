@@ -8,10 +8,10 @@
 import os
 import ssl
 import json
+import urllib
 import logging
 import tempfile
 import urlparse
-import urllib
 from xml.etree import ElementTree
 
 import requests
