@@ -44,14 +44,6 @@ class Auth(object):
     COOKIE = 2
     OAUTH = 3
 
-    @classmethod
-    def is_basic(cls, auth):
-        return auth == cls.BASIC
-
-    @classmethod
-    def is_oauth2(cls, auth):
-        return auth == cls.OAUTH
-
 
 class UserAuth(object):
     """This class is used for both Basic and Cookie based authentication
