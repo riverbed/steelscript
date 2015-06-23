@@ -376,7 +376,7 @@ class ColumnProxy(object):
                     setattr(o, component, n)
                     o = n
 
-            setattr(o, components[-1], value)
+            setattr(o, components[-1], self.FakeColumn(name))
 
         self._callback(root)
         return dir(root)
