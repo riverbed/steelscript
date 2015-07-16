@@ -83,4 +83,4 @@ class Application(BaseCommand):
                 self.options.rest_body_lines)
 
     def main(self):
-        print ("Not implemented")
+        pass
