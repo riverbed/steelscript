@@ -15,3 +15,6 @@ Table of Contents
    appfwk/toc
    cmdline/toc
    vmconfig/toc
+
+* `reschema <http://homedirs.nbttech.com/~wguo/reschema/>`__
+* `Sleepwalker <http://homedirs.nbttech.com/~wguo/sleepwalker>`__

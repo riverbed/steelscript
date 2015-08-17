@@ -11,6 +11,8 @@ PROJECTS = [
     ('appfwk', 'SteelScript Application Framework', '../../steelscript-appfwk'),
     ('cmdline', 'SteelScript Command Line', '../../steelscript-cmdline'),
     ('vmconfig', 'SteelScript VM', '../../steelscript-vm-config'),
+    ('reschema', 'reschema', '../../reschema'),
+    ('Sleepwalker', 'Sleepwalker', '../../sleepwalker')
 ]
 
 def create_symlinks():

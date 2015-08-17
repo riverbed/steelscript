@@ -91,6 +91,9 @@ Documentation
 * :doc:`cmdline/overview`
 * :doc:`steelhead/overview`
 
+* `reschema <http://homedirs.nbttech.com/~wguo/reschema/>`__
+* `Sleepwalker <http://homedirs.nbttech.com/~wguo/sleepwalker>`__
+
 License
 -------
 
