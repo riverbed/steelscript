@@ -16,6 +16,8 @@ import os.path
 import platform
 import steelscript
 
+rest_pkgs = ['reschema', 'sleepwalker']
+
 
 class Command(BaseCommand):
     help = 'Show information about SteelScript packages installed'
@@ -36,14 +38,33 @@ class Command(BaseCommand):
 
         e = pkg_resources.AvailableDistributions()
 
+        steelscript_pkgs = [x for x in e if x.startswith('steel')]
+        egg_info_pkgs = []
+        egg_link_pkgs = []
+        corrupted_pkgs = []
+
+        for p in steelscript_pkgs:
+            pkg = pkg_resources.get_distribution(p)
+            if pkg.location.endswith('site-packages'):
+                egg_info_pkgs.append(p)
+            else:
+                egg_link_pkgs.append(p)
+
+        if egg_info_pkgs and egg_link_pkgs:
+            corrupted_pkgs = egg_link_pkgs
+
         print ""
         print "Installed SteelScript Packages"
         print "Core packages:"
         core_pkgs = [x for x in e
-                     if x.startswith('steel') and 'appfwk' not in x]
+                     if (x.startswith('steel') or x in rest_pkgs)
+                     and 'appfwk' not in x]
         core_pkgs.sort()
         for p in core_pkgs:
             pkg = pkg_resources.get_distribution(p)
+            if p in corrupted_pkgs:
+                print '  %-40s  corrupted' % (pkg.project_name)
+                continue
             print '  %-40s  %s' % (pkg.project_name, pkg.version)
 
         print ""
@@ -55,6 +76,9 @@ class Command(BaseCommand):
             appfwk_pkgs.sort()
             for p in appfwk_pkgs:
                 pkg = pkg_resources.get_distribution(p)
+                if p in corrupted_pkgs:
+                    print '  %-40s  corrupted' % (pkg.project_name)
+                    continue
                 print '  %-40s  %s' % (pkg.project_name, pkg.version)
         else:
             print "None."
@@ -62,9 +86,25 @@ class Command(BaseCommand):
         print ""
         print "Paths to source:"
         paths = [os.path.dirname(p) for p in steelscript.__path__]
+
+        for p in set(rest_pkgs).intersection(set(e)):
+            pkg = pkg_resources.get_distribution(p)
+            loc = pkg.location
+            if loc not in paths:
+                paths.append(loc)
+
         paths.sort()
         for p in paths:
             print "  %s" % p
+
+        if corrupted_pkgs:
+            print ""
+            print "Instructions to fix corrupted packages:"
+            print "1. pip uninstall <corrupted_package>"
+            print "2. pip install <corrupted_package>"
+            print "   or do the following:"
+            print "      cd <source_directory_of_corrupted_package>"
+            print "      pip install ."
 
         if self.options.verbose:
             print ""
