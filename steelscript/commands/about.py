@@ -99,6 +99,7 @@ class Command(BaseCommand):
 
         if corrupted_pkgs:
             print ""
+            print "WARNING: Corrupted installation detected"
             print "Instructions to fix corrupted packages:"
             print "1. pip uninstall <corrupted_package>"
             print "2. pip install <corrupted_package>"
