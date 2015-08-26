@@ -240,7 +240,8 @@ class Connection(object):
         if not r.ok:
             exc = RvbdHTTPException(r, r.text, method, path)
             if (self._reauthenticate_handler is not None and
-                exc.error_id in ('AUTH_INVALID_SESSION',
+                exc.error_id in ('AUTH_REQUIRED',
+                                 'AUTH_INVALID_SESSION',
                                  'AUTH_EXPIRED_TOKEN')):
                 logger.debug('session timed out -- reauthenticating')
                 # clean any stale cookies from session
