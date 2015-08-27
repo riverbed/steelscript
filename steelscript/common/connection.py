@@ -117,6 +117,7 @@ class Connection(object):
         self.conn.verify = verify
         self._reauthenticate_handler = reauthenticate_handler
         self.set_user_agent()
+        self.cookies = None
 
         # store last full response
         self.response = None
@@ -182,7 +183,8 @@ class Connection(object):
 
             r = self.conn.request(method, path, data=body, params=params,
                                   headers=extra_headers,
-                                  stream=stream, **kwargs)
+                                  stream=stream,
+                                  cookies=self.cookies, **kwargs)
 
             if r.request.url != path:
                 rest_logger.info('Full URL: %s' % r.request.url)
@@ -231,7 +233,8 @@ class Connection(object):
             self._ssladapter = True
             logger.info('SSL error -- retrying with TLSv1')
             r = self.conn.request(method, path, data=body,
-                                  params=params, headers=extra_headers)
+                                  params=params, headers=extra_headers,
+                                  cookies=self.cookies)
 
         # check if good status response otherwise raise exception
         if not r.ok:
@@ -240,6 +243,8 @@ class Connection(object):
                 exc.error_id in ('AUTH_INVALID_SESSION',
                                  'AUTH_EXPIRED_TOKEN')):
                 logger.debug('session timed out -- reauthenticating')
+                # clean any stale cookies from session
+                self._clear_cookies()
                 handler = self._reauthenticate_handler
                 self._reauthenticate_handler = None
                 handler()
@@ -266,6 +271,11 @@ class Connection(object):
                 except AttributeError:
                     res = obj.__dict__
             return res
+
+    def _clear_cookies(self):
+        self.conn.headers.pop('Cookie', None)
+        self.cookies.clear_session_cookies()
+        self.conn.cookies.clear_session_cookies()
 
     def _prepare_headers(self, headers):
         if headers:
