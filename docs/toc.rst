@@ -16,5 +16,5 @@ Table of Contents
    cmdline/toc
    vmconfig/toc
 
-* `reschema <http://homedirs.nbttech.com/~wguo/reschema/>`__
-* `Sleepwalker <http://homedirs.nbttech.com/~wguo/sleepwalker>`__
+* `reschema <https://support.riverbed.com/apis/steelscript/reschema/index.html>`__
+* `Sleepwalker <https://support.riverbed.com/apis/steelscript/sleepwalker/index.html>`__
