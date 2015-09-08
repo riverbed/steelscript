@@ -74,6 +74,7 @@ Documentation
   * :doc:`netshark/tutorial`
   * :doc:`cmdline/tutorial`
   * :doc:`steelhead/tutorial`
+  * :doc:`scc/tutorial`
 
 * Device modules
 
