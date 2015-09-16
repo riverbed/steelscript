@@ -16,8 +16,6 @@ import os.path
 import platform
 import steelscript
 
-rest_pkgs = ['reschema', 'sleepwalker']
-
 
 class Command(BaseCommand):
     help = 'Show information about SteelScript packages installed'
@@ -57,7 +55,7 @@ class Command(BaseCommand):
         print "Installed SteelScript Packages"
         print "Core packages:"
         core_pkgs = [x for x in e
-                     if (x.startswith('steel') or x in rest_pkgs)
+                     if x.startswith('steel')
                      and 'appfwk' not in x]
         core_pkgs.sort()
         for p in core_pkgs:
@@ -84,11 +82,22 @@ class Command(BaseCommand):
             print "None."
 
         print ""
+        print "REST tools and libraries:"
+
+        installed_rest = set(['reschema', 'sleepwalker']).intersection(set(e))
+        rest_pkgs = [pkg_resources.get_distribution(p) for p in installed_rest]
+
+        if rest_pkgs:
+            for pkg in rest_pkgs:
+                print '  %-40s  %s' % (pkg.project_name, pkg.version)
+        else:
+            print "None."
+
+        print ""
         print "Paths to source:"
         paths = [os.path.dirname(p) for p in steelscript.__path__]
 
-        for p in set(rest_pkgs).intersection(set(e)):
-            pkg = pkg_resources.get_distribution(p)
+        for pkg in rest_pkgs:
             loc = pkg.location
             if loc not in paths:
                 paths.append(loc)
