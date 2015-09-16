@@ -4,7 +4,7 @@ SteelScript Common
 This module provides many utility functions and other classes used
 by the various other SteelScript components.
 
-Documenation available in this module:
+Documentation available in this module:
 
 * Generic helper classes and functions:
 

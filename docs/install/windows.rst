@@ -33,7 +33,7 @@ It is usually easiest to install as administrator:
 
 3. Add Python to your System Path:
 
-   * Navigate to the Enviroment Variables window via Right-click on
+   * Navigate to the Environment Variables window via Right-click on
      "My Computer"->Properties->Advanced system settings->Environment
      Variables.
 

@@ -12,7 +12,7 @@ Timezone Handling
 Conversions
 -----------
 
-Devices often represesent time as seconds (or microseconds or
+Devices often represent time as seconds (or microseconds or
 nanoseconds) since the Unix epoch (January 1, 1970).  The following
 functions are useful for converting to and from native Python
 ``datetime.datetime`` objects:
