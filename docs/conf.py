@@ -292,5 +292,7 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 def setup(app):
+    # add custom css that overrides the default theme
+    app.add_stylesheet('custom.css')
     # Register the docstring processor with sphinx
     app.connect('autodoc-process-docstring', process_docstring)
