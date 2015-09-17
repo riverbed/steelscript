@@ -107,6 +107,9 @@ You can check your installation using ``steel about``:
      steelscript.appfwk                        0.9.7.1
      steelscript.appfwk.business-hours         0.9.6
 
+   REST tools and libraries:
+     None
+
    Paths to source:
      ~/steelscript/venv/lib/python2.7/site-packages
 

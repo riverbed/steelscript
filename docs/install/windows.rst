@@ -79,7 +79,10 @@ It is usually easiest to install as administrator:
         steelscript.netshark                      0.9.0
 
       Application Framework packages:
-      None.
+        None
+
+      REST tools and libraries:
+        None
 
       Paths to source:
         C:\Python27\lib\site-packages

@@ -79,7 +79,7 @@ class Command(BaseCommand):
                     continue
                 print '  %-40s  %s' % (pkg.project_name, pkg.version)
         else:
-            print "None."
+            print "  None"
 
         print ""
         print "REST tools and libraries:"
@@ -91,7 +91,7 @@ class Command(BaseCommand):
             for pkg in rest_pkgs:
                 print '  %-40s  %s' % (pkg.project_name, pkg.version)
         else:
-            print "None."
+            print "  None"
 
         print ""
         print "Paths to source:"
