@@ -275,7 +275,8 @@ class Connection(object):
 
     def _clear_cookies(self):
         self.conn.headers.pop('Cookie', None)
-        self.cookies.clear_session_cookies()
+        if self.cookies:
+            self.cookies.clear_session_cookies()
         self.conn.cookies.clear_session_cookies()
 
     def _prepare_headers(self, headers):
