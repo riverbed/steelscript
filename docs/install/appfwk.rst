@@ -12,4 +12,4 @@ The Application Framework comes pre-installed and configured in our
 `SteelScript VM <https://splash.riverbed.com/docs/DOC-4860>`_.
 
 Once you have the VM up and running in your enviroment, see the complete
-`App Framework documentation <appfwk/overview>`.
+:doc:`App Framework documentation </appfwk/overview>`.

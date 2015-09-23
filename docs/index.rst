@@ -72,7 +72,6 @@ Documentation
 
   * :doc:`netprofiler/tutorial`
   * :doc:`netshark/tutorial`
-  * :doc:`cmdline/tutorial`
   * :doc:`steelhead/tutorial`
   * :doc:`scc/tutorial`
 
