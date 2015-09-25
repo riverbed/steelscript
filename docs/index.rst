@@ -33,14 +33,10 @@ The SteelScript Application Framework makes it easy to create a fully
 custom web application that mashes up data from multiple sources.  It comes
 pre-configured with several reports for NetProfiler and NetShark.
 
-Once you have the base ``steelscript`` package installed, getting started
-is just a few commands away::
-
-   $ steel install --appfwk
-   $ steel appfwk mkproject
-
-This will populate a local directory with all the files you need to run
-the server in "dev" mode on your local system.
+Get started with App Framework by downloading and running a Virtual
+Machine with it pre-installed and configured.  The latest links
+and guides can be found on our 
+`Splash site <https://splash.riverbed.com/docs/DOC-4860>`_.
 
 For more details, see the :doc:`complete documentation <appfwk/overview>`.
 
@@ -76,20 +72,30 @@ Documentation
 
   * :doc:`netprofiler/tutorial`
   * :doc:`netshark/tutorial`
-  * :doc:`cmdline/tutorial`
   * :doc:`steelhead/tutorial`
+  * :doc:`scc/tutorial`
 
-* Core modules
+* Device modules
 
-  * :doc:`common/overview`
   * :doc:`netprofiler/overview`
   * :doc:`netshark/overview`
+  * :doc:`steelhead/overview`
+  * :doc:`scc/overview`
 
-* :doc:`appfwk/overview`
-* :doc:`vmconfig/overview`
+* App Framework and VM
 
-* :doc:`cmdline/overview`
-* :doc:`steelhead/overview`
+  * :doc:`appfwk/overview`
+  * :doc:`vmconfig/overview`
+
+* Library modules
+
+  * :doc:`common/overview`
+  * :doc:`cmdline/overview`
+
+* REST tools and libraries
+
+  * `reschema <https://support.riverbed.com/apis/steelscript/reschema/index.html>`__
+  * `Sleepwalker <https://support.riverbed.com/apis/steelscript/sleepwalker/index.html>`__
 
 License
 -------

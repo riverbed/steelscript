@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2014 Riverbed Technology, Inc.
+# Copyright (c) 2015 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -36,14 +36,33 @@ class Command(BaseCommand):
 
         e = pkg_resources.AvailableDistributions()
 
+        steelscript_pkgs = [x for x in e if x.startswith('steel')]
+        egg_info_pkgs = []
+        egg_link_pkgs = []
+        corrupted_pkgs = []
+
+        for p in steelscript_pkgs:
+            pkg = pkg_resources.get_distribution(p)
+            if pkg.location.endswith('site-packages'):
+                egg_info_pkgs.append(p)
+            else:
+                egg_link_pkgs.append(p)
+
+        if egg_info_pkgs and egg_link_pkgs:
+            corrupted_pkgs = egg_link_pkgs
+
         print ""
         print "Installed SteelScript Packages"
         print "Core packages:"
         core_pkgs = [x for x in e
-                     if x.startswith('steel') and 'appfwk' not in x]
+                     if x.startswith('steel')
+                     and 'appfwk' not in x]
         core_pkgs.sort()
         for p in core_pkgs:
             pkg = pkg_resources.get_distribution(p)
+            if p in corrupted_pkgs:
+                print '  %-40s  corrupted' % (pkg.project_name)
+                continue
             print '  %-40s  %s' % (pkg.project_name, pkg.version)
 
         print ""
@@ -55,16 +74,47 @@ class Command(BaseCommand):
             appfwk_pkgs.sort()
             for p in appfwk_pkgs:
                 pkg = pkg_resources.get_distribution(p)
+                if p in corrupted_pkgs:
+                    print '  %-40s  corrupted' % (pkg.project_name)
+                    continue
                 print '  %-40s  %s' % (pkg.project_name, pkg.version)
         else:
-            print "None."
+            print "  None"
+
+        print ""
+        print "REST tools and libraries:"
+
+        installed_rest = set(['reschema', 'sleepwalker']).intersection(set(e))
+        rest_pkgs = [pkg_resources.get_distribution(p) for p in installed_rest]
+
+        if rest_pkgs:
+            for pkg in rest_pkgs:
+                print '  %-40s  %s' % (pkg.project_name, pkg.version)
+        else:
+            print "  None"
 
         print ""
         print "Paths to source:"
         paths = [os.path.dirname(p) for p in steelscript.__path__]
+
+        for pkg in rest_pkgs:
+            loc = pkg.location
+            if loc not in paths:
+                paths.append(loc)
+
         paths.sort()
         for p in paths:
             print "  %s" % p
+
+        if corrupted_pkgs:
+            print ""
+            print "WARNING: Corrupted installation detected"
+            print "Instructions to fix corrupted packages:"
+            print "1. pip uninstall <corrupted_package>"
+            print "2. pip install <corrupted_package>"
+            print "   or do the following:"
+            print "      cd <source_directory_of_corrupted_package>"
+            print "      pip install ."
 
         if self.options.verbose:
             print ""

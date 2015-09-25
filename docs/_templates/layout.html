@@ -1,4 +1,5 @@
 {% extends "!layout.html" %}
+{% set css_files = css_files + [ "_static/extra.css" ] %}
 {% block extrahead %}
     <script type="text/javascript" src="//nexus.ensighten.com/riverbed/rvbss/Bootstrap.js"></script>
     {{ super() }}

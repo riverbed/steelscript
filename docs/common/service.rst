@@ -23,7 +23,7 @@ or more authentication methods.  The following methods may be supported:
 
 * :py:const:`Auth.COOKIE` - session based authentication via HTTP Cookies.  The initial
   authentication uses username and password.  On success, an HTTP
-  Cookie is set and used for subsequesnt REST calls.
+  Cookie is set and used for subsequent REST calls.
 
 * :py:const:`Auth.BASIC` - simple username/password based HTTP Basic authentication.
 

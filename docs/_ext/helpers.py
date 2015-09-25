@@ -8,10 +8,14 @@ PROJECTS = [
     ('netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'),
     ('netshark', 'SteelScript NetShark', '../../steelscript-netshark'),
     ('steelhead', 'SteelScript SteelHead', '../../steelscript-steelhead'),
+    ('scc', 'SteelScript SteelCentral Controller', '../../steelscript-scc'),
     ('appfwk', 'SteelScript Application Framework', '../../steelscript-appfwk'),
     ('cmdline', 'SteelScript Command Line', '../../steelscript-cmdline'),
     ('vmconfig', 'SteelScript VM', '../../steelscript-vm-config'),
+    ('reschema', 'reschema', '../../reschema'),
+    ('Sleepwalker', 'Sleepwalker', '../../sleepwalker')
 ]
+
 
 def create_symlinks():
     for proj, title, path in PROJECTS:
@@ -30,6 +34,7 @@ def create_symlinks():
                 'Could not find related project source tree: %s' % src)
 
         os.symlink(src, proj)
+
 
 def write_toc_templates():
     if not os.path.exists('_templates'):

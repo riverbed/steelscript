@@ -56,6 +56,7 @@ are a number of installation options available::
        --appfwk            Install all application framework packages
        --pip-options=PIP_OPTIONS
                            Additional options to pass to pip
+       --steelhead         Install steelhead packages
 
 ``steel mkworkspace``
 ---------------------

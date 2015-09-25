@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Riverbed Technology, Inc.
+# Copyright (c) 2015 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -24,6 +24,8 @@ class RvbdHTTPException(RvbdException):
 
         self.status = result.status_code
         self.reason = result.reason
+        self.xresult = result
+        self.xdata = data
         # Try to parse the error structure (either XML or JSON)
         try:
             t = result.headers.get('Content-type', None)
@@ -40,18 +42,18 @@ class RvbdHTTPException(RvbdException):
                     self.error_id = e.get('error_id')
                     self.error_text = e.get('error_text')
 
-            elif t.find('application/json') != -1:
+            elif t is not None and 'application/json' in t:
                 d = json.loads(data)
-                #for NetShark
+                # for NetShark
                 try:
                     self.error_text = d['error_text']
                     self.error_id = d['error_id']
                 except KeyError:
-                    #for netprofiler
+                    # for NetProfiler
                     self.error_id = None
                     self.error_text = d['status_text']
             elif self.reason == 'Unauthorized':
-                self.error_id = None
+                self.error_id = 'AUTH_REQUIRED'
                 self.error_text = "Not authorized"
             else:
                 self.error_id = None
@@ -60,8 +62,8 @@ class RvbdHTTPException(RvbdException):
             if self.error_text == "Not authorized":
                 self.error_text += (
                     " You are not logged in. "
-                    "use the auth parameter to enter valid credentials or"
-                    "authenticate using the .authenticate(auth) method"
+                    "Use the auth parameter to enter valid credentials or "
+                    "authenticate using the .authenticate(auth) method."
                 )
 
         except Exception, e:

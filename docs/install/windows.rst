@@ -33,7 +33,7 @@ It is usually easiest to install as administrator:
 
 3. Add Python to your System Path:
 
-   * Navigate to the Enviroment Variables window via Right-click on
+   * Navigate to the Environment Variables window via Right-click on
      "My Computer"->Properties->Advanced system settings->Environment
      Variables.
 
@@ -79,7 +79,10 @@ It is usually easiest to install as administrator:
         steelscript.netshark                      0.9.0
 
       Application Framework packages:
-      None.
+        None
+
+      REST tools and libraries:
+        None
 
       Paths to source:
         C:\Python27\lib\site-packages

@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Riverbed Technology, Inc.
+# Copyright (c) 2015 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -8,6 +8,7 @@
 import os
 import ssl
 import json
+import urllib
 import logging
 import tempfile
 import urlparse
@@ -116,6 +117,7 @@ class Connection(object):
         self.conn.verify = verify
         self._reauthenticate_handler = reauthenticate_handler
         self.set_user_agent()
+        self.cookies = None
 
         # store last full response
         self.response = None
@@ -181,7 +183,8 @@ class Connection(object):
 
             r = self.conn.request(method, path, data=body, params=params,
                                   headers=extra_headers,
-                                  stream=stream, **kwargs)
+                                  stream=stream,
+                                  cookies=self.cookies, **kwargs)
 
             if r.request.url != path:
                 rest_logger.info('Full URL: %s' % r.request.url)
@@ -230,15 +233,19 @@ class Connection(object):
             self._ssladapter = True
             logger.info('SSL error -- retrying with TLSv1')
             r = self.conn.request(method, path, data=body,
-                                  params=params, headers=extra_headers)
+                                  params=params, headers=extra_headers,
+                                  cookies=self.cookies)
 
         # check if good status response otherwise raise exception
         if not r.ok:
             exc = RvbdHTTPException(r, r.text, method, path)
             if (self._reauthenticate_handler is not None and
-                exc.error_id in ('AUTH_INVALID_SESSION',
+                exc.error_id in ('AUTH_REQUIRED',
+                                 'AUTH_INVALID_SESSION',
                                  'AUTH_EXPIRED_TOKEN')):
                 logger.debug('session timed out -- reauthenticating')
+                # clean any stale cookies from session
+                self._clear_cookies()
                 handler = self._reauthenticate_handler
                 self._reauthenticate_handler = None
                 handler()
@@ -265,6 +272,12 @@ class Connection(object):
                 except AttributeError:
                     res = obj.__dict__
             return res
+
+    def _clear_cookies(self):
+        self.conn.headers.pop('Cookie', None)
+        if self.cookies:
+            self.cookies.clear_session_cookies()
+        self.conn.cookies.clear_session_cookies()
 
     def _prepare_headers(self, headers):
         if headers:
@@ -319,6 +332,17 @@ class Connection(object):
             return tree, r
 
         return tree
+
+    def urlencoded_request(self, method, path, body=None, params=None,
+                           extra_headers=None, raw_response=False):
+        """Send a request with url encoded parameters in body"""
+        extra_headers = self._prepare_headers(extra_headers)
+        extra_headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        extra_headers['Accept'] = 'application/json'
+
+        body = urllib.urlencode(body)
+
+        return self._request(method, path, body, params, extra_headers)
 
     def upload(self, path, data, method="POST", params=None,
                extra_headers=None):

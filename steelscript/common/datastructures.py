@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Riverbed Technology, Inc.
+# Copyright (c) 2015 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -376,7 +376,7 @@ class ColumnProxy(object):
                     setattr(o, component, n)
                     o = n
 
-            setattr(o, components[-1], value)
+            setattr(o, components[-1], self.FakeColumn(name))
 
         self._callback(root)
         return dir(root)
@@ -422,3 +422,15 @@ class RecursiveUpdateDict(dict):
             self[key] = od
         else:
             self[key] = other_dict[key]
+
+
+class Singleton(type):
+    """Metaclass for singleton classes"""
+    # inspired by
+    # stackoverflow.com/questions/6760685/creating-a-singleton-in-python
+    _instances = {}
+
+    def __call__(cls, *args, **kw):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kw)
+        return cls._instances[cls]

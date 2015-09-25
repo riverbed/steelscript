@@ -1,6 +1,12 @@
 CHANGELOG
 ----------------------
 
+[1.0]
+ * Improved OAuth2 support
+ * Better package upgrades and status with 'steel' command
+ * Improved cookie handling
+ * Documentation updates
+
 [0.9.7]
  * Support unicode with Formatter; update print_table signature
  * Narrow down requests dependency

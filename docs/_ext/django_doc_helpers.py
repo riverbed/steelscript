@@ -1,6 +1,6 @@
 import os
 import sys
-import re
+import inspect
 
 THIS_DIR = os.path.dirname(__file__)
 PROJECT_DIR = os.path.join(THIS_DIR, '..', 'appfwk_project')
@@ -12,10 +12,10 @@ if not os.path.exists(PROJECT_DIR):
 
 sys.path.append(PROJECT_DIR)
 
-import inspect
-import local_settings
-from django.core.management import setup_environ
-setup_environ(local_settings)
+
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'local_settings')
+django.setup()
 
 from django.db import models
 from django.utils.html import strip_tags

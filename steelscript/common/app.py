@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Riverbed Technology, Inc.
+# Copyright (c) 2015 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -83,4 +83,4 @@ class Application(BaseCommand):
                 self.options.rest_body_lines)
 
     def main(self):
-        print ("Not implemented")
+        pass
