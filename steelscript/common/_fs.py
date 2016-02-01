@@ -65,13 +65,13 @@ class SteelScriptDir(object):
 
 
 class SteelScriptFile(object):
-    """Base Class for Flyscript file storage objects
-    """
+    """Base Class for SteelScript file storage objects."""
     def __init__(self, path, filename):
         self.path = path
         self.filename = filename
         self.fullpath = os.path.join(self.path, filename)
         self.data = None
+        self.version = 0
         self.read()
 
     def read(self):
@@ -84,8 +84,7 @@ class SteelScriptFile(object):
 
 
 class SteelScriptConfig(SteelScriptFile):
-    """File object for JSON configuration files
-    """
+    """File object for JSON configuration files."""
     def __init__(self, *args, **kwargs):
         super(SteelScriptConfig, self).__init__(*args, **kwargs)
 
@@ -102,18 +101,25 @@ class SteelScriptConfig(SteelScriptFile):
 
 
 class SteelScriptData(SteelScriptFile):
-    """File object for pickled data storage
-    """
+    """File object for pickled data storage."""
     def __init__(self, *args, **kwargs):
         super(SteelScriptData, self).__init__(*args, **kwargs)
 
     def read(self):
         if os.path.isfile(self.fullpath):
             with open(self.fullpath, 'r') as f:
-                self.data = pickle.load(f)
+                data = pickle.load(f)
+
+            if 'CACHE_VERSION' in data:
+                self.version = data['CACHE_VERSION']
+                self.data = data['data']
+            else:
+                self.data = data
+
         else:
             self.data = None
 
     def write(self):
         with open(self.fullpath, 'w') as f:
-            pickle.dump(self.data, f)
+            pickle.dump({'CACHE_VERSION': self.version,
+                         'data': self.data}, f)
