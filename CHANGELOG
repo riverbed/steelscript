@@ -1,6 +1,9 @@
 CHANGELOG
 ----------------------
 
+[1.0.1]
+ * Add support for versioning cache files
+
 [1.0]
  * Improved OAuth2 support
  * Better package upgrades and status with 'steel' command
