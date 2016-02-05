@@ -21,28 +21,45 @@ def ensure_dir(d):
 
 
 class SteelScriptDir(object):
-    """Manages the user dependent steelscript directory used
-    to store user relevant configuration and data
+    """Manage user dependent steelscript directory for configuration and data.
     """
     # TODO - add cleanup operations
     def __init__(self, *components, **kwargs):
-        self.basedir = kwargs.get('directory')
-        self.component = os.path.join(*components)
+        """Initialize user local SteelScriptDir object
 
-        if self.basedir is None and platform.system() == 'Windows':
-            self.basedir = os.path.join(
-                os.environ['APPDATA'],
-                'steelscript',
-                self.component)
-        elif self.basedir is None and platform.system() == 'Linux':
-            self.basedir = os.path.join(
-                os.environ['HOME'],
-                '.steelscript', self.component)
-        elif self.basedir is None and platform.system() == 'Darwin':
-            self.basedir = os.path.join(
-                os.environ['HOME'],
-                '.steelscript',
-                self.component)
+        By default, the location of this directory will be inside
+        a folder named `.steelscript` in the users home directory.
+        The specific path varies depending on Operating System.
+
+        This base dir can be overridden by including a ``directory`` keyword
+        argument.
+
+        :param components: arguments which will be interpreted
+            as hierarchy of folders
+        :param directory: optional kwarg which indicates the base directory
+            to use.  Any specified components will be appended to this
+            location.
+        """
+        self.basedir = kwargs.get('directory')
+        if components:
+            self.component = os.path.join(*components)
+        else:
+            self.component = ''
+
+        if self.basedir is None:
+            if platform.system() == 'Windows':
+                self.basedir = os.path.join(
+                    os.environ['APPDATA'],
+                    'steelscript',
+                    self.component)
+            else:
+                self.basedir = os.path.join(
+                    os.environ['HOME'],
+                    '.steelscript',
+                    self.component)
+        else:
+            self.basedir = os.path.join(self.basedir, self.component)
+
         ensure_dir(self.basedir)
 
     def isfile(self, filename, prefix=''):
@@ -65,13 +82,13 @@ class SteelScriptDir(object):
 
 
 class SteelScriptFile(object):
-    """Base Class for Flyscript file storage objects
-    """
+    """Base Class for SteelScript file storage objects."""
     def __init__(self, path, filename):
         self.path = path
         self.filename = filename
         self.fullpath = os.path.join(self.path, filename)
         self.data = None
+        self.version = 0
         self.read()
 
     def read(self):
@@ -84,8 +101,7 @@ class SteelScriptFile(object):
 
 
 class SteelScriptConfig(SteelScriptFile):
-    """File object for JSON configuration files
-    """
+    """File object for JSON configuration files."""
     def __init__(self, *args, **kwargs):
         super(SteelScriptConfig, self).__init__(*args, **kwargs)
 
@@ -102,18 +118,25 @@ class SteelScriptConfig(SteelScriptFile):
 
 
 class SteelScriptData(SteelScriptFile):
-    """File object for pickled data storage
-    """
+    """File object for pickled data storage."""
     def __init__(self, *args, **kwargs):
         super(SteelScriptData, self).__init__(*args, **kwargs)
 
     def read(self):
         if os.path.isfile(self.fullpath):
             with open(self.fullpath, 'r') as f:
-                self.data = pickle.load(f)
+                data = pickle.load(f)
+
+            if 'CACHE_VERSION' in data:
+                self.version = data['CACHE_VERSION']
+                self.data = data['data']
+            else:
+                self.data = data
+
         else:
             self.data = None
 
     def write(self):
         with open(self.fullpath, 'w') as f:
-            pickle.dump(self.data, f)
+            pickle.dump({'CACHE_VERSION': self.version,
+                         'data': self.data}, f)
