@@ -1,0 +1,221 @@
+/*
+ * This style sheet includes elemets which are being overridden
+ * from the original theme.css located in sphinx_rtd_theme.
+ * GitHub Repository: https://github.com/snide/sphinx_rtd_theme
+ *
+ * These changes include SteelScript's custom colors and styling
+ * for the Licence button.
+ *
+ * */
+
+
+/* Change blue to orange */
+.wy-alert.wy-alert-neutral a, .rst-content .wy-alert-neutral.note a, .rst-content .wy-alert-neutral.attention a, .rst-content .wy-alert-neutral.caution a, .rst-content .wy-alert-neutral.danger a, .rst-content .wy-alert-neutral.error a, .rst-content .wy-alert-neutral.hint a, .rst-content .wy-alert-neutral.important a, .rst-content .wy-alert-neutral.tip a, .rst-content .wy-alert-neutral.warning a, .rst-content .wy-alert-neutral.seealso a, .rst-content .wy-alert-neutral.admonition-todo a {
+  color: #E7682C;
+}
+
+.wy-tray-container li.wy-tray-item-warning {
+  background: #E7682C;
+}
+
+.btn-warning {
+  background-color: #E7682C !important;
+}
+
+.btn-link {
+  background-color: transparent !important;
+  color: #E7682C;
+  box-shadow: none;
+  border-color: transparent !important;
+}
+
+.wy-dropdown-menu > dd > a:hover {
+  background: #E7682C;
+  color: #fff;
+}
+
+.wy-dropdown.wy-dropdown-bubble .wy-dropdown-menu a:hover {
+  background: #E7682C;
+  color: #fff;
+}
+
+.wy-inline-validate.wy-inline-validate-warning .wy-input-context {
+  color: #E7682C;
+}
+
+a {
+  color: #E7682C;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.wy-text-warning {
+  color: #E7682C !important;
+}
+
+.wy-menu-vertical a:active {
+  background-color: #E7682C;
+  cursor: pointer;
+  color: #fff;
+}
+
+.wy-side-nav-search img {
+  display: block;
+  margin: auto auto 0.809em auto;
+  height: 45px;
+  width: 45px;
+  background-color: #E7682C;
+  padding: 5px;
+  border-radius: 100%;
+}
+
+.wy-nav .wy-menu-vertical header {
+  color: #E7682C;
+}
+
+.wy-nav .wy-menu-vertical a:hover {
+  background-color: #E7682C;
+  color: #fff;
+}
+
+.wy-nav-top {
+  display: none;
+  background: #E7682C;
+  color: #fff;
+  padding: 0.4045em 0.809em;
+  position: relative;
+  line-height: 50px;
+  text-align: center;
+  font-size: 100%;
+  *zoom: 1;
+}
+
+.wy-nav-top img {
+  margin-right: 12px;
+  height: 45px;
+  width: 45px;
+  background-color: #E7682C;
+  padding: 5px;
+  border-radius: 100%;
+}
+
+
+.title-logo {
+  color: #E7682C !important;
+}
+
+.rst-versions a {
+  color: #E7682C;
+  text-decoration: none;
+}
+
+.rst-content a tt, .rst-content a tt, .rst-content a code {
+  color: #E7682C;
+}
+
+.rst-content dl:not(.docutils) dt {
+  display: inline-block;
+  margin: 6px 0;
+  font-size: 90%;
+  line-height: normal;
+  background: white;
+  color: #E7682C;
+  border-top: solid 3px #f1aa88;
+  padding: 6px;
+  position: relative;
+}
+
+
+/* Change visited color */
+a:visited {
+  color: #E7682C;
+}
+
+.btn-link:visited {
+  color: #E7682C;
+}
+
+
+/* Change hover color */
+a:hover {
+  color: #ea7c47;
+}
+
+
+/* Change sidebar to use linear gradient */
+.wy-side-nav-search {
+  display: block;
+  width: 300px;
+  padding: 0.809em;
+  margin-bottom: 0.809em;
+  z-index: 200;
+  background-color: #000;
+  background: linear-gradient(to right, black 0%, #2b2b2b 100%);
+  text-align: center;
+  padding: 0.809em;
+  display: block;
+  color: #fcfcfc;
+  margin-bottom: 0.809em;
+}
+
+.wy-nav-side {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: 2em;
+  width: 300px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  min-height: 100%;
+  background-color: #000;
+  background: linear-gradient(to right, black 0%, #2b2b2b 100%);
+  z-index: 200;
+}
+
+
+/* Add licence button styling */
+.wy-menu-license {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.wy-menu-license a {
+  color: #E3E3E3;
+  padding: 4px 6px;
+}
+.wy-menu-license a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Add grey color styling */
+.wy-breadcrumbs-extra {
+  margin-bottom: 0;
+  color: #b3b3b3;
+  font-size: 80%;
+  display: inline-block;
+}
+
+.wy-menu-vertical li ul li a {
+  margin-bottom: 0;
+  color: #b3b3b3;
+  font-weight: normal;
+}
+
+.wy-menu-vertical a {
+  display: inline-block;
+  line-height: 18px;
+  padding: 0.4045em 1.618em;
+  display: block;
+  position: relative;
+  font-size: 90%;
+  color: #b3b3b3;
+}
+
+.wy-menu-vertical a:hover span.toctree-expand {
+  color: #b3b3b3;
+}
+
+.wy-nav .wy-menu-vertical a {
+  color: #b3b3b3;
+}
