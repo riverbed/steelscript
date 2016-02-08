@@ -14,6 +14,7 @@
 import sys
 import os
 import sys
+import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('.'))
 import _ext.helpers as helpers
 from _ext.django_doc_helpers import process_docstring
@@ -113,30 +114,13 @@ html_theme = 'default'
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'relbartextcolor': '#e16832',
-    'relbarlinkcolor': '#e16832',
-    'relbarbgcolor': '#000',
-    #'headtextcolor': '#141',
-
-    'headbgcolor': '#ddd',
-    'headtextcolor': '#111',
-
-    'textcolor': '#111',
-    'linkcolor': '#c77040',
-    'visitedlinkcolor': '#c77040',
-
-    'codebgcolor': '#def',
-
-    'sidebarbgcolor': '#ccc',
-    'sidebartextcolor': '#222',
-    'sidebarlinkcolor': '#c77030',
-    'sidebarwidth' : 280,
-
-    'footerbgcolor': '#222',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
+html_theme = "sphinx_rtd_theme"
+
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -293,6 +277,6 @@ texinfo_documents = [
 
 def setup(app):
     # add custom css that overrides the default theme
-    app.add_stylesheet('custom.css')
+    app.add_stylesheet('theme.css')
     # Register the docstring processor with sphinx
     app.connect('autodoc-process-docstring', process_docstring)

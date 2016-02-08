@@ -106,8 +106,18 @@ scripts included in the documentation are licensed under the terms and
 conditions of the MIT License.  See the :doc:`license` page for more
 information.
 
-
 .. toctree::
-    :hidden:
+   :hidden:
+   :numbered:
+   :maxdepth: 3
 
-    toc
+   install/toc
+   steel
+   common/toc
+   netprofiler/toc
+   netshark/toc
+   steelhead/toc
+   scc/toc
+   appfwk/toc
+   cmdline/toc
+   vmconfig/toc
