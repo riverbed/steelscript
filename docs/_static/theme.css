@@ -159,3 +159,13 @@ a:hover {
 .wy-nav .wy-menu-vertical a {
   color: #b3b3b3;
 }
+
+/* Set the top nav color to white on mobile */
+.wy-nav-top a {
+  color: #fff;
+}
+
+/* Make margins gray */
+.rst-content dl:not(.docutils) dt {
+  border-top: solid 3px #c7c7c7;
+}
