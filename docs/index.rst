@@ -94,8 +94,8 @@ Documentation
 
 * REST tools and libraries
 
-  * `reschema <https://support.riverbed.com/apis/steelscript/reschema/index.html>`__
-  * `Sleepwalker <https://support.riverbed.com/apis/steelscript/sleepwalker/index.html>`__
+  * `reschema <reschema/index.html>`__
+  * `Sleepwalker <Sleepwalker/index.html>`__
 
 License
 -------
