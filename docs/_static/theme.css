@@ -25,7 +25,6 @@
 .btn-link {
   background-color: transparent !important;
   color: #E7682C;
-  box-shadow: none;
   border-color: transparent !important;
 }
 
@@ -45,8 +44,6 @@
 
 a {
   color: #E7682C;
-  text-decoration: none;
-  cursor: pointer;
 }
 
 .wy-text-warning {
@@ -55,18 +52,11 @@ a {
 
 .wy-menu-vertical a:active {
   background-color: #E7682C;
-  cursor: pointer;
   color: #fff;
 }
 
 .wy-side-nav-search img {
-  display: block;
-  margin: auto auto 0.809em auto;
-  height: 45px;
-  width: 45px;
   background-color: #E7682C;
-  padding: 5px;
-  border-radius: 100%;
 }
 
 .wy-nav .wy-menu-vertical header {
@@ -79,24 +69,12 @@ a {
 }
 
 .wy-nav-top {
-  display: none;
   background: #E7682C;
   color: #fff;
-  padding: 0.4045em 0.809em;
-  position: relative;
-  line-height: 50px;
-  text-align: center;
-  font-size: 100%;
-  *zoom: 1;
 }
 
 .wy-nav-top img {
-  margin-right: 12px;
-  height: 45px;
-  width: 45px;
   background-color: #E7682C;
-  padding: 5px;
-  border-radius: 100%;
 }
 
 
@@ -106,7 +84,6 @@ a {
 
 .rst-versions a {
   color: #E7682C;
-  text-decoration: none;
 }
 
 .rst-content a tt, .rst-content a tt, .rst-content a code {
@@ -114,15 +91,8 @@ a {
 }
 
 .rst-content dl:not(.docutils) dt {
-  display: inline-block;
-  margin: 6px 0;
-  font-size: 90%;
-  line-height: normal;
   background: white;
   color: #E7682C;
-  border-top: solid 3px #f1aa88;
-  padding: 6px;
-  position: relative;
 }
 
 
@@ -144,33 +114,14 @@ a:hover {
 
 /* Change sidebar to use linear gradient */
 .wy-side-nav-search {
-  display: block;
-  width: 300px;
-  padding: 0.809em;
-  margin-bottom: 0.809em;
-  z-index: 200;
   background-color: #000;
   background: linear-gradient(to right, black 0%, #2b2b2b 100%);
-  text-align: center;
-  padding: 0.809em;
-  display: block;
   color: #fcfcfc;
-  margin-bottom: 0.809em;
 }
 
 .wy-nav-side {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  padding-bottom: 2em;
-  width: 300px;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  min-height: 100%;
   background-color: #000;
   background: linear-gradient(to right, black 0%, #2b2b2b 100%);
-  z-index: 200;
 }
 
 
@@ -190,25 +141,14 @@ a:hover {
 
 /* Add grey color styling */
 .wy-breadcrumbs-extra {
-  margin-bottom: 0;
   color: #b3b3b3;
-  font-size: 80%;
-  display: inline-block;
 }
 
 .wy-menu-vertical li ul li a {
-  margin-bottom: 0;
   color: #b3b3b3;
-  font-weight: normal;
 }
 
 .wy-menu-vertical a {
-  display: inline-block;
-  line-height: 18px;
-  padding: 0.4045em 1.618em;
-  display: block;
-  position: relative;
-  font-size: 90%;
   color: #b3b3b3;
 }
 
