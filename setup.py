@@ -6,6 +6,7 @@
 
 import os
 import sys
+import itertools
 
 try:
     from setuptools import setup, find_packages, Command
@@ -52,6 +53,9 @@ install_requires = [
 if sys.platform == 'win32':
     install_requires.append('pyreadline') # readline subsitute for Windows
 
+# Additional dependencies
+test = ['pytest', 'testfixtures', 'mock']
+doc = ['sphinx', 'sphinx_rtd_theme']
 
 setup_args = {
     'name':               'steelscript',
@@ -96,6 +100,13 @@ http://pythonhosted.org/steelscript/
     },
 
     'install_requires': install_requires,
+
+    'extras_require': {
+        'test': test,
+        'doc': doc,
+        'dev': [p for p in itertools.chain(test, doc)],
+        'all': []
+    },
 
     'cmdclass': {
         'mksteel': MakeSteel,
