@@ -122,4 +122,4 @@ information.
    cmdline/toc
    vmconfig/toc
    reschema/toc
-   Sleepwalker/toc
+   sleepwalker/toc

@@ -13,7 +13,7 @@ PROJECTS = [
     ('cmdline', 'SteelScript Command Line', '../../steelscript-cmdline'),
     ('vmconfig', 'SteelScript VM', '../../steelscript-vm-config'),
     ('reschema', 'reschema', '../../reschema'),
-    ('Sleepwalker', 'Sleepwalker', '../../sleepwalker')
+    ('sleepwalker', 'sleepwalker', '../../sleepwalker')
 ]
 
 
