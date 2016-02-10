@@ -93,6 +93,7 @@ a {
 .rst-content dl:not(.docutils) dt {
   background: white;
   color: #E7682C;
+  border-top: solid 3px #f1aa88;
 }
 
 
@@ -163,9 +164,4 @@ a:hover {
 /* Set the top nav color to white on mobile */
 .wy-nav-top a {
   color: #fff;
-}
-
-/* Make margins gray */
-.rst-content dl:not(.docutils) dt {
-  border-top: solid 3px #c7c7c7;
 }

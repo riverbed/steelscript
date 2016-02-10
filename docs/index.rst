@@ -121,3 +121,5 @@ information.
    appfwk/toc
    cmdline/toc
    vmconfig/toc
+   reschema/toc
+   Sleepwalker/toc
