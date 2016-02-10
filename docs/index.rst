@@ -95,7 +95,7 @@ Documentation
 * REST tools and libraries
 
   * `reschema <reschema/index.html>`__
-  * `Sleepwalker <Sleepwalker/index.html>`__
+  * `sleepwalker <sleepwalker/index.html>`__
 
 License
 -------
