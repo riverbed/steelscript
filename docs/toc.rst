@@ -18,4 +18,4 @@ Table of Contents
    vmconfig/toc
 
 * `reschema <reschema/index.html>`__
-* `Sleepwalker <Sleepwalker/index.html>`__
+* `sleepwalker <sleepwalker/index.html>`__
