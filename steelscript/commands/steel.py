@@ -58,10 +58,10 @@ LOGFILE = None
 
 STEELSCRIPT_CORE = ['steelscript',
                     'steelscript.netprofiler',
-                    'steelscript.netshark']
+                    'steelscript.netshark',
+                    'steelscript.wireshark']
 
 STEELSCRIPT_APPFW = ['steelscript.appfwk',
-                     'steelscript.wireshark',
                      'steelscript.appfwk.business-hours']
 
 STEELSCRIPT_STEELHEAD = ['steelscript.cmdline',

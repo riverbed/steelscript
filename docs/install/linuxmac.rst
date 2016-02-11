@@ -100,6 +100,7 @@ separate different projects from one another.
       Package steelscript already installed
       Installing steelscript.netprofiler...done
       Installing steelscript.netshark...done
+      Installing steelscript.wireshark...done
 
    See `<http://github.com/riverbed>`_ for a complete list of
    additional SteelScript packages available.
@@ -112,9 +113,10 @@ separate different projects from one another.
 
       Installed SteelScript Packages
       Core packages:
-        steelscript                               0.9.2
-        steelscript.netprofiler                   0.9.2
-        steelscript.netshark                      0.9.2
+        steelscript                               1.0
+        steelscript.netprofiler                   1.0
+        steelscript.netshark                      1.0
+        steelscript.wireshark                     1.0
 
       Application Framework packages:
         None
