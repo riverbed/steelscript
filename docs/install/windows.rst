@@ -63,6 +63,7 @@ It is usually easiest to install as administrator:
 
       > pip.exe install steelscript.netprofiler
       > pip.exe install steelscript.netshark
+      > pip.exe install steelscript.wireshark
 
 .. _verify-windows:
 
@@ -74,9 +75,10 @@ It is usually easiest to install as administrator:
 
       Installed SteelScript Packages
       Core packages:
-        steelscript                               0.9.0
-        steelscript.netprofiler                   0.9.0
-        steelscript.netshark                      0.9.0
+        steelscript                               1.0
+        steelscript.netprofiler                   1.0
+        steelscript.netshark                      1.0
+        steelscript.wireshark                     1.0
 
       Application Framework packages:
         None
@@ -123,13 +125,13 @@ to run these commands as administrator.
    command prompt and type the following commands (change the cd command
    to match the directory FlyScript is extracted into)::
 
-      > cd c:\steelscript-0.9.0
+      > cd c:\steelscript-1.0
       > C:\Python27\python setup.py install
       ...
       ...
-      Installed c:\Python27\site-packages\steelscript-0.9.0-py2.7.egg
-      Processing dependencies for steelscript==0.9.0
-      Finished processing dependencies for steelscript==0.9.0
+      Installed c:\Python27\site-packages\steelscript-1.0-py2.7.egg
+      Processing dependencies for steelscript==1.0
+      Finished processing dependencies for steelscript==1.0
 
 5. :ref:`Verify <verify-windows>` your installation with ``steel.py about``
 
