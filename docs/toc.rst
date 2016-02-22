@@ -11,6 +11,7 @@ Table of Contents
    common/toc
    netprofiler/toc
    netshark/toc
+   wireshark/toc
    steelhead/toc
    scc/toc
    appfwk/toc
