@@ -39,7 +39,7 @@ class IntervalTests(unittest.TestCase):
         int1 = Interval(1, 5)
         int2 = Interval(3, 4)
         ints1 = IntervalList([Interval(1, 3), Interval(4, 5)])
-        self.assertEqual(int2 - int1, None)
+        self.assertEqual(int2 - int1, IntervalList([]))
         self.assertEqual(int1 - int2, ints1)
 
         int1 = Interval(1, 3)
@@ -51,7 +51,7 @@ class IntervalTests(unittest.TestCase):
 
         int1 = Interval(1, 3)
         int2 = Interval(3, 5)
-        self.assertEqual(int1 - int2, Interval(1, 3))
+        self.assertEqual(int1 - int2, IntervalList([Interval(1, 3)]))
 
         int1 = Interval(1, 3)
         int2 = Interval(5, 8)
@@ -59,6 +59,12 @@ class IntervalTests(unittest.TestCase):
         int3 = Interval(0, 2)
         ints2 = IntervalList([Interval(0, 1)])
         self.assertEqual(int3 - ints1, ints2)
+
+        self.assertEqual(int1 - None, IntervalList([int1]))
+
+        int1 = Interval(1, 5)
+        int2 = Interval(1, 3)
+        self.assertEqual((int1 - int2)[0], Interval(3, 5))
 
     def test_add(self):
         int1, int2, int3 = Interval(0, 3), Interval(1, 5), Interval(0, 5)

@@ -25,8 +25,11 @@ class Interval(object):
         self.start = start
         self.end = end
 
+    def __str__(self):
+        return '%s, %s' % (self.start, self.end)
+
     def __repr__(self):
-        return 'Interval(%s, %s)' % (self.start, self.end)
+        return '%s(%s, %s)' % (self.__class__.__name__, self.start, self.end)
 
     def __contains__(self, item):
         """One interval is contained by another if the range from start to end
@@ -41,7 +44,7 @@ class Interval(object):
     def overlap(self, other):
         return self.end >= other.start and self.start <= other.end
 
-    def __sub__(self, other):
+    def __sub__(self, other=None):
         """Subtracting an Interval object or an IntervalList object.
         If subtracting an Interval object, the method returns an interval
         object with the part of interval from left operand that does not
@@ -56,11 +59,15 @@ class Interval(object):
             >>>int3 - IntervalList([int1, int2])
             IntervalList([Interval(0, 1), Interval(2, 4), Interval(5, 7)])
 
-        :param other: an Interval/IntervalList object
-        :return: Interval object or IntervalList object
+        :param other: an Interval/IntervalList object or None
+        :return: IntervalList object
         """
+
+        if other is None:
+            return IntervalList([self])
+
         if self in other:
-            return None
+            return IntervalList([])
 
         if isinstance(other, IntervalList):
             remain = IntervalList([self])
@@ -68,21 +75,19 @@ class Interval(object):
                 remain -= interval
             return remain
 
-        if isinstance(other, Interval):
-            if self in other:
-                return None
-            elif other in self:
-                times = [(self.start, other.start),
-                         (other.end, self.end)]
-                return IntervalList([Interval(t[0], t[1]) for t in times])
+        else:  # isinstance(other, Interval):
+            if other in self:
+                ints = [(self.start, other.start), (other.end, self.end)]
+                return IntervalList([self.__class__(t[0], t[1])
+                                     for t in ints if t[0] != t[1]])
             elif not self.overlap(other):
-                return self
+                return IntervalList([self])
             elif self.start <= other.start:
-                return Interval(start=self.start,
-                                end=other.start)
+                return IntervalList([self.__class__(start=self.start,
+                                                    end=other.start)])
             else:  # self.end >= other.end:
-                return Interval(start=other.end,
-                                end=self.end)
+                return IntervalList([self.__class__(start=other.end,
+                                                    end=self.end)])
 
     def __eq__(self, other):
         return self.start == other.start and self.end == other.end
@@ -100,12 +105,13 @@ class Interval(object):
             >>>int1 + int2
             Interval(1, 5)
 
-        :param other:
-        :return:
+        :param other: Interval object
+        :return: Interval object or IntervalList object
         """
         if not self.overlap(other):
             return IntervalList([self, other])
-        return Interval(min(self.start, other.start), max(self.end, other.end))
+        return self.__class__(min(self.start, other.start),
+                              max(self.end, other.end))
 
 
 class IntervalList(object):
@@ -116,6 +122,10 @@ class IntervalList(object):
     def __repr__(self):
         intervals = ', '.join([repr(interval) for interval in self])
         return 'IntervalList([' + intervals + '])'
+
+    def __str__(self):
+        intervals = ', '.join('(' + str(interval) + ')' for interval in self)
+        return '[' + intervals + ']'
 
     def __getitem__(self, index):
         return self.intervals[index]
@@ -206,3 +216,6 @@ class IntervalList(object):
 
         l.append(other)
         return IntervalList(l)
+
+    def append(self, other):
+        self.intervals.append(other)
