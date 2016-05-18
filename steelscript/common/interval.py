@@ -1,8 +1,12 @@
-# Copyright (c) 2015 Riverbed Technology, Inc.
+# Copyright (c) 2016 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
+
+import copy
+
+__all__ = ['Interval', 'IntervalList']
 
 
 class Interval(object):
@@ -18,6 +22,14 @@ class Interval(object):
         True
         >>> int1, int2 = Interval(1, 3), Interval(1, 3)
         >>> int1 == int2
+        True
+        >>> dt1 = datetime.datetime(2016, 5, 18, 13)
+        >>> dt2 = datetime.datetime(2016, 5, 18, 14)
+        >>> dt3 = datetime.datetime(2016, 5, 18, 10)
+        >>> dt4 = datetime.datetime(2016, 5, 18, 15)
+        >>> int1 = Interval(dt1, dt2)
+        >>> int2 = Interval(dt3, dt4)
+        >>> int1 in int2
         True
     """
 
@@ -106,18 +118,30 @@ class Interval(object):
             Interval(1, 5)
 
         :param other: Interval object
-        :return: Interval object or IntervalList object
+        :return: IntervalList object
         """
         if not self.overlap(other):
             return IntervalList([self, other])
-        return self.__class__(min(self.start, other.start),
-                              max(self.end, other.end))
+        merged = self.__class__(min(self.start, other.start),
+                                max(self.end, other.end))
+        return IntervalList([merged])
 
 
 class IntervalList(object):
-    """Creates an object from a list of non-overlapping Interval objects."""
+    """Creates an object from a list of Interval objects."""
     def __init__(self, intervals):
-        self.intervals = sorted(intervals, key=lambda x: (x.start, x.end))
+        intervals = sorted(intervals, key=lambda x: (x.start, x.end))
+
+        # Merge overlapping intervals
+        stack = []
+        for itv in intervals:
+            if not stack:
+                stack.append(itv)
+            else:
+                if stack[-1].overlap(itv):
+                    itv = (stack.pop() + itv)[0]
+                stack.append(itv)
+        self.intervals = stack
 
     def __repr__(self):
         intervals = ', '.join([repr(interval) for interval in self])
@@ -170,17 +194,11 @@ class IntervalList(object):
         l = []
         for interval in self:
             remain = interval - other
-            if remain is None:
-                continue
-            if isinstance(remain, Interval):
-                l.append(remain)
-            else:
-                l.extend(remain.intervals)
-
+            l.extend(remain.intervals)
         return IntervalList(l)
 
     def __eq__(self, other):
-        """Check if two IntervalList object equals.
+        """Check if two IntervalList objects are equivalent.
 
         Example:
             >>>ints1 = IntervalList([1, 3], [5, 6])
@@ -198,7 +216,7 @@ class IntervalList(object):
         """Merge one Interval object into self.
 
         Example:
-             >>>int1 = Interval(2. 3)
+             >>>int1 = Interval(2, 3)
              >>>ints = IntervalList([Interval(1, 2), Interval(3,4)])
              >>>ints + int1
              IntervalList([Interval(1, 4)])
@@ -206,16 +224,9 @@ class IntervalList(object):
         :param other: An Interval object.
         :return: An IntervalList object.
         """
-        l = []
-
-        for interval in self:
-            if interval.overlap(other):
-                other += interval
-            else:
-                l.append(interval)
-
-        l.append(other)
-        return IntervalList(l)
+        intervals = copy.copy(self.intervals)
+        intervals.append(other)
+        return IntervalList(intervals)
 
     def append(self, other):
         self.intervals.append(other)

@@ -5,6 +5,7 @@
 # as set forth in the License.
 
 import unittest
+from datetime import datetime
 
 from steelscript.common import Interval, IntervalList
 
@@ -22,6 +23,14 @@ class IntervalTests(unittest.TestCase):
         int2 = Interval(2, 3)
         self.assertTrue(int2 in int1)
 
+        int1 = Interval(1.5, 2.5)
+        int2 = Interval(1.2, 2.7)
+        self.assertTrue(int1 in int2)
+
+        int1 = Interval(datetime(2016, 5, 18, 20), datetime(2016, 5, 18, 22))
+        int2 = Interval(datetime(2016, 5, 18, 18), datetime(2016, 5, 18, 23))
+        self.assertTrue(int1 in int2)
+
     def test_overlap(self):
         int1 = Interval(1, 5)
         int2 = Interval(0, 2)
@@ -33,6 +42,10 @@ class IntervalTests(unittest.TestCase):
         self.assertTrue(int1.overlap(int3))
         self.assertTrue(int4.overlap(int1))
         self.assertTrue(int1.overlap(int4))
+
+        int1 = Interval(datetime(2016, 5, 18, 17), datetime(2016, 5, 18, 19))
+        int2 = Interval(datetime(2016, 5, 18, 16), datetime(2016, 5, 18, 18))
+        self.assertTrue(int1.overlap(int2))
 
     def test_sub(self):
 
@@ -66,9 +79,16 @@ class IntervalTests(unittest.TestCase):
         int2 = Interval(1, 3)
         self.assertEqual((int1 - int2)[0], Interval(3, 5))
 
+        int1 = Interval(datetime(2016, 5, 18, 20), datetime(2016, 5, 18, 23))
+        int2 = Interval(datetime(2016, 5, 18, 21), datetime(2016, 5, 18, 22))
+        int3 = Interval(datetime(2016, 5, 18, 20), datetime(2016, 5, 18, 21))
+        int4 = Interval(datetime(2016, 5, 18, 22), datetime(2016, 5, 18, 23))
+        intlist = IntervalList([int4, int3])
+        self.assertEqual(int1 - int2, intlist)
+
     def test_add(self):
         int1, int2, int3 = Interval(0, 3), Interval(1, 5), Interval(0, 5)
-        self.assertEqual(int1 + int2, int3)
+        self.assertEqual(int1 + int2, IntervalList([int3]))
 
         int4 = Interval(-1, 0)
         self.assertEqual(int2 + int4, IntervalList([int2, int4]))
