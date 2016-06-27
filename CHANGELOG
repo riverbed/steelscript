@@ -1,6 +1,14 @@
 CHANGELOG
 ----------------------
 
+[1.1]
+ * Documentation updates
+ * Documents - Wireshark documents added.
+ * Documents - Documentation style and color scheme fixes.
+ * Documents - Link and navigation fixes.
+ * License fixes
+ * Dependency changes due to Steelhead package.
+
 [1.0.1]
  * Add support for versioning cache files
 
