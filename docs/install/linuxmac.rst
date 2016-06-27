@@ -100,6 +100,7 @@ separate different projects from one another.
       Package steelscript already installed
       Installing steelscript.netprofiler...done
       Installing steelscript.netshark...done
+      Installing steelscript.wireshark...done
 
    See `<http://github.com/riverbed>`_ for a complete list of
    additional SteelScript packages available.
@@ -112,9 +113,10 @@ separate different projects from one another.
 
       Installed SteelScript Packages
       Core packages:
-        steelscript                               0.9.2
-        steelscript.netprofiler                   0.9.2
-        steelscript.netshark                      0.9.2
+        steelscript                               1.0
+        steelscript.netprofiler                   1.0
+        steelscript.netshark                      1.0
+        steelscript.wireshark                     1.0
 
       Application Framework packages:
         None
@@ -163,11 +165,12 @@ and their dependencies instead of directly installing them.
    archives for ``steelscript``, ``requests``, and ``importlib``.
 
 3. Add any additional steelscript packages of interest.  The following
-   will download both the netprofiler and netshark packages to the
+   will download the netprofiler, netshark, and wireshark packages to the
    same archive directory along with ``virtualenv``::
 
        $ pip install --no-use-wheel -d steelscript_packages steelscript.netprofiler
        $ pip install --no-use-wheel -d steelscript_packages steelscript.netshark
+       $ pip install --no-use-wheel -d steelscript_packages steelscript.wireshark
        $ pip install --no-use-wheel -d steelscript_packages virtualenv
 
    .. note::
@@ -244,6 +247,7 @@ Repeat the following steps for each the following packages, in order:
 3. steelscript
 4. steelscript.netprofiler
 5. steelscript.netshark
+6. steelscript.wireshark
 
 Replace ``<packagename>`` below with the filename from the tarball::
 

@@ -1,0 +1,167 @@
+/*
+ * This style sheet includes elemets which are being overridden
+ * from the original theme.css located in sphinx_rtd_theme.
+ * GitHub Repository: https://github.com/snide/sphinx_rtd_theme
+ *
+ * These changes include SteelScript's custom colors and styling
+ * for the Licence button.
+ *
+ * */
+
+
+/* Change blue to orange */
+.wy-alert.wy-alert-neutral a, .rst-content .wy-alert-neutral.note a, .rst-content .wy-alert-neutral.attention a, .rst-content .wy-alert-neutral.caution a, .rst-content .wy-alert-neutral.danger a, .rst-content .wy-alert-neutral.error a, .rst-content .wy-alert-neutral.hint a, .rst-content .wy-alert-neutral.important a, .rst-content .wy-alert-neutral.tip a, .rst-content .wy-alert-neutral.warning a, .rst-content .wy-alert-neutral.seealso a, .rst-content .wy-alert-neutral.admonition-todo a {
+  color: #E7682C;
+}
+
+.wy-tray-container li.wy-tray-item-warning {
+  background: #E7682C;
+}
+
+.btn-warning {
+  background-color: #E7682C !important;
+}
+
+.btn-link {
+  background-color: transparent !important;
+  color: #E7682C;
+  border-color: transparent !important;
+}
+
+.wy-dropdown-menu > dd > a:hover {
+  background: #E7682C;
+  color: #fff;
+}
+
+.wy-dropdown.wy-dropdown-bubble .wy-dropdown-menu a:hover {
+  background: #E7682C;
+  color: #fff;
+}
+
+.wy-inline-validate.wy-inline-validate-warning .wy-input-context {
+  color: #E7682C;
+}
+
+a {
+  color: #E7682C;
+}
+
+.wy-text-warning {
+  color: #E7682C !important;
+}
+
+.wy-menu-vertical a:active {
+  background-color: #E7682C;
+  color: #fff;
+}
+
+.wy-side-nav-search img {
+  background-color: #E7682C;
+}
+
+.wy-nav .wy-menu-vertical header {
+  color: #E7682C;
+}
+
+.wy-nav .wy-menu-vertical a:hover {
+  background-color: #E7682C;
+  color: #fff;
+}
+
+.wy-nav-top {
+  background: #E7682C;
+  color: #fff;
+}
+
+.wy-nav-top img {
+  background-color: #E7682C;
+}
+
+
+.title-logo {
+  color: #E7682C !important;
+}
+
+.rst-versions a {
+  color: #E7682C;
+}
+
+.rst-content a tt, .rst-content a tt, .rst-content a code {
+  color: #E7682C;
+}
+
+.rst-content dl:not(.docutils) dt {
+  background: white;
+  color: #E7682C;
+  border-top: solid 3px #f1aa88;
+}
+
+
+/* Change visited color */
+a:visited {
+  color: #E7682C;
+}
+
+.btn-link:visited {
+  color: #E7682C;
+}
+
+
+/* Change hover color */
+a:hover {
+  color: #ea7c47;
+}
+
+
+/* Change sidebar to use linear gradient */
+.wy-side-nav-search {
+  background-color: #000;
+  background: linear-gradient(to right, black 0%, #2b2b2b 100%);
+  color: #fcfcfc;
+}
+
+.wy-nav-side {
+  background-color: #000;
+  background: linear-gradient(to right, black 0%, #2b2b2b 100%);
+}
+
+
+/* Add licence button styling */
+.wy-menu-license {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.wy-menu-license a {
+  color: #E3E3E3;
+  padding: 4px 6px;
+}
+.wy-menu-license a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Add grey color styling */
+.wy-breadcrumbs-extra {
+  color: #b3b3b3;
+}
+
+.wy-menu-vertical li ul li a {
+  color: #b3b3b3;
+}
+
+.wy-menu-vertical a {
+  color: #b3b3b3;
+}
+
+.wy-menu-vertical a:hover span.toctree-expand {
+  color: #b3b3b3;
+}
+
+.wy-nav .wy-menu-vertical a {
+  color: #b3b3b3;
+}
+
+/* Set the top nav color to white on mobile */
+.wy-nav-top a {
+  color: #fff;
+}

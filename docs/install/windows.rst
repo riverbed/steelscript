@@ -20,63 +20,45 @@ It is usually easiest to install as administrator:
 
 1. If you don't yet have Python installed on your system, download
    Python from `python.org`_.  Be sure to pick the
-   installer from the Python 2 section (2.7.6 at the time this
+   installer from the Python 2 section (2.7.11 at the time this
    document is written) since SteelScript does not currently support
    Python 3.  Download the installer for your platform (32bit
    vs. 64bit).
 
-2. Install Python `setuptools`_ Simplest approach is to download the
-   `ez_setup.py <http://peak.telecommunity.com/dist/ez_setup.py>`_
-   script, then double-click the file in your downloads directory.
-   This should automatically determine the best installation for your
-   configuration.
+2. Double-click the Python installer and follow the instructions.
 
-3. Add Python to your System Path:
+   * Installing for all users is usually a good choice unless there are
+     permissions issues with your machine.
+   * Choose the default folder for installation
+   * On the Customize Python screen, make sure "pip" and the "Add python.exe to
+     Path" are set to install.
 
-   * Navigate to the Environment Variables window via Right-click on
-     "My Computer"->Properties->Advanced system settings->Environment
-     Variables.
+3. Open command-line window (Start -> Search -> cmd.exe)
 
-   * Add a new item to the "User variables for USERNAME" section in the top part of
-     the window with the following properties (assumes Python from Step 1 was
-     installed into the default location).  If you already have an item named "Path"
-     there, you can just add a semi-colon (";") and append the following text in the
-     dialog box::
+4. Use pip to install the SteelScript package::
 
-        Name: Path
-        Value: C:\Python27;C:\Python27\Scripts<br>
-
-4. Open command-line window (Start -> Search -> cmd.exe)
-
-5. Change to your Python Scripts directory and install pip::
-
-      > cd C:\Python27\Scripts
-      > easy_install.exe pip
-      ...
-
-6. Use pip to install steelscript::
-
-      > cd C:\Python27\Scripts
       > pip.exe install steelscript
 
-7. Install one or more product specific SteelScript modules::
+5. Install one or more product specific SteelScript packages::
 
       > pip.exe install steelscript.netprofiler
       > pip.exe install steelscript.netshark
+      > pip.exe install steelscript.wireshark
 
 .. _verify-windows:
 
-8. At this point, you should be able to run the examples included in
-   the SteelScript package.  Run the ``steel about`` script as a
+6. At this point, you should be able to run the examples included in
+   the SteelScript packages.  Run the ``steel about`` script as a
    simple test::
 
       C:\Python27\Scripts>steel about
 
       Installed SteelScript Packages
       Core packages:
-        steelscript                               0.9.0
-        steelscript.netprofiler                   0.9.0
-        steelscript.netshark                      0.9.0
+        steelscript                               1.0.1
+        steelscript.netprofiler                   1.0.2
+        steelscript.netshark                      1.0
+        steelscript.wireshark                     1.0.1
 
       Application Framework packages:
         None
@@ -89,47 +71,45 @@ It is usually easiest to install as administrator:
 
       (add -v or --verbose for further information)
 
-9. Make a workspace to copy over the included example scripts and create
+7. Make a workspace to copy over the included example scripts and create
    a sandbox to work around with::
 
       > steel mkworkspace
 
-10. Take a look at your new files and start developing!
+8. Take a look at your new files and start developing!
 
 
 Offline Installation
 --------------------
 
-For offline installation, ensure you have downloaded python,
-setuptools, requests, and steelscript ahead of time and follow steps 1
-and 2 above.  With python and setuptools installed install steelscript
-using the following steps.  As above, it is usually recommended
-to run these commands as administrator.
+For offline installation, you will still need to have Python installed
+on your Windows machine as described in steps 1 and 2 above.  You will
+also need a machine that has internet access in order to collect the
+SteelScript packages and their dependencies as described below:
 
-1. Double click on the ``requests`` package to extract the contents.
+1. From a machine which has internet access and Python installed as described
+   above, create a new temporary directoy and collect the packages with the
+   following commands from a cmd.exe prompt::
 
-2. Install the requests package using the system python.  Open a
-   command prompt and type the following commands (change the cd command
-   to match the directory requests is extracted into)::
+   > mkdir steelscript-packages
+   > cd steelscript-packages
+   > pip install --download . --no-use-wheel steelscript
+   > pip install --download . --no-use-wheel steelscript.netprofiler
+   > pip install --download . --no-use-wheel steelscript.netshark
+   > pip install --download . --no-use-wheel steelscript.wireshark
 
-      > cd c:\requests-2.1.0
-      > C:\Python27\python setup.py install
-      ...
+2. Zip up this directory and transfer the zip file to your offline machine.
 
-3. Double click on the ``steelscript`` package to extract the contents.
-   Extract all product specific packages of interest as well.
+3. On the offline machine, unzip the file to some location.
 
-4. Install the package using the system python.  Open a
-   command prompt and type the following commands (change the cd command
-   to match the directory FlyScript is extracted into)::
+4. Open a cmd.exe shell, cd into this unzipped directory, and install the
+   packages::
 
-      > cd c:\steelscript-0.9.0
-      > C:\Python27\python setup.py install
-      ...
-      ...
-      Installed c:\Python27\site-packages\steelscript-0.9.0-py2.7.egg
-      Processing dependencies for steelscript==0.9.0
-      Finished processing dependencies for steelscript==0.9.0
+   > cd steelscript-packages
+   > pip install --no-index --find-links . steelscript
+   > pip install --no-index --find-links . steelscript.netprofiler
+   > pip install --no-index --find-links . steelscript.netshark
+   > pip install --no-index --find-links . steelscript.wireshark
 
 5. :ref:`Verify <verify-windows>` your installation with ``steel.py about``
 

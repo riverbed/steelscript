@@ -11,11 +11,12 @@ Table of Contents
    common/toc
    netprofiler/toc
    netshark/toc
+   wireshark/toc
    steelhead/toc
    scc/toc
    appfwk/toc
    cmdline/toc
    vmconfig/toc
 
-* `reschema <https://support.riverbed.com/apis/steelscript/reschema/index.html>`__
-* `Sleepwalker <https://support.riverbed.com/apis/steelscript/sleepwalker/index.html>`__
+* `reschema <reschema/index.html>`__
+* `sleepwalker <sleepwalker/index.html>`__
