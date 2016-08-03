@@ -103,5 +103,11 @@ class IntervalTests(unittest.TestCase):
         int5 = Interval(3, 7)
         self.assertEqual(ints + int5, IntervalList([int4, Interval(1, 7)]))
 
+    def test_intersect(self):
+        iv = Interval(1, 10)
+        ivl = IntervalList([Interval(0, 3), Interval(5, 6)])
+        res = IntervalList([Interval(1, 3), Interval(5, 6)])
+        self.assertEqual(res, iv.intersection(ivl))
+
 if __name__ == '__main__':
     unittest.main()

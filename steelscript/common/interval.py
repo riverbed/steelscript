@@ -126,6 +126,20 @@ class Interval(object):
                                 max(self.end, other.end))
         return IntervalList([merged])
 
+    def intersection(self, interval_list):
+        """Return intersection interval list.
+
+        Example:
+            >>>int1 = Interval(1,5)
+            >>>il = IntervalList([interval(0,2), interval(4,6)])
+            >>>int1.intersection(il) == IntervalList(interval[1,2],
+            >>>                                      interval[4,5])
+
+        :param interval_list: IntervalList object
+        :return: IntervalList object
+        """
+        return self - (self - interval_list)
+
 
 class IntervalList(object):
     """Creates an object from a list of Interval objects."""
