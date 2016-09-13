@@ -302,10 +302,13 @@ class Connection(object):
                           raw_json=raw_json)
 
         if r.status_code == 204 or len(r.content) == 0:
-            return None  # no data
+            data = None  # no data
+        else:
+            data = json.loads(r.text)
+
         if raw_response:
-            return json.loads(r.text), r
-        return json.loads(r.text)
+            return data, r
+        return data
 
     def xml_request(self, method, path, body=None,
                     params=None, extra_headers=None, raw_response=False):
