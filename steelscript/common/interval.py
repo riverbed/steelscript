@@ -53,9 +53,6 @@ class Interval(object):
         """
         return item.start >= self.start and item.end <= self.end
 
-    def overlap(self, other):
-        return self.end >= other.start and self.start <= other.end
-
     def __sub__(self, other=None):
         """Subtracting an Interval object or an IntervalList object.
         If subtracting an Interval object, the method returns an interval
@@ -104,10 +101,6 @@ class Interval(object):
     def __eq__(self, other):
         return self.start == other.start and self.end == other.end
 
-    @property
-    def size(self):
-        return self.end - self.start
-
     def __add__(self, other):
         """Merges two Interval objects.
 
@@ -126,14 +119,21 @@ class Interval(object):
                                 max(self.end, other.end))
         return IntervalList([merged])
 
+    def overlap(self, other):
+        return self.end >= other.start and self.start <= other.end
+
+    @property
+    def size(self):
+        return self.end - self.start
+
     def intersection(self, interval_list):
         """Return intersection interval list.
 
         Example:
             >>>int1 = Interval(1,5)
-            >>>il = IntervalList([interval(0,2), interval(4,6)])
-            >>>int1.intersection(il) == IntervalList(interval[1,2],
-            >>>                                      interval[4,5])
+            >>>il = IntervalList([Interval(0,2), Interval(4,6)])
+            >>>int1.intersection(il) == IntervalList(Interval[1,2],
+            >>>                                      Interval[4,5])
 
         :param interval_list: IntervalList object
         :return: IntervalList object
