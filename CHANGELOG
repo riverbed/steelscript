@@ -1,6 +1,9 @@
 CHANGELOG
 ----------------------
 
+[1.2]
+ * Add interval class.
+
 [1.1]
  * Documentation updates
  * Documents - Wireshark documents added.
