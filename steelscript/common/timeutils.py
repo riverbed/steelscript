@@ -394,9 +394,32 @@ _timedelta_units = {
     'h': 60*60, 'hr': 60*60, 'hour': 60*60, 'hours': 60*60,
     'd': 24*60*60, 'day': 24*60*60, 'days': 24*60*60,
     'w': 7*24*60*60, 'week': 7*24*60*60, 'weeks': 7*24*60*60,
+    'month': 30*24*60*60, 'months': 30*24*60*60,
+    'q': 90*24*60*60, 'quarter': 90*24*60*60, 'quarters': 90*24*60*60,
+    'y': 365*24*60*60, 'year': 365*24*60*60, 'years': 365*24*60*60
 }
 
 _timedelta_re = re.compile("([0-9]*\.*[0-9]*) *([a-zA-Z]*)")
+
+# Build map from casual units to standard units recognizable by datetime
+units_map = {}
+for k, v in _timedelta_units.iteritems():
+    if v == 1:
+        units_map[k] = 'second'
+    elif v == 60:
+        units_map[k] = 'minute'
+    elif v == 60*60:
+        units_map[k] = 'hour'
+    elif v == 60*60*24:
+        units_map[k] = 'day'
+    elif v == 7*24*60*60:
+        units_map[k] = 'week'
+    elif v == 60*60*24*30:
+        units_map[k] = 'month'
+    elif v == 90*24*60*60:
+        units_map[k] = 'quarter'
+    elif v == 60*60*24*365:
+        units_map[k] = 'year'
 
 
 def timedelta_str(td):
@@ -490,7 +513,45 @@ def parse_timedelta(s):
     return timedelta(seconds=units * float(val))
 
 
-def parse_range(s):
+def floor_dt(dt, unit, begin_monday=False):
+    """Derive the most recent start datetime of the current duration unit.
+    i.e., for datetime(2016, 12, 14, 10, 14) and hour, should return
+    datetime(2016, 12, 14, 10, 0)
+
+    :param dt: datetime value
+    :param unit: string, duration unit: year, quarter, month, week, day,
+        hour, minute, second.
+    :return : datetime.
+    """
+
+    if unit == 'week':
+        offset = 0 if begin_monday else 1
+        dt = dt - timedelta(days=dt.weekday() + offset)
+        return floor_dt(dt, 'day')
+
+    if unit == 'quarter':
+        # Update the month to be first of current quarter
+        dt = dt.replace(month=(dt.month - 1)/3 * 3 + 1)
+        return floor_dt(dt, 'month')
+
+    start_month, start_day, start_hour, start_minute, start_second = \
+        1, 1, 0, 0, 0
+
+    kwargs, smaller_unit = {}, False
+
+    for u in ['year', 'month', 'day', 'hour', 'minute', 'second']:
+        if smaller_unit:
+            kwargs[u] = eval('start_' + u)
+        else:
+            kwargs[u] = getattr(dt, u)
+
+        if not smaller_unit and u == unit:
+            smaller_unit = True
+
+    return datetime(**kwargs)
+
+
+def parse_range(s, begin_monday=False):
     """Parse the string `s` representing a range of times
     (e.g., `"12:00 PM to 1:00 PM"` or `"last 2 weeks"`).
 
@@ -519,6 +580,35 @@ def parse_range(s):
             end = datetime.now()
             start = end - duration
             return start, end
+        except ValueError:
+            pass
+
+    # try to convert the datetime to
+    elif s.startswith('previous'):
+        try:
+            duration = s[8:].strip()
+            unit = units_map[_timedelta_re.match(duration).group(2)]
+            now = datetime.now()
+
+            start = floor_dt(now - parse_timedelta(duration),
+                             unit, begin_monday)
+            end = floor_dt(now, unit, begin_monday)
+
+            return start, end
+
+        except ValueError:
+            pass
+
+    elif s.startswith('this'):
+        try:
+            duration = s[4:].strip()
+            unit = units_map[_timedelta_re.match(duration).group(2)]
+            now = datetime.now()
+
+            start = floor_dt(now, unit, begin_monday)
+
+            return start, now
+
         except ValueError:
             pass
 
