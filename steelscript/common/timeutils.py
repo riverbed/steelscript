@@ -562,6 +562,11 @@ def parse_range(s, begin_monday=False):
 
     s = s.strip()
 
+    if s == 'today':
+        s = 'this day'
+    elif s == 'yesterday':
+        s = 'previous day'
+
     # first try something of the form "time1 to time2"
     i = s.split('to')
     if len(i) == 2:
