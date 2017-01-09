@@ -17,6 +17,7 @@ import time
 import calendar
 from datetime import datetime, timedelta, tzinfo
 from decimal import Decimal
+from dateutil.relativedelta import relativedelta
 
 __all__ = ['ensure_timezone', 'force_to_utc', 'datetime_to_seconds',
            'datetime_to_microseconds', 'datetime_to_nanoseconds',
@@ -395,7 +396,7 @@ _timedelta_units = {
     'd': 24*60*60, 'day': 24*60*60, 'days': 24*60*60,
     'w': 7*24*60*60, 'week': 7*24*60*60, 'weeks': 7*24*60*60,
     'month': 30*24*60*60, 'months': 30*24*60*60,
-    'q': 90*24*60*60, 'quarter': 90*24*60*60, 'quarters': 90*24*60*60,
+    'q': 91*24*60*60, 'quarter': 91*24*60*60, 'quarters': 91*24*60*60,
     'y': 365*24*60*60, 'year': 365*24*60*60, 'years': 365*24*60*60
 }
 
@@ -412,11 +413,11 @@ for k, v in _timedelta_units.iteritems():
         units_map[k] = 'hour'
     elif v == 60*60*24:
         units_map[k] = 'day'
-    elif v == 7*24*60*60:
+    elif v == 60*60*24*7:
         units_map[k] = 'week'
     elif v == 60*60*24*30:
         units_map[k] = 'month'
-    elif v == 90*24*60*60:
+    elif v == 60*60*24*91:
         units_map[k] = 'quarter'
     elif v == 60*60*24*365:
         units_map[k] = 'year'
@@ -595,8 +596,15 @@ def parse_range(s, begin_monday=False):
             unit = units_map[_timedelta_re.match(duration).group(2)]
             now = datetime.now()
 
-            start = floor_dt(now - parse_timedelta(duration),
-                             unit, begin_monday)
+            how_many = _timedelta_re.match(duration).group(1)
+            how_many = 1 if how_many == '' else int(how_many)
+
+            if unit == 'quarter':
+                delta = relativedelta(months=how_many*3)
+            else:
+                delta = relativedelta(**{unit+'s': how_many})
+
+            start = floor_dt(now - delta, unit, begin_monday)
             end = floor_dt(now, unit, begin_monday)
 
             return start, end

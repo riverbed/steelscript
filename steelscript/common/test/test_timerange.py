@@ -9,7 +9,7 @@ import unittest
 from collections import OrderedDict
 
 from datetime import datetime, timedelta
-
+from dateutil.relativedelta import relativedelta
 from steelscript.common.timeutils import parse_range, parse_timedelta
 
 
@@ -123,7 +123,7 @@ class TimeRangeTests(unittest.TestCase):
         self.assertTrue(end - start, parse_timedelta('3 months'))
 
         start, end = parse_range('previous 3 months')
-        self.assertTrue(end - start, parse_timedelta('3 months'))
+        self.assertEquals(start, end - relativedelta(months=3))
         self.on_boundary(end, 'month')
         self.within_unit(end, 'month')
 
@@ -137,7 +137,7 @@ class TimeRangeTests(unittest.TestCase):
         self.assertTrue(end - start, parse_timedelta('3 q'))
 
         start, end = parse_range('previous 3 q')
-        self.assertTrue(end - start, parse_timedelta('3 q'))
+        self.assertEquals(start, end - relativedelta(months=9))
         self.on_boundary(end, 'month')
         self.within_unit(end, 'quarter')
         self.assertTrue(end.month in [1, 4, 7, 10])
@@ -154,7 +154,7 @@ class TimeRangeTests(unittest.TestCase):
         self.assertTrue(end - start, parse_timedelta('3 years'))
 
         start, end = parse_range('previous 3 years')
-        self.assertTrue(end - start, parse_timedelta('3 years'))
+        self.assertEquals(start, end - relativedelta(years=3))
         self.on_boundary(end, 'year')
         self.within_unit(end, 'year')
 
