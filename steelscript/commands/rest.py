@@ -99,7 +99,7 @@ class HistoryManager(object):
 
         if self.current.obj:
             lines = []
-            for i in range(readline.get_current_history_length()+1):
+            for i in range(1, readline.get_current_history_length()+1):
                 line = readline.get_history_item(i)
                 if line:
                     lines.append(str(line))
@@ -390,9 +390,8 @@ class Command(Application):
             return self.filelines.pop(0)
         else:
             input = raw_input(prompt)
-            readline.remove_history_item(
-                readline.get_current_history_length() - 1
-            )
+            readline.clear_history()
+
             return input
 
     def main(self):
@@ -422,7 +421,6 @@ class Command(Application):
         if self.options.file:
             with open(self.options.file, 'r') as f:
                 self.filelines = [line.rstrip() for line in f]
-
         print "REST Shell ('help' or 'quit' when done)"
         print "Current mode is 'json', use 'mode text' to switch to raw text"
         while True:
