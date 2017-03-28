@@ -72,12 +72,9 @@ def test_tcp_conn(dest, port):
     try:
         rcode = s.connect_ex((dest, port))
     except Exception as e:
-        raise RvbdConnectException("Exception raised test_tcp_conn for {2}:{3}. "
-                                   "type: {0}, message "
-                                   "{1}".format(type(e),
-                                                str(e),
-                                                dest,
-                                                port))
+        raise RvbdConnectException("Exception raised in test_tcp_conn({2}, "
+                                   "{3}) type: {0}, message {1}"
+                                   "".format(type(e), str(e), dest, port))
     finally:
         s.close()
 
