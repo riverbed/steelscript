@@ -15,6 +15,13 @@ class RvbdException(Exception):
     pass
 
 
+class RvbdConnectException(RvbdException):
+    def __init__(self, message, **kwargs):
+        super(RvbdConnectException, self).__init__(message)
+        self.errno = kwargs.get('errno', None)
+        self.errname = kwargs.get('errname', None)
+
+
 class RvbdHTTPException(RvbdException):
     def __init__(self, result, data, method, urlpath):
         RvbdException.__init__(

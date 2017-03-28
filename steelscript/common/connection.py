@@ -8,7 +8,9 @@
 import os
 import ssl
 import json
+import errno
 import urllib
+import socket
 import logging
 import tempfile
 import urlparse
@@ -23,7 +25,8 @@ from requests.packages.urllib3.util import parse_url
 from requests.packages.urllib3.poolmanager import PoolManager
 from pkg_resources import get_distribution
 
-from steelscript.common.exceptions import RvbdException, RvbdHTTPException
+from steelscript.common.exceptions import RvbdException, RvbdHTTPException, \
+    RvbdConnectException
 
 logger = logging.getLogger(__name__)
 rest_logger = logging.getLogger('REST')
@@ -61,6 +64,28 @@ def scrub_passwords(data):
         return result
     else:
         return data
+
+
+def test_tcp_conn(dest, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(5)
+    try:
+        rcode = s.connect_ex((dest, port))
+    except Exception as e:
+        raise RvbdConnectException("Exception raised in test_tcp_conn({2}, "
+                                   "{3}) type: {0}, message {1}"
+                                   "".format(type(e), str(e), dest, port))
+    finally:
+        s.close()
+
+    if rcode == 0:
+        return True
+    else:
+        err_name = errno.errorcode.get(rcode, "UnknownError")
+        raise RvbdConnectException("Socket errno raised on connection "
+                                   "attempt: {0}".format(err_name),
+                                   errno=rcode,
+                                   errname=err_name)
 
 
 class Connection(object):
