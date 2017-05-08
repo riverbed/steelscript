@@ -76,7 +76,7 @@ class TestInstallGitlab(TestVirtualEnv):
         self.assertFalse('steel' in out)
 
         with self.assertRaises(ShellFailed):
-            out = self.shell('steel -h')
+            out = self.shell('{venv}/bin/steel -h'.format(venv=self.venv))
 
         out = self.shell('vsteel -h')
         self.assertTrue('Usage' in out)
@@ -174,7 +174,7 @@ class TestInstallLocalGit(TestVirtualEnv):
         self.assertFalse('steel' in out)
 
         with self.assertRaises(ShellFailed):
-            out = self.shell('steel -h')
+            out = self.shell('{venv}/bin/steel -h'.format(venv=self.venv))
 
         gitdir = os.path.join(self.venv, 'git')
         self.shell('mkdir {gitdir}'.format(gitdir=gitdir))
@@ -191,7 +191,9 @@ class TestInstallLocalGit(TestVirtualEnv):
             if not os.path.exists(pkgdir):
                 self.skipTest('Test skipped to avoid failure due to alternate '
                               'directory structure.')
-                raise Exception('Cannot find git directory: {0}'.format(pkgdir))
+                raise Exception(
+                    'Cannot find git directory: {0}'.format(pkgdir)
+                )
             os.symlink(pkgdir, os.path.join(gitdir, pkg + '.git'))
 
         out = self.shell('vsteel install --giturl file://{gitdir}'

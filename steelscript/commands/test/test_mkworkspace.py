@@ -11,7 +11,7 @@ import ntpath
 import shutil
 import logging
 
-from steelscript.commands.steel import shell, ShellFailed
+from steelscript.commands.steel import shell
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -54,8 +54,8 @@ class TestWorkspace(unittest.TestCase):
     """
 
     tmp_examples_path = os.path.join(sys.prefix, 'share', 'doc', 'steelscript',
-                          'examples', 'steelscript')
-    # The temporary workspace is located in the directory with all the temporary
+                                     'examples', 'steelscript')
+    # The temp workspace is located in the directory with all the temporary
     # example files.
     tmp_workspace_path = os.path.join(tmp_examples_path, 'test-workspace')
 
@@ -73,7 +73,8 @@ class TestWorkspace(unittest.TestCase):
         # directory to be used for testing.
         mkdir(cls.tmp_examples_path)
         for i in range(10):
-            mk_dummy_file(cls.tmp_examples_path, 'test_example_' + str(i) + '.py')
+            mk_dummy_file(cls.tmp_examples_path,
+                          'test_example_' + str(i) + '.py')
         cd = 'cd ' + cls.tmp_examples_path + ';'
         cls.shell(cd + 'steel mkworkspace -d ' + cls.tmp_workspace_path)
 
@@ -85,9 +86,9 @@ class TestWorkspace(unittest.TestCase):
     @classmethod
     def shell(cls, cmd):
         if cmd.startswith('steel' or cmd.startswith(cls.steel)):
-            opts=' --loglevel debug --logfile -'
+            opts = ' --loglevel debug --logfile -'
         else:
-            opts=''
+            opts = ''
         return shell('{cmd}{opts}'.format(cmd=cmd, opts=opts),
                      exit_on_fail=False, save_output=True)
 
@@ -123,7 +124,6 @@ class TestWorkspaceFunctionality(TestWorkspace):
         dummy_files = os.listdir(steel_ex_path)
         self.assertEqual(len(dummy_files), 10)
 
-
     def test_overwrite_in_collect_reports_script(self):
         steel_ex_path = os.path.join(self.tmp_workspace_path,
                                      'steelscript-examples')
@@ -136,12 +136,14 @@ class TestWorkspaceFunctionality(TestWorkspace):
         cd = 'cd ' + self.tmp_workspace_path + ';'
         self.shell(cd + 'python collect_examples.py')
         test_file = open(file_path)
-        self.assertEqual(test_file.read(), 'This file better not get overwritten')
+        self.assertEqual(test_file.read(),
+                         'This file better not get overwritten')
         test_file.close()
         # Now we test that the file does indeed get overwritten
         self.shell(cd + 'python collect_examples.py --overwrite')
         test_file = open(file_path)
-        self.assertNotEqual(test_file.read(), 'This file better not get overwritten')
+        self.assertNotEqual(test_file.read(),
+                            'This file better not get overwritten')
         # Now we celebrate because all the tests passed! :)
 
 if __name__ == '__main__':
