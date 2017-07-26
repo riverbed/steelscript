@@ -267,7 +267,8 @@ class Connection(object):
             if (self._reauthenticate_handler is not None and
                 exc.error_id in ('AUTH_REQUIRED',
                                  'AUTH_INVALID_SESSION',
-                                 'AUTH_EXPIRED_TOKEN')):
+                                 'AUTH_EXPIRED_TOKEN',
+                                 'AUTH_INVALID_CREDENTIALS')):
                 logger.debug('session timed out -- reauthenticating')
                 # clean any stale cookies from session
                 self._clear_cookies()
