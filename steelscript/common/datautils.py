@@ -118,7 +118,11 @@ class Formatter(object):
                 else:
                     # take column and wrap it in place, creating new rows
                     wrapped = (r for r in textwrap.wrap(column, width=width))
-                    row[long_column] = wrapped.next()
+                    try:
+                        row[long_column] = wrapped.next()
+                    except StopIteration:
+                        # The column is empty string
+                        pass
                     print ''.join(unicode(s).ljust(x)
                                   for s, x in zip(row, widths))
                     for line in wrapped:
