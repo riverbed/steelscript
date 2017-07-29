@@ -1,6 +1,12 @@
 CHANGELOG
 ----------------------
 
+[1.3.1]
+ * Add appresponse to docs and core setup
+ * Handle token expiration for appresponse connections
+ * Fix empty string when printing description
+ * Fix tests when inside docker container
+
 [1.3]
  * Add support to parse ‘months/years ago’
  * Add method to test connections
