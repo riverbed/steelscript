@@ -58,13 +58,15 @@ are a number of installation options available::
                            Additional options to pass to pip
        --steelhead         Install steelhead packages
 
+.. _steel_mkworkspace:
+
 ``steel mkworkspace``
 ---------------------
 
 The ``mkworkspace`` subcommand is used to create a workspace in which you can
 develop and run Steelscript scripts. It will pull all scripts from
 the /examples folder in your installed Steelscript packages. Once you create a
-workspace you will notice it contains the Steelscript scripts, a README file 
+workspace you will notice it contains the Steelscript scripts, a README file
 and ``collect_examples.py``. ``collect_examples.py`` can be used to collect any new
 examples from the Steelscript packages after the creation of the workspace.
 There are a number of workspace options available::
@@ -73,7 +75,7 @@ There are a number of workspace options available::
    Usage: steel mkworkspace [options]
 
      Create new workspace for running and creating Steelscript scripts
-   
+
     Options:
       --version          show program's version number and exit
       -h, --help         show this help message and exit

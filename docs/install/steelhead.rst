@@ -48,7 +48,7 @@ The following packages are related to the SteelScript SteelHead:
   (`PyPI <https://pypi.python.org/pypi/steelscript.cmdline>`__,
   `GitHub
   <https://github.com/riverbed/steelscript-cmdline/releases>`__) -
-  python modules for interacting with transport types, such as telnet and ssh. 
+  python modules for interacting with transport types, such as telnet and ssh.
 
 The primary package is ``steelscript.steelhead``.  Installing this will
 pull in a number of dependencies.  The exact dependencies will change

@@ -9,6 +9,7 @@ docs/_build
 docs/appfwk_project
 docs/netprofiler
 docs/netshark
+docs/appresponse
 docs/wireshark
 docs/appfwk
 docs/vmconfig

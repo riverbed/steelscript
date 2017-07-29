@@ -7,6 +7,7 @@ PROJECTS = [
     ('common', 'SteelScript Common', '..'),
     ('netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'),
     ('netshark', 'SteelScript NetShark', '../../steelscript-netshark'),
+    ('appresponse', 'SteelScript AppResponse', '../../steelscript-appresponse'),
     ('wireshark', 'SteelScript WireShark', '../../steelscript-wireshark'),
     ('steelhead', 'SteelScript SteelHead', '../../steelscript-steelhead'),
     ('scc', 'SteelScript SteelCentral Controller', '../../steelscript-scc'),

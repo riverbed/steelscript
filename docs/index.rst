@@ -79,6 +79,7 @@ Documentation
 
   * :doc:`netprofiler/overview`
   * :doc:`netshark/overview`
+  * :doc:`appresponse/overview`
   * :doc:`steelhead/overview`
   * :doc:`scc/overview`
 
@@ -116,6 +117,7 @@ information.
    common/toc
    netprofiler/toc
    netshark/toc
+   appresponse/toc
    wireshark/toc
    steelhead/toc
    scc/toc
