@@ -35,7 +35,7 @@ pre-configured with several reports for NetProfiler and NetShark.
 
 Get started with App Framework by downloading and running a Virtual
 Machine with it pre-installed and configured.  The latest links
-and guides can be found on our 
+and guides can be found on our
 `Splash site <https://splash.riverbed.com/docs/DOC-4860>`_.
 
 For more details, see the :doc:`complete documentation <appfwk/overview>`.
@@ -72,6 +72,7 @@ Documentation
 
   * :doc:`netprofiler/tutorial`
   * :doc:`netshark/tutorial`
+  * :doc:`appresponse/tutorial`
   * :doc:`steelhead/tutorial`
   * :doc:`scc/tutorial`
 
