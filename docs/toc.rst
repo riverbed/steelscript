@@ -13,6 +13,7 @@ Table of Contents
    netshark/toc
    appresponse/toc
    wireshark/toc
+   packets/toc
    steelhead/toc
    scc/toc
    appfwk/toc

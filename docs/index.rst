@@ -75,6 +75,7 @@ Documentation
   * :doc:`appresponse/tutorial`
   * :doc:`steelhead/tutorial`
   * :doc:`scc/tutorial`
+  * :doc:`packets/tutorial`
 
 * Device modules
 
@@ -120,6 +121,7 @@ information.
    netshark/toc
    appresponse/toc
    wireshark/toc
+   packets/toc
    steelhead/toc
    scc/toc
    appfwk/toc

@@ -42,7 +42,7 @@ class MakeSteel(Command):
         with open(bootstrap, 'w') as f:
             f.writelines(lines)
 
-        print '%s written.' % bootstrap
+        print('{0} written.'.format(bootstrap))
 
 
 install_requires = [

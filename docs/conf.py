@@ -16,6 +16,7 @@ import os
 import sys
 import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('.'))
+sys.path.append(os.path.abspath('sphinxext'))
 import _ext.helpers as helpers
 from _ext.django_doc_helpers import process_docstring
 
@@ -32,10 +33,15 @@ helpers.setup_sys_path()
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
 
+# Use cython as the default syntax highlighting language, as python is a subset
+# this does the right thing
+highlight_language = 'cython'
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+              'cython_highlighting',
               'sphinx.ext.intersphinx',
               'sphinx.ext.todo',
               'sphinx.ext.coverage']

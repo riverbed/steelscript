@@ -9,6 +9,7 @@ PROJECTS = [
     ('netshark', 'SteelScript NetShark', '../../steelscript-netshark'),
     ('appresponse', 'SteelScript AppResponse', '../../steelscript-appresponse'),
     ('wireshark', 'SteelScript WireShark', '../../steelscript-wireshark'),
+    ('packets', 'SteelScript Packets', '../../steelscript-packets'),
     ('steelhead', 'SteelScript SteelHead', '../../steelscript-steelhead'),
     ('scc', 'SteelScript SteelCentral Controller', '../../steelscript-scc'),
     ('appfwk', 'SteelScript Application Framework', '../../steelscript-appfwk'),
