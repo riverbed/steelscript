@@ -1,0 +1,21 @@
+# start with slim version
+FROM python:2.7
+MAINTAINER Riverbed Technology
+
+# separate out steelhead package to it picks up already installed dependencies
+RUN set -ex \
+        && pip install --src /src -r requirements.txt \
+        && pip install --src /src -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-steelhead.git@master#egg=steelscript-steelhead \
+        && pip install --src /src \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript#egg=steelscript \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-netprofiler#egg=steelscript-netprofiler \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-netshark#egg=steelscript-netshark \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-wireshark#egg=steelscript-wireshark \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-cmdline#egg=steelscript-cmdline \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-scc#egg=steelscript-scc \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-appresponse#egg=steelscript-appresponse \
+        && pip install --src /src \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-steelhead#egg=steelscript-steelhead \
+            -e git+https://gitlab.lab.nbttech.com/steelscript/steelscript-packets.git@master#egg=steelscript-packets \
+        && rm -f /src/pip-delete-this-directory.txt \
+        && rm -rf ~/.cache
