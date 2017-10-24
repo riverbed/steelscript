@@ -1,4 +1,3 @@
-# start with slim version
 FROM python:2.7
 MAINTAINER Riverbed Technology
 
