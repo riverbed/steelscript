@@ -320,7 +320,6 @@ class BaseCommand(object):
           super(<subclass>, self).setup()
 
         """
-
         pass
 
     def setup(self):

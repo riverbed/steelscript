@@ -364,9 +364,6 @@ class Command(Application):
         self.interactive = True
         self.jsonmode = True
 
-    def parse_args(self):
-        super(Command, self).parse_args()
-
     def add_positional_args(self):
         super(Command, self).add_positional_args()
         # self.add_positional_arg('host', 'Rest hostname or IP address')

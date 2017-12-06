@@ -21,6 +21,10 @@ class Application(BaseCommand):
         Actual scripts should inherit from the device-specific
         subclass rather than this script.
     """
+    username = None
+    password = None
+    oauth = None
+
     def __init__(self, *args, **kwargs):
         super(Application, self).__init__(*args, **kwargs)
         self.has_conn_options = False
@@ -65,6 +69,17 @@ class Application(BaseCommand):
         super(Application, self).validate_args()
 
         if self.has_conn_options:
+
+            # check to see if we've added credentials to the class
+            # itself, and use those as defaults if nothing passed in via
+            # the command line options
+            if self.username and not self.options.username:
+                self.options.username = self.username
+            if self.password and not self.options.password:
+                self.options.password = self.password
+            if self.oauth and not self.options.oauth:
+                self.options.oauth = self.oauth
+
             if self.options.oauth and (self.options.username or
                                        self.options.password):
                 self.parser.error('Username/Password are mutually exclusive '
@@ -72,6 +87,9 @@ class Application(BaseCommand):
                                   'one method.')
             elif self.options.oauth:
                 self.auth = OAuth(self.options.oauth)
+            elif not self.options.username or not self.options.password:
+                self.parser.error('Authentication credentials required: '
+                                  'either username/password or OAuth token.')
             else:
                 self.auth = UserAuth(self.options.username,
                                      self.options.password)
