@@ -33,6 +33,8 @@ class RvbdHTTPException(RvbdException):
         self.reason = result.reason
         self.xresult = result
         self.xdata = data
+        self.xmethod = method
+        self.xurlpath = urlpath
         # Try to parse the error structure (either XML or JSON)
         try:
             t = result.headers.get('Content-type', None)
@@ -51,14 +53,19 @@ class RvbdHTTPException(RvbdException):
 
             elif t is not None and 'application/json' in t:
                 d = json.loads(data)
-                # for NetShark
-                try:
+                # Handle Riverbed Case
+                if set(('error_text', 'error_id')) == set(d.keys()):
                     self.error_text = d['error_text']
                     self.error_id = d['error_id']
-                except KeyError:
-                    # for NetProfiler
-                    self.error_id = None
-                    self.error_text = d['status_text']
+                # ServiceNow case
+                elif (('error' in d) and
+                      (set(('message', 'detail')) ==
+                       set(d['error'].keys()))):
+                    self.error_text = d['error']['detail']
+                    self.error_id = d['error']['message']
+                # Don't know this format just grab the entire body.
+                else:
+                    self.error_text = data
             elif self.reason == 'Unauthorized':
                 self.error_id = 'AUTH_REQUIRED'
                 self.error_text = "Not authorized"
@@ -78,4 +85,10 @@ class RvbdHTTPException(RvbdException):
             self.error_text = e.message
 
     def __str__(self):
-        return "%s %s" % (self.status, self.error_text)
+        return "{0} {1}".format(self.status, self.error_text)
+
+    def __repr__(self):
+        return ("RvbdHTTPException(result={result}, data={data}, "
+                "method={method}, urlpath={urlpath})"
+                "".format(result=self.xresult, data=self.xdata,
+                          method=self.xmethod, urlpath=self.xurlpath))

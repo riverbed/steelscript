@@ -170,10 +170,27 @@ class Connection(object):
 
     def _request(self, method, path, body=None, params=None,
                  extra_headers=None, raw_json=None, stream=False,
-                 **kwargs):
+                 files=None, **kwargs):
         p = parse_url(path)
         if not p.host:
             path = self.get_url(path)
+
+        """
+        Having files is a special case. The data passed into the underlying
+        requests object must be an object (a dict) in order to be processed
+        into the multipart files request.
+        """
+        if files:
+            if raw_json is None:
+                raise RvbdException('A raw object must be passed in as the '
+                                    'raw_json argument in order to process '
+                                    'files data.')
+            # we have files so use the raw json object as the data
+            req_data = raw_json
+        else:
+            # we have no files so revert to the expected behavior of using
+            # the string representation of the body.
+            req_data = body
 
         try:
             rest_logger.info('%s %s' % (method, str(path)))
@@ -206,9 +223,10 @@ class Connection(object):
                     rest_logger.info('... <truncated %d lines>'
                                      % (len(lines) - 20))
 
-            r = self.conn.request(method, path, data=body, params=params,
+            r = self.conn.request(method, path, data=req_data, params=params,
                                   headers=extra_headers,
                                   stream=stream,
+                                  files=files,
                                   cookies=self.cookies, **kwargs)
 
             if r.request.url != path:
@@ -257,9 +275,9 @@ class Connection(object):
             self.conn.mount('https://', SSLAdapter(ssl.PROTOCOL_TLSv1))
             self._ssladapter = True
             logger.info('SSL error -- retrying with TLSv1')
-            r = self.conn.request(method, path, data=body,
+            r = self.conn.request(method, path, data=req_data,
                                   params=params, headers=extra_headers,
-                                  cookies=self.cookies)
+                                  cookies=self.cookies, files=files)
 
         # check if good status response otherwise raise exception
         if not r.ok:
@@ -276,8 +294,9 @@ class Connection(object):
                 self._reauthenticate_handler = None
                 handler()
                 logger.debug('session reauthentication succeeded -- retrying')
-                r = self._request(method, path, body, params,
-                                  extra_headers, raw_json=raw_json, **kwargs)
+                r = self._request(method, path, req_data, params,
+                                  extra_headers, raw_json=raw_json,
+                                  files=files, **kwargs)
                 # successful connection, reset token if previously unset
                 self._reauthenticate_handler = handler
                 return r
@@ -311,11 +330,24 @@ class Connection(object):
         else:
             return CaseInsensitiveDict()
 
-    def json_request(self, method, path, body=None,
-                     params=None, extra_headers=None, raw_response=False):
-        """ Send a JSON request and receive JSON response. """
+    def json_request(self, method, path, body=None, params=None,
+                     extra_headers=None, raw_response=False,
+                     files=None):
+        """ Send a JSON request and receive JSON response.
+
+        `files` is a python requests Multipart-encoded files object.
+            Minimally defined as:
+            {'file': open(<file>, 'rb')}.
+            A more complete files object would be:
+            {'file': (<string: base file name>,
+                      <binary mode open file object: file to be uploaded>,
+                      <string: file mime type>,
+                      <dictionary: additional headers>}.
+
+        """
         extra_headers = self._prepare_headers(extra_headers)
-        extra_headers['Content-Type'] = 'application/json'
+        if files is None:
+            extra_headers['Content-Type'] = 'application/json'
         extra_headers['Accept'] = 'application/json'
 
         raw_json = body
@@ -325,7 +357,7 @@ class Connection(object):
             body = ''
 
         r = self._request(method, path, body, params, extra_headers,
-                          raw_json=raw_json)
+                          raw_json=raw_json, files=files)
 
         if r.status_code == 204 or len(r.content) == 0:
             data = None  # no data
