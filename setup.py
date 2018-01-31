@@ -49,6 +49,7 @@ install_requires = [
     'requests>=2.1.0,<2.5',
     'importlib',
     'python-dateutil',
+    'python-magic>=0.4.12',
 ]
 
 if sys.platform == 'win32':

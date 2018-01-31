@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Riverbed Technology, Inc.
+# Copyright (c) 2018 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -14,10 +14,10 @@ import socket
 import logging
 import tempfile
 import urlparse
-from xml.etree import ElementTree
-
 import requests
 import requests.exceptions
+from os.path import basename
+from xml.etree import ElementTree
 from requests.utils import default_user_agent
 from requests.adapters import HTTPAdapter
 from requests.structures import CaseInsensitiveDict
@@ -27,6 +27,7 @@ from pkg_resources import get_distribution
 
 from steelscript.common.exceptions import RvbdException, RvbdHTTPException, \
     RvbdConnectException
+from steelscript.common.fileutils import get_mime_type as get_mime
 
 logger = logging.getLogger(__name__)
 rest_logger = logging.getLogger('REST')
@@ -174,24 +175,6 @@ class Connection(object):
         p = parse_url(path)
         if not p.host:
             path = self.get_url(path)
-
-        """
-        Having files is a special case. The data passed into the underlying
-        requests object must be an object (a dict) in order to be processed
-        into the multipart files request.
-        """
-        if files:
-            if raw_json is None:
-                raise RvbdException('A raw object must be passed in as the '
-                                    'raw_json argument in order to process '
-                                    'files data.')
-            # we have files so use the raw json object as the data
-            req_data = raw_json
-        else:
-            # we have no files so revert to the expected behavior of using
-            # the string representation of the body.
-            req_data = body
-
         try:
             rest_logger.info('%s %s' % (method, str(path)))
             if params:
@@ -215,7 +198,11 @@ class Connection(object):
                         debug_body = json.dumps(
                             raw_json, indent=2, cls=self.JsonEncoder)
                 else:
-                    debug_body = body
+                    if files and isinstance(body, dict):
+                        debug_body = json.dumps(body, indent=2,
+                                                cls=self.JsonEncoder)
+                    else:
+                        debug_body = body
                 lines = debug_body.split('\n')
                 for line in lines[:self.REST_BODY_LINES]:
                     rest_logger.info('... %s' % line)
@@ -223,7 +210,7 @@ class Connection(object):
                     rest_logger.info('... <truncated %d lines>'
                                      % (len(lines) - 20))
 
-            r = self.conn.request(method, path, data=req_data, params=params,
+            r = self.conn.request(method, path, data=body, params=params,
                                   headers=extra_headers,
                                   stream=stream,
                                   files=files,
@@ -275,7 +262,7 @@ class Connection(object):
             self.conn.mount('https://', SSLAdapter(ssl.PROTOCOL_TLSv1))
             self._ssladapter = True
             logger.info('SSL error -- retrying with TLSv1')
-            r = self.conn.request(method, path, data=req_data,
+            r = self.conn.request(method, path, data=body,
                                   params=params, headers=extra_headers,
                                   cookies=self.cookies, files=files)
 
@@ -294,8 +281,9 @@ class Connection(object):
                 self._reauthenticate_handler = None
                 handler()
                 logger.debug('session reauthentication succeeded -- retrying')
-                r = self._request(method, path, req_data, params,
-                                  extra_headers, raw_json=raw_json,
+                r = self._request(method, path, body=body, params=params,
+                                  extra_headers=extra_headers,
+                                  raw_json=raw_json,
                                   files=files, **kwargs)
                 # successful connection, reset token if previously unset
                 self._reauthenticate_handler = handler
@@ -331,23 +319,10 @@ class Connection(object):
             return CaseInsensitiveDict()
 
     def json_request(self, method, path, body=None, params=None,
-                     extra_headers=None, raw_response=False,
-                     files=None):
-        """ Send a JSON request and receive JSON response.
+                     extra_headers=None, raw_response=False):
 
-        `files` is a python requests Multipart-encoded files object.
-            Minimally defined as:
-            {'file': open(<file>, 'rb')}.
-            A more complete files object would be:
-            {'file': (<string: base file name>,
-                      <binary mode open file object: file to be uploaded>,
-                      <string: file mime type>,
-                      <dictionary: additional headers>}.
-
-        """
         extra_headers = self._prepare_headers(extra_headers)
-        if files is None:
-            extra_headers['Content-Type'] = 'application/json'
+        extra_headers['Content-Type'] = 'application/json'
         extra_headers['Accept'] = 'application/json'
 
         raw_json = body
@@ -357,7 +332,7 @@ class Connection(object):
             body = ''
 
         r = self._request(method, path, body, params, extra_headers,
-                          raw_json=raw_json, files=files)
+                          raw_json=raw_json)
 
         if r.status_code == 204 or len(r.content) == 0:
             data = None  # no data
@@ -404,6 +379,112 @@ class Connection(object):
         body = urllib.urlencode(body)
 
         return self._request(method, path, body, params, extra_headers)
+
+    def upload_file(self, path, files, body=None, params=None,
+                    extra_headers=None, file_headers=None, field_name='file',
+                    raw_response=False):
+        """
+        By default executes a POST (could be PUT) to upload a file or files.
+
+        :param path: The full or relative URL of the file upload API
+        :param files: Can be a string that is the full path to a file to be
+               uploaded OR it can be a tuple/list of strings that are each the
+               full path to a file to be uploaded.
+        :param body: Optional body. If present must be a dictionary.
+        :param params: optional URL params
+        :param extra_headers: Optional headers
+        :param file_headers: Optional headers to include with the multipart
+               file data. Default is {'Expires': '0'}. Pass in an empty dict
+               object if you would not like to include any file_headers in the
+               multipart data.
+        :param field_name: The name of the form field on the destination that
+               will receive the posted multipart data. Default is 'file'
+        :param raw_response: False (defualt) results in the function returning
+               only the decoded JSON response present in the response body. If
+               set to True then the funciton will return a tuple of the decoded
+               JSON body and the full response object. Set to True if you
+               want to inspect the result code or response headers.
+        :return: See 'raw_response' for details on the returned data.
+        """
+
+        # the underlying request object will add the correct content type
+        # header
+        extra_headers = self._prepare_headers(extra_headers)
+        extra_headers['Accept'] = 'application/json'
+
+        # by default add a zero expiration header.
+        if file_headers is None:
+            file_headers = {'Expires': '0'}
+
+        # body must be a dict object for this call.
+        if (body is not None) and (not isinstance(body, dict)):
+            raise RvbdException("The 'body' argument must either be None or a "
+                                "dict")
+        # Open all of the files
+        xfiles = dict()
+        if isinstance(files, basestring):
+            try:
+                xfiles[basename(files)] = {'file': open(files, 'rb')}
+            except IOError as e:
+                raise RvbdException("Could not open '{0}' for read in binary "
+                                    "mode. Please check path.".format(files))
+        elif isinstance(files, (list, tuple)):
+            for file in files:
+                try:
+                    xfiles[basename(file)] = {'file': open(file, 'rb')}
+                except IOError as e:
+                    raise RvbdException("Could not open '{0}' for read in "
+                                        "binary mode. Please check path."
+                                        "".format(file))
+        else:
+            raise RvbdException("upload_file 'files' argument must be a "
+                                "string or list type (list, tuple). {0} is "
+                                "not a valid files argument."
+                                "".format(type(files)))
+
+        # build the multipart content from the files
+        if len(xfiles) == 1:
+            for f in xfiles:
+                if file_headers.keys():
+                    req_files = {field_name: (f,
+                                              xfiles[f]['file'],
+                                              get_mime(xfiles[f]['file']),
+                                              file_headers)}
+                else:
+                    req_files = {field_name: (f,
+                                              xfiles[f]['file'],
+                                              get_mime(xfiles[f]['file']))}
+
+        elif len(xfiles) > 1:
+            req_files = list()
+            for f in xfiles:
+                if file_headers.keys():
+                    req_files.append((field_name, (f,
+                                                   xfiles[f]['file'],
+                                                   get_mime(xfiles[f]['file']),
+                                                   file_headers)
+                                      ))
+                else:
+                    req_files.append((field_name, (f,
+                                                   xfiles[f]['file'],
+                                                   get_mime(xfiles[f]['file']))
+                                      ))
+        else:
+            raise RvbdException("At least one valid file required. Files was: "
+                                "{0}".format(files))
+
+        # send the files
+        r = self._request("POST", path, body, params, extra_headers,
+                          files=req_files)
+
+        if r.status_code == 204 or len(r.content) == 0:
+            data = None  # no data
+        else:
+            data = json.loads(r.text)
+
+        if raw_response:
+            return data, r
+        return data
 
     def upload(self, path, data, method="POST", params=None,
                extra_headers=None):
