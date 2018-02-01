@@ -320,6 +320,7 @@ class Connection(object):
 
     def json_request(self, method, path, body=None, params=None,
                      extra_headers=None, raw_response=False):
+        """ Send a JSON request and receive JSON response. """
 
         extra_headers = self._prepare_headers(extra_headers)
         extra_headers['Content-Type'] = 'application/json'
@@ -384,7 +385,7 @@ class Connection(object):
                     extra_headers=None, file_headers=None, field_name='file',
                     raw_response=False):
         """
-        By default executes a POST (could be PUT) to upload a file or files.
+        By default executes a POST to upload a file or files.
 
         :param path: The full or relative URL of the file upload API
         :param files: Can be a string that is the full path to a file to be
@@ -425,14 +426,14 @@ class Connection(object):
         if isinstance(files, basestring):
             try:
                 xfiles[basename(files)] = {'file': open(files, 'rb')}
-            except IOError as e:
+            except IOError:
                 raise RvbdException("Could not open '{0}' for read in binary "
                                     "mode. Please check path.".format(files))
         elif isinstance(files, (list, tuple)):
             for file in files:
                 try:
                     xfiles[basename(file)] = {'file': open(file, 'rb')}
-                except IOError as e:
+                except IOError:
                     raise RvbdException("Could not open '{0}' for read in "
                                         "binary mode. Please check path."
                                         "".format(file))
@@ -448,12 +449,12 @@ class Connection(object):
                 if file_headers.keys():
                     req_files = {field_name: (f,
                                               xfiles[f]['file'],
-                                              get_mime(xfiles[f]['file']),
+                                              get_mime(f),
                                               file_headers)}
                 else:
                     req_files = {field_name: (f,
                                               xfiles[f]['file'],
-                                              get_mime(xfiles[f]['file']))}
+                                              get_mime(f))}
 
         elif len(xfiles) > 1:
             req_files = list()
@@ -461,13 +462,13 @@ class Connection(object):
                 if file_headers.keys():
                     req_files.append((field_name, (f,
                                                    xfiles[f]['file'],
-                                                   get_mime(xfiles[f]['file']),
+                                                   get_mime(f),
                                                    file_headers)
                                       ))
                 else:
                     req_files.append((field_name, (f,
                                                    xfiles[f]['file'],
-                                                   get_mime(xfiles[f]['file']))
+                                                   get_mime(f))
                                       ))
         else:
             raise RvbdException("At least one valid file required. Files was: "
