@@ -15,6 +15,7 @@ import logging
 import tempfile
 import urlparse
 import requests
+import mimetypes
 import requests.exceptions
 from os.path import basename
 from xml.etree import ElementTree
@@ -27,7 +28,6 @@ from pkg_resources import get_distribution
 
 from steelscript.common.exceptions import RvbdException, RvbdHTTPException, \
     RvbdConnectException
-from steelscript.common.fileutils import get_mime_type as get_mime
 
 logger = logging.getLogger(__name__)
 rest_logger = logging.getLogger('REST')
@@ -385,7 +385,7 @@ class Connection(object):
                     extra_headers=None, file_headers=None, field_name='file',
                     raw_response=False):
         """
-        By default executes a POST to upload a file or files.
+        Executes a POST to upload a file or files.
 
         :param path: The full or relative URL of the file upload API
         :param files: Can be a string that is the full path to a file to be
@@ -445,30 +445,41 @@ class Connection(object):
 
         # build the multipart content from the files
         if len(xfiles) == 1:
+            # single file is a dict object
             for f in xfiles:
-                if file_headers.keys():
+                mtype, _ = mimetypes.guess_type(f)
+                if mtype and file_headers.keys():
                     req_files = {field_name: (f,
                                               xfiles[f]['file'],
-                                              get_mime(f),
+                                              mtype,
                                               file_headers)}
+                elif mtype and not file_headers.keys():
+                    req_files = {field_name: (f,
+                                              xfiles[f]['file'],
+                                              mtype)}
                 else:
                     req_files = {field_name: (f,
-                                              xfiles[f]['file'],
-                                              get_mime(f))}
+                                              xfiles[f]['file'])}
 
         elif len(xfiles) > 1:
+            # multiple files is a list
             req_files = list()
             for f in xfiles:
-                if file_headers.keys():
+                mtype, _ = mimetypes.guess_type(f)
+                if mtype and file_headers.keys():
                     req_files.append((field_name, (f,
                                                    xfiles[f]['file'],
-                                                   get_mime(f),
+                                                   mtype,
                                                    file_headers)
+                                      ))
+                elif mtype and not file_headers.keys():
+                    req_files.append((field_name, (f,
+                                                   xfiles[f]['file'],
+                                                   mtype)
                                       ))
                 else:
                     req_files.append((field_name, (f,
-                                                   xfiles[f]['file'],
-                                                   get_mime(f))
+                                                   xfiles[f]['file'])
                                       ))
         else:
             raise RvbdException("At least one valid file required. Files was: "
