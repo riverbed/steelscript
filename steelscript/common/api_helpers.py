@@ -22,6 +22,9 @@ class APIVersion:
     def __str__(self):
         return "%s.%s" % (self.major, self.minor)
 
+    def __repr__(self):
+        return "<APIVersion {}>".format(str(self))
+
     def __cmp__(self, other):
         if self.major < other.major:
             return -1
