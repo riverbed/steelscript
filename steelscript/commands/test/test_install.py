@@ -29,7 +29,7 @@ class TestVirtualEnv(unittest.TestCase):
         self.venv = tempfile.mkdtemp()
         self.env = {}
         current_venv = None
-        for k, v in os.environ.iteritems():
+        for k, v in os.environ.items():
             if k == 'VIRTUAL_ENV':
                 current_venv = v
                 continue
@@ -180,7 +180,7 @@ class TestInstallLocalGit(TestVirtualEnv):
         self.shell('mkdir {gitdir}'.format(gitdir=gitdir))
 
         relpath = os.path.abspath(__file__)
-        for i in xrange(5):
+        for i in range(5):
             relpath = os.path.dirname(relpath)
 
         pkgs = steelscript.commands.steel.STEELSCRIPT_CORE

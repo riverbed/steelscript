@@ -42,12 +42,11 @@ class MakeSteel(Command):
         with open(bootstrap, 'w') as f:
             f.writelines(lines)
 
-        print('{0} written.'.format(bootstrap))
+        print(('{0} written.'.format(bootstrap)))
 
 
 install_requires = [
     'requests>=2.1.0,<2.5',
-    'importlib',
     'python-dateutil',
 ]
 

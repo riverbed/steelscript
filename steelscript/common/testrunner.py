@@ -103,7 +103,7 @@ class LogTestRunner:
             
         #endtime = time.time()
         endtime = 0
-        failed, errored = map(len, (result.failures, result.errors))
+        failed, errored = list(map(len, (result.failures, result.errors)))
         totaltime = endtime - starttime
         totalfailed = failed + errored
         totalpassed = result.testsRun - totalfailed

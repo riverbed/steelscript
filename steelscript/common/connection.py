@@ -9,11 +9,11 @@ import os
 import ssl
 import json
 import errno
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import socket
 import logging
 import tempfile
-import urlparse
+import urllib.parse
 import requests
 import mimetypes
 import requests.exceptions
@@ -52,7 +52,7 @@ class SSLAdapter(HTTPAdapter):
 def scrub_passwords(data):
     if hasattr(data, 'iteritems'):
         result = {}
-        for (k, v) in data.iteritems():
+        for (k, v) in data.items():
             if k.lower() in ('password', 'authenticate', 'cookie'):
                 result[k] = "********"
             else:
@@ -155,7 +155,7 @@ class Connection(object):
 
     def get_url(self, path):
         """ Returns a fully qualified URL given a path. """
-        return urlparse.urljoin(self.hostname, path)
+        return urllib.parse.urljoin(self.hostname, path)
 
     def set_user_agent(self, extra=None):
         version = get_distribution('steelscript').version
@@ -179,12 +179,12 @@ class Connection(object):
             rest_logger.info('%s %s' % (method, str(path)))
             if params:
                 rest_logger.info('Parameters: ')
-                for k, v in params.iteritems():
+                for k, v in params.items():
                     rest_logger.info('... %s: %s' % (k, v))
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Extra request headers: ')
-                for k, v in extra_headers.iteritems():
+                for k, v in extra_headers.items():
                     rest_logger.info('... %s: %s' % (k, v))
             if self.REST_DEBUG >= 2 and body:
                 rest_logger.info('Request body: ')
@@ -221,7 +221,7 @@ class Connection(object):
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Request headers: ')
-                for k, v in scrub_passwords(r.request.headers).iteritems():
+                for k, v in scrub_passwords(r.request.headers).items():
                     rest_logger.info('... %s: %s' % (k, v))
 
             if stream:
@@ -233,7 +233,7 @@ class Connection(object):
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Response headers: ')
-                for k, v in r.headers.iteritems():
+                for k, v in r.headers.items():
                     rest_logger.info('... %s: %s' % (k, v))
 
             if self.REST_DEBUG >= 2 and not stream and r.text:
@@ -377,7 +377,7 @@ class Connection(object):
         extra_headers['Content-Type'] = 'application/x-www-form-urlencoded'
         extra_headers['Accept'] = 'application/json'
 
-        body = urllib.urlencode(body)
+        body = urllib.parse.urlencode(body)
 
         return self._request(method, path, body, params, extra_headers)
 
@@ -423,7 +423,7 @@ class Connection(object):
                                 "dict")
         # Open all of the files
         xfiles = dict()
-        if isinstance(files, basestring):
+        if isinstance(files, str):
             try:
                 xfiles[basename(files)] = {'file': open(files, 'rb')}
             except IOError:
@@ -448,12 +448,12 @@ class Connection(object):
             # single file is a dict object
             for f in xfiles:
                 mtype, _ = mimetypes.guess_type(f)
-                if mtype and file_headers.keys():
+                if mtype and list(file_headers.keys()):
                     req_files = {field_name: (f,
                                               xfiles[f]['file'],
                                               mtype,
                                               file_headers)}
-                elif mtype and not file_headers.keys():
+                elif mtype and not list(file_headers.keys()):
                     req_files = {field_name: (f,
                                               xfiles[f]['file'],
                                               mtype)}
@@ -466,13 +466,13 @@ class Connection(object):
             req_files = list()
             for f in xfiles:
                 mtype, _ = mimetypes.guess_type(f)
-                if mtype and file_headers.keys():
+                if mtype and list(file_headers.keys()):
                     req_files.append((field_name, (f,
                                                    xfiles[f]['file'],
                                                    mtype,
                                                    file_headers)
                                       ))
-                elif mtype and not file_headers.keys():
+                elif mtype and not list(file_headers.keys()):
                     req_files.append((field_name, (f,
                                                    xfiles[f]['file'],
                                                    mtype)

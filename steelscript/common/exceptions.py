@@ -81,7 +81,7 @@ class RvbdHTTPException(RvbdException):
                     "authenticate using the .authenticate(auth) method."
                 )
 
-        except Exception, e:
+        except Exception as e:
             self.error_id = 'INVALID_ERROR_IDENTIFIER'
             self.error_text = e.message
 

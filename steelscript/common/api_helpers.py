@@ -9,7 +9,7 @@ class APIVersion:
     """Wraps information about the client-side supported API versions"""
 
     def __init__(self, v):
-        if isinstance(v, basestring):
+        if isinstance(v, str):
             L = v.split(".")
             self.major = int(L[0])
             self.minor = int(L[1])
@@ -44,10 +44,10 @@ if __name__ == "__main__":
     b = APIVersion("1.1")
     c = APIVersion("2.1")
 
-    print "a, a2, a3, b, c", a, a2, a3, b, c
-    print "a < b", a < b
-    print "a > b", a > b
-    print "a > c", a > c
-    print "a == a2", a == a2
-    print "a > a2", a > a2
-    print "a >= a2", a >= a2
+    print("a, a2, a3, b, c", a, a2, a3, b, c)
+    print("a < b", a < b)
+    print("a > b", a > b)
+    print("a > c", a > c)
+    print("a == a2", a == a2)
+    print("a > a2", a > a2)
+    print("a >= a2", a >= a2)

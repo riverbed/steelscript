@@ -10,7 +10,7 @@ import json
 import platform
 
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 

@@ -5,7 +5,7 @@
 # as set forth in the License.
 
 
-from itertools import izip
+
 
 
 # http://goo.gl/zeJZl
@@ -84,16 +84,16 @@ class Formatter(object):
         """
         import textwrap
 
-        widths = [max(len(unicode(x)) + padding for x in col)
-                  for col in izip(headers, *data)]
+        widths = [max(len(str(x)) + padding for x in col)
+                  for col in zip(headers, *data)]
 
         if max_width and sum(widths) > max_width:
             delta = sum(widths) - max_width
             if delta > widths[long_column]:
                 # issue warning then turn off wrapping so data is still printed
-                print ('WARNING: Formatting error: cannot truncate column %d '
+                print(('WARNING: Formatting error: cannot truncate column %d '
                        'to meet max_width %d, printing all data instead ...'
-                       % (long_column, max_width))
+                       % (long_column, max_width)))
                 max_width = None
             else:
                 widths[long_column] -= delta
@@ -102,9 +102,9 @@ class Formatter(object):
         for i, row in enumerate(data):
             if i == 0 or (paginate and i % paginate == 0):
                 # print header at least once
-                print ''
-                print header
-                print '-' * len(header)
+                print('')
+                print(header)
+                print('-' * len(header))
             if max_width:
                 row = list(row)
                 column = row[long_column]
@@ -113,32 +113,32 @@ class Formatter(object):
                     # truncate data with ellipsis if needed
                     row[long_column] = ((column[:width] + '..')
                                         if len(column) > width else column)
-                    print ''.join(unicode(s).ljust(x)
-                                  for s, x in zip(row, widths))
+                    print(''.join(str(s).ljust(x)
+                                  for s, x in zip(row, widths)))
                 else:
                     # take column and wrap it in place, creating new rows
                     wrapped = (r for r in textwrap.wrap(column, width=width))
                     try:
-                        row[long_column] = wrapped.next()
+                        row[long_column] = next(wrapped)
                     except StopIteration:
                         # The column is empty string
                         pass
-                    print ''.join(unicode(s).ljust(x)
-                                  for s, x in zip(row, widths))
+                    print(''.join(str(s).ljust(x)
+                                  for s, x in zip(row, widths)))
                     for line in wrapped:
                         newrow = [''] * len(widths)
                         newrow[long_column] = line
-                        print ''.join(unicode(s).ljust(x)
-                                      for s, x in zip(newrow, widths))
+                        print(''.join(str(s).ljust(x)
+                                      for s, x in zip(newrow, widths)))
             else:
-                print ''.join(unicode(s).ljust(x)
-                              for s, x in zip(row, widths))
+                print(''.join(str(s).ljust(x)
+                              for s, x in zip(row, widths)))
 
     @classmethod
     def get_csv(cls, data, headers, delim=','):
         """Return list of lists using `delim` as separator."""
         def tostr(x):
-            return x.encode('utf-8') if type(x) in [str, unicode] else str(x)
+            return x.encode('utf-8') if type(x) in [str, str] else str(x)
 
         output = [delim.join(tostr(s) for s in headers)]
         for row in data:
@@ -149,4 +149,4 @@ class Formatter(object):
     def print_csv(cls, data, headers, delim=','):
         """ Print table to stdout using `delim` as separator
         """
-        print '\n'.join(cls.get_csv(data, headers, delim))
+        print('\n'.join(cls.get_csv(data, headers, delim)))

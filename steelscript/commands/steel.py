@@ -35,10 +35,15 @@ except ImportError:
 
 
 import logging
+
+#logging.basicConfig(format="%(asctime)s [%(levelname)-5s] %(name)s:%(lineno)s - %(message)s", level=logging.DEBUG)
+
 if __name__ == '__main__':
     logger = logging.getLogger('steel')
+    logger.setLevel(logging.DEBUG)
 else:
     logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
 
 try:
     __VERSION__ = get_distribution('steelscript').version
@@ -746,17 +751,17 @@ def prompt(msg, choices=None, default=None, password=False):
         if password:
             value = getpass.getpass(msg)
         else:
-            value = raw_input(msg)
+            value = input(msg)
 
         if not value:
             if default is not None:
                 value = default
             else:
-                print 'Please enter a valid response.'
+                print('Please enter a valid response.')
 
         if choices and value not in choices:
-            print ('Please choose from the following choices (%s)' %
-                   '/'.join(choices))
+            print(('Please choose from the following choices (%s)' %
+                   '/'.join(choices)))
             value = None
 
     return value
@@ -766,7 +771,7 @@ def add_log_options(parser):
     group = optparse.OptionGroup(parser, "Logging Parameters")
     group.add_option("--loglevel",
                      help="log level: debug, warn, info, critical, error",
-                     choices=LOG_LEVELS.keys(), default="info")
+                     choices=list(LOG_LEVELS.keys()), default="info")
     group.add_option("--logfile",
                      help="log file, use '-' for stdout", default=None)
     parser.add_option_group(group)
@@ -857,13 +862,16 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
         console(msg + '...', newline=False)
 
     def enqueue_output(out, queue):
-        for line in iter(out.readline, b''):
+        for line in iter(out.readline, ''):
+            logger.debug('putting {} on queue'.format(line))
             queue.put(line)
         out.close()
+        logger.debug('closing queue')
 
     logger.info('Running command: %s' % cmd)
     proc = subprocess.Popen(cmd, shell=True, env=env, cwd=cwd, bufsize=1,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            universal_newlines=True)
 
     q = Queue()
     t = Thread(target=enqueue_output, args=(proc.stdout, q))
@@ -914,7 +922,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
         if not allow_fail and exit_on_fail:
             console('Command failed: %s' % cmd)
             for line in tail:
-                print '  ', line
+                print('  ', line)
             if LOGFILE:
                 console('See log for details: %s' % LOGFILE)
             sys.exit(1)
@@ -928,7 +936,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
 
     if save_output:
         if output:
-            return '\n'.join(output)
+            return '\n'.join(str(x) for x in output)
         return ''
     return None
 
@@ -1009,7 +1017,7 @@ def check_virtualenv():
 
 def check_vcpython27():
     try:
-        shell(cmd='where /R C:\Users Visual*C++*2008*-bit*Command*Prompt.lnk',
+        shell(cmd='where /R C:\\Users Visual*C++*2008*-bit*Command*Prompt.lnk',
               allow_fail=True)
         return True
     except ShellFailed:
