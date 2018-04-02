@@ -69,7 +69,7 @@ class Command(BaseCommand):
     def mkdir(cls, dirname):
         """Create directory if it doesn't already exist."""
         if not os.path.exists(dirname):
-            os.mkdir(dirname)
+            os.makedirs(dirname)
 
     def create_file(self, dirname, filename, content):
         """Create a file according to some basic specifications."""
@@ -129,65 +129,68 @@ class Command(BaseCommand):
             console("Check the installation")
             return
 
-        console("Collecting examples from installed packages ... ",
-                newline=False)
-
         examples_root = os.path.join(sys.prefix, 'share', 'doc',
                                      'steelscript', 'examples')
         # If the packages were installed normally, examples will be located in
         # the virtualenv/share/docs/steelscript/examples and if not they will
         # be in the packages root directories in /examples
-        if os.path.exists(examples_root):
+        if os.path.exists(examples_root) and os.listdir(examples_root):
             cls._cp_examples_from_docs(dirpath, overwrite)
         else:
             cls._cp_examples_from_src(dirpath, overwrite)
 
     @classmethod
     def _cp_examples_from_docs(cls, dirpath, overwrite):
-        """Copy all examples from the virtual environment's installed packages.
-        """
-        examples_root = os.path.join(sys.prefix, 'share', 'doc',
-                                     'steelscript', 'examples')
+        """Copy all examples and notebooks from the virtualenv."""
         e = AvailableDistributions()
         # Get packages with prefix steel (ex. steelscript.netshark)
-        steel_pkgs = (x for x in e if x.startswith('steel'))
+        steel_pkgs = [x for x in e if x.startswith('steel')]
         # Remove the 'steelscript.' prefix
-        no_prefix_pkgs = (x.split('.', 1)[1]
-                          if '.' in x else x for x in steel_pkgs)
-        # Turn those package names (ex. 'netshark') into full paths
-        example_paths = (os.path.join(examples_root, p) for p in no_prefix_pkgs
-                         if os.path.exists(os.path.join(examples_root, p)))
-        new_dir = None
-        for p in example_paths:
-            new_dir = cls.path_leaf(p) + '-examples'
-            new_dir_path = os.path.join(dirpath, new_dir)
-            cls.mkdir(new_dir_path)
-            cls.copy_all(p, new_dir_path, overwrite)
+        no_prefix_pkgs = [x.split('.', 1)[1]
+                          if '.' in x else x for x in steel_pkgs]
+        docs_root = os.path.join(sys.prefix, 'share', 'doc', 'steelscript')
 
-        console("done")
-        if new_dir is None:
-            console("WARNING: No examples were found")
+        # process examples and notebooks
+        for kind in ('examples', 'notebooks'):
+            root = os.path.join(docs_root, kind)
+            paths = [os.path.join(root, p) for p in no_prefix_pkgs
+                     if os.path.exists(os.path.join(root, p))]
+            dst_paths = [os.path.join(dirpath, kind,
+                                      '{}-{}'.format(cls.path_leaf(p), kind))
+                         for p in paths]
+
+            cls._cp_files(kind, paths, dst_paths, overwrite)
 
     @classmethod
     def _cp_examples_from_src(cls, dirpath, overwrite):
-        """Copy all examples from steelscript root directories."""
+        """Copy all examples and notebooks from steelscript root dirs."""
         # Get the paths of installed packages (ex /src/steelscript-netprofiler)
-        pkg_paths = (os.path.dirname(p) for p in steelscript.__path__)
-        # Get all the paths to the example files if the /examples folder exists
-        example_paths = (p for p in pkg_paths
-                         if os.path.exists(os.path.join(p, 'examples')))
-        new_dir = None
-        for p in example_paths:
-            new_dir = cls.path_leaf(p) + '-examples'
-            # Remove 'steelscript-' prefix
-            new_dir = new_dir.split('-', 1)[1]
-            new_dir_path = os.path.join(dirpath, new_dir)
-            cls.mkdir(new_dir_path)
-            cls.copy_all(os.path.join(p, 'examples'), new_dir_path, overwrite)
+        pkg_paths = [os.path.dirname(p) for p in steelscript.__path__]
 
-        console("done")
-        if new_dir is None:
-            console("WARNING: No examples were found")
+        for kind in ('examples', 'notebooks'):
+            paths = [os.path.join(p, kind) for p in pkg_paths
+                     if os.path.exists(os.path.join(p, kind))]
+
+            mkname = lambda x: (cls.path_leaf(x) + '-' + kind).split('-', 1)[1]
+            dst_paths = [os.path.join(dirpath, kind,
+                                      mkname(os.path.dirname(p)))
+                         for p in paths]
+
+            cls._cp_files(kind, paths, dst_paths, overwrite)
+
+    @classmethod
+    def _cp_files(cls, kind, src_paths, dst_paths, overwrite):
+        if src_paths:
+            console("Collecting {} from installed packages ... ".format(kind),
+                    newline=False)
+
+            for src, dst in zip(src_paths, dst_paths):
+                cls.mkdir(dst)
+                cls.copy_all(src, dst, overwrite)
+
+            console("done")
+        else:
+            console("WARNING: No {} were found".format(kind))
 
     @classmethod
     def path_leaf(cls, path):
