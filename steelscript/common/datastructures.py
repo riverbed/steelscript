@@ -177,8 +177,8 @@ class JsonDict(dict):
 
         # Treat "__" as a separator like a '.'
         #   so x.a__b ==> x.a.b
-        if isinstance(key, str):
-            key = key.encode('utf-8')
+        if isinstance(key, bytes):
+            key = key.decode('utf-8')
         keyparts = key.split("__")
 
         # Navigate to the parent object to be set.
@@ -216,8 +216,8 @@ class JsonDict(dict):
             for item in value:
                 newvalue.append(self._decode(item, None))
         else:
-            if isinstance(value, str):
-                newvalue = value.encode('utf-8')
+            if isinstance(value, bytes):
+                newvalue = value.decode('utf-8')
             else:
                 newvalue = value
 
@@ -275,8 +275,8 @@ class DictObject(dict):
         def _decode_list(data):
             rv = []
             for item in data:
-                if isinstance(item, str):
-                    item = item.encode('utf-8')
+                if isinstance(item, bytes):
+                    item = item.decode('utf-8')
                 elif isinstance(item, list):
                     item = _decode_list(item)
                 elif isinstance(item, dict):
@@ -287,10 +287,10 @@ class DictObject(dict):
         def _decode_dict(data):
             rv = DictObject()
             for key, value in data.items():
-                if isinstance(key, str):
-                    key = key.encode('utf-8')
-                if isinstance(value, str):
-                    value = value.encode('utf-8')
+                if isinstance(key, bytes):
+                    key = key.decode('utf-8')
+                if isinstance(value, bytes):
+                    value = value.decode('utf-8')
                 elif isinstance(value, list):
                     value = _decode_list(value)
                 elif isinstance(value, dict):

@@ -288,7 +288,6 @@ class Connection(object):
                 # successful connection, reset token if previously unset
                 self._reauthenticate_handler = handler
                 return r
-
             else:
                 raise exc
 

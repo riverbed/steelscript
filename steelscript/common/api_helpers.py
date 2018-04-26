@@ -22,20 +22,24 @@ class APIVersion:
     def __str__(self):
         return "%s.%s" % (self.major, self.minor)
 
-    def __cmp__(self, other):
-        if self.major < other.major:
-            return -1
+    def __eq__(self, other):
+        return ((self.major, self.minor) == (other.major, other.minor))
 
-        if self.major > other.major:
-            return 1
+    def __ne__(self, other):
+        return ((self.major, self.minor) != (other.major, other.minor))
 
-        if self.minor < other.minor:
-            return -1
+    def __lt__(self, other):
+        return ((self.major, self.minor) < (other.major, other.minor))
 
-        if self.minor > other.minor:
-            return 1
+    def __le__(self, other):
+        return ((self.major, self.minor) <= (other.major, other.minor))
 
-        return 0
+    def __gt__(self, other):
+        return ((self.major, self.minor) > (other.major, other.minor))
+
+    def __ge__(self, other):
+        return ((self.major, self.minor) >= (other.major, other.minor))
+
 
 if __name__ == "__main__":
     a = APIVersion("1.0")
