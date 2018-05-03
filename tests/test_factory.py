@@ -4,8 +4,6 @@
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
-from __future__ import (absolute_import, unicode_literals, print_function,
-                        division)
 import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
@@ -78,7 +76,7 @@ def test_feature_import_error():
     # The newest model in this path tries to import something that doesn't
     # exist, in order to genrerate an ImportError distinct from
     # a FactoryLookupError.
-    with pytest.raises(ImportError):
+    with pytest.raises(ModuleNotFoundError):
         factory.get_by_standard_layout(BASE_PKG, 'model',
                                        search_list=SEARCH_LIST,
                                        feature=FEATURE)
