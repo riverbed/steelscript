@@ -13,11 +13,11 @@ __all__ = ['RvbdException', 'RvbdHTTPException',
 
 
 class RvbdException(Exception):
-    def __init__(self, message, **kwargs):
+    def __init__(self, msg, **kwargs):
         tmp_message = kwargs.get('message', None)
-        if isinstance(message, str) and tmp_message is None:
-            super().__init__(message)
-            self.message = message
+        if isinstance(msg, str) and tmp_message is None:
+            super().__init__(msg)
+            self.message = msg
         elif isinstance(tmp_message, str):
             super().__init__(tmp_message)
             self.message = tmp_message

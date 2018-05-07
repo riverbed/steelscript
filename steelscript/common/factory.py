@@ -6,7 +6,6 @@
 
 from __future__ import (unicode_literals, print_function, division,
                         absolute_import)
-from os.path import basename
 import logging
 
 from importlib import import_module
@@ -276,9 +275,6 @@ def _attempt_import_and_check(searched, mod_path, check, first_fail):
 
     except ImportError as ie:
         raise ie
-
-    except:
-        raise
 
 
 def _run_check(module, check, first_fail):
