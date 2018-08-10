@@ -1,5 +1,10 @@
 CHANGELOG
-----------------------
+---------
+
+[1.4]
+ * Update to latest version of requests library for newer SSL certs
+ * Add method for file uploads on Connection class
+ * Add support for notebooks in SDK packages when creating new Workspaces
 
 [1.3.2]
  * Add ability to add default credentials to example and utility scripts
