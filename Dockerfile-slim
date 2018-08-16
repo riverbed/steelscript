@@ -12,7 +12,7 @@ RUN set -ex \
 
 RUN set -ex \
         && buildDeps=' \
-                gcc \
+                g++ \
                 libssl-dev \
                 libffi-dev \
         ' \
