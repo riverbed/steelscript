@@ -16,3 +16,11 @@ RUN set -ex \
             -e git+https://github.com/riverbed/steelscript-packets.git@master#egg=steelscript-packets \
         && rm -f /src/pip-delete-this-directory.txt \
         && rm -rf ~/.cache
+
+RUN set -ex \
+        && steel mkworkspace -d /root/steelscript-workspace
+
+WORKDIR /root/steelscript-workspace
+
+# Configure container startup
+CMD ["/bin/bash"]

@@ -22,23 +22,26 @@ class APIVersion:
     def __str__(self):
         return "%s.%s" % (self.major, self.minor)
 
+    def __repr__(self):
+        return "<APIVersion {}>".format(str(self))
+
     def __eq__(self, other):
-        return ((self.major, self.minor) == (other.major, other.minor))
+        return (self.major, self.minor) == (other.major, other.minor)
 
     def __ne__(self, other):
-        return ((self.major, self.minor) != (other.major, other.minor))
+        return (self.major, self.minor) != (other.major, other.minor)
 
     def __lt__(self, other):
-        return ((self.major, self.minor) < (other.major, other.minor))
+        return (self.major, self.minor) < (other.major, other.minor)
 
     def __le__(self, other):
-        return ((self.major, self.minor) <= (other.major, other.minor))
+        return (self.major, self.minor) <= (other.major, other.minor)
 
     def __gt__(self, other):
-        return ((self.major, self.minor) > (other.major, other.minor))
+        return (self.major, self.minor) > (other.major, other.minor)
 
     def __ge__(self, other):
-        return ((self.major, self.minor) >= (other.major, other.minor))
+        return (self.major, self.minor) >= (other.major, other.minor)
 
 
 if __name__ == "__main__":

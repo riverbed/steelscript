@@ -7,7 +7,7 @@ SteelScript and associated modules on Windows.
 Dependencies
 ------------
 
-* Python version 2.6.x or 2.7.x - see `python.org <http://python.org/download/>`_
+* Python version 2.7.x - see `python.org <http://python.org/download/>`_
 * Python `setuptools <https://pypi.python.org/pypi/setuptools>`_
 
 .. _installsys-windows:

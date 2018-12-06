@@ -17,6 +17,7 @@ import urllib.parse
 import requests
 import mimetypes
 import requests.exceptions
+import warnings
 from os.path import basename
 from xml.etree import ElementTree
 from requests.utils import default_user_agent
@@ -47,6 +48,7 @@ class SSLAdapter(HTTPAdapter):
                                        maxsize=maxsize,
                                        block=block,
                                        ssl_version=self.ssl_version)
+
 
 
 def scrub_passwords(data):
@@ -172,6 +174,8 @@ class Connection(object):
     def _request(self, method, path, body=None, params=None,
                  extra_headers=None, raw_json=None, stream=False,
                  files=None, **kwargs):
+        warnings.catch_warnings()
+        warnings.simplefilter('once')
         p = parse_url(path)
         if not p.host:
             path = self.get_url(path)

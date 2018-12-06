@@ -49,8 +49,12 @@ extensions = ['sphinx.ext.autodoc',
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-# The suffix of source filenames.
-source_suffix = '.rst'
+## Added to text Markdown
+source_parsers = {
+   '.md': 'recommonmark.parser.CommonMarkParser',
+}
+
+source_suffix = ['.rst', '.md']
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
@@ -60,7 +64,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'steelscript'
-copyright = u'2017 Riverbed Technology, Inc.'
+copyright = u'2018 Riverbed Technology, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
