@@ -34,6 +34,10 @@ logger = logging.getLogger(__name__)
 rest_logger = logging.getLogger('REST')
 
 
+warnings.catch_warnings()
+warnings.simplefilter('once')
+
+
 class SSLAdapter(HTTPAdapter):
     """ An HTTPS Transport Adapter that uses an arbitrary SSL version. """
     # handle https connections that don't like to negotiate
@@ -48,7 +52,6 @@ class SSLAdapter(HTTPAdapter):
                                        maxsize=maxsize,
                                        block=block,
                                        ssl_version=self.ssl_version)
-
 
 
 def scrub_passwords(data):
@@ -155,6 +158,10 @@ class Connection(object):
     def __repr__(self):
         return '<{0} to {1}>'.format(self.__class__.__name__, self.hostname)
 
+    def __del__(self):
+        # cleanup after ourselves
+        self.conn.close()
+
     def get_url(self, path):
         """ Returns a fully qualified URL given a path. """
         return urllib.parse.urljoin(self.hostname, path)
@@ -174,8 +181,6 @@ class Connection(object):
     def _request(self, method, path, body=None, params=None,
                  extra_headers=None, raw_json=None, stream=False,
                  files=None, **kwargs):
-        warnings.catch_warnings()
-        warnings.simplefilter('once')
         p = parse_url(path)
         if not p.host:
             path = self.get_url(path)
