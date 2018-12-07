@@ -137,12 +137,12 @@ class Formatter(object):
     @classmethod
     def get_csv(cls, data, headers, delim=','):
         """Return list of lists using `delim` as separator."""
-        def tostr(x):
-            return x.encode('utf-8') if type(x) in [str, str] else str(x)
 
-        output = [delim.join(tostr(s) for s in headers)]
+        output = [delim.join(headers)]
+
         for row in data:
-            output.append(delim.join(tostr(x) for x in row))
+            output.append(delim.join(str(x) for x in row))
+
         return output
 
     @classmethod
