@@ -4,13 +4,10 @@
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
-
 """
 This module contains a number of utilities for working with
 dates and times, in conjunction with the python `datetime` module.
 """
-
-
 
 import re
 import time
@@ -289,6 +286,38 @@ class _informat(object):
         return tm.replace(month=now.month, day=now.day, year=now.year)
 
 
+# all the different time of day formats we can parse.
+# refer to the python time module documentation for details
+# on the format strings
+_time_formats = (
+    '%H:%M:%S.%f',
+    '%H:%M:%S',
+    '%H:%M',
+    '%I:%M:%S %p',
+    '%I:%M:%S%p',
+    '%I:%M %p',
+    '%I:%M%p',
+    '%I %p',
+    '%I%p'
+)
+
+# all the different date formats we can parse.
+# note that dates are "normalized" a bit, see parse() below.
+_date_formats = (
+    '%m/%d',
+    '%B %d',
+    '%b %d'
+)
+
+_date_year_formats = (
+    '%Y/%m/%d',
+    '%m/%d/%Y',
+    '%m/%d/%y',
+    '%B/%d/%Y',
+    '%b/%d/%Y',
+)
+
+
 class TimeParser(object):
     """Instances of this class parse strings representing dates and/or
     times into python `datetime.datetime` objects.
@@ -349,49 +378,20 @@ class TimeParser(object):
         dt, self._fmt = self._parse_no_hint(s)
         return dt
 
-    # all the different time of day formats we can parse.
-    # refer to the python time module documentation for details
-    # on the format strings
-    _time_formats = (
-        '%H:%M:%S.%f',
-        '%H:%M:%S',
-        '%H:%M',
-        '%I:%M:%S %p',
-        '%I:%M:%S%p',
-        '%I:%M %p',
-        '%I:%M%p',
-        '%I %p',
-        '%I%p'
-    )
 
-    # all the different date formats we can parse.
-    # note that dates are "normalized" a bit, see parse() below.
-    _date_formats = (
-        '%m/%d',
-        '%B %d',
-        '%b %d'
-    )
-
-    _date_year_formats = (
-        '%Y/%m/%d',
-        '%m/%d/%Y',
-        '%m/%d/%y',
-        '%B/%d/%Y',
-        '%b/%d/%Y',
-    )
-
-    def _apply_formats(self):
-        self._formats = (
-            [_informat(_tf, False, False) for _tf in self._time_formats]
+    _formats = (
+        (
+            [_informat(_tf, False, False) for _tf in _time_formats]
             + [_informat('%s %s' % (_tf, _df), True, False)
-               for _tf in self._time_formats for _df in self._date_formats]
+               for _tf in _time_formats for _df in _date_formats]
             + [_informat('%s %s' % (_df, _tf), True, False)
-               for _tf in self._time_formats for _df in self._date_formats]
+               for _tf in _time_formats for _df in _date_formats]
             + [_informat('%s %s' % (_tf, _df), True, True)
-               for _tf in self._time_formats for _df in self._date_year_formats]
+               for _tf in _time_formats for _df in _date_year_formats]
             + [_informat('%s %s' % (_df, _tf), True, True)
-               for _tf in self._time_formats for _df in self._date_year_formats]
+               for _tf in _time_formats for _df in _date_year_formats]
         )
+     )
 
 
 _timedelta_units = {
@@ -539,7 +539,7 @@ def floor_dt(dt, unit, begin_monday=False):
 
     if unit == 'quarter':
         # Update the month to be first of current quarter
-        dt = dt.replace(month=(dt.month - 1)/3 * 3 + 1)
+        dt = dt.replace(month=(dt.month - 1)//3 * 3 + 1)
         return floor_dt(dt, 'month')
 
     start_month, start_day, start_hour, start_minute, start_second = \
