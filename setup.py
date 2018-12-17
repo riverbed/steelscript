@@ -46,8 +46,7 @@ class MakeSteel(Command):
 
 
 install_requires = [
-    'requests==2.19.1',
-    'importlib',
+    'requests==2.21.0',
     'python-dateutil',
 ]
 
