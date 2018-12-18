@@ -1,6 +1,9 @@
 CHANGELOG
 ---------
 
+[1.8]
+ * Last release planned to support python 2.7 for anything other than security fixes to the SteelScript codebase.
+
 [1.4]
  * Update to latest version of requests library for newer SSL certs
  * Add method for file uploads on Connection class
