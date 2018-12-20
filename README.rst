@@ -9,6 +9,13 @@ For a complete guide to installation, see:
 
   `https://support.riverbed.com/apis/steelscript/index.html <https://support.riverbed.com/apis/steelscript/index.html>`_
 
+Python Compatibility Note
+-------------------------
+
+The 1.8.X series of SteelScript packages are the last anticipated to support
+Python 2.  Future development will focus on Python 3, starting with version
+2.0.
+
 Quick Start
 -----------
 
