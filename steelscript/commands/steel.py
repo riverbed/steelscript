@@ -36,8 +36,6 @@ except ImportError:
 
 import logging
 
-#logging.basicConfig(format="%(asctime)s [%(levelname)-5s] %(name)s:%(lineno)s - %(message)s", level=logging.DEBUG)
-
 if __name__ == '__main__':
     logger = logging.getLogger('steel')
     logger.setLevel(logging.DEBUG)

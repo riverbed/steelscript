@@ -47,7 +47,7 @@ class TestVirtualEnv(unittest.TestCase):
             if m:
                 path = ':'.join([e for e in m.groups() if e])
         self.env['PATH'] = path
-        shell('virtualenv {venv}'.format(venv=self.venv),
+        shell('virtualenv -p $(which python) {venv}'.format(venv=self.venv),
               env=self.env, exit_on_fail=False)
 
         self.steel = 'python ' + os.path.abspath(
