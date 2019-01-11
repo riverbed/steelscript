@@ -98,7 +98,7 @@ class TestWorkspaceFunctionality(TestWorkspace):
         """Tests if all the correct files were created during mkworkspace"""
         # Test if the directory was made
         steel_ex_path = os.path.join(self.tmp_workspace_path,
-                                     'steelscript-examples')
+                                     'examples', 'steelscript-examples')
         self.assertTrue(os.path.exists(steel_ex_path))
         # Test if the dummy files were made
         dummy_files = os.listdir(steel_ex_path)
@@ -114,7 +114,7 @@ class TestWorkspaceFunctionality(TestWorkspace):
         """Makes sure all aspects of the collect_examples.py file work"""
         # Test that the examples directory is still there
         steel_ex_path = os.path.join(self.tmp_workspace_path,
-                                     'steelscript-examples')
+                                     'examples', 'steelscript-examples')
         self.assertTrue(os.path.exists(self.tmp_workspace_path))
         # Remove the examples directory, then use the
         # collect_examples script to get them back
@@ -126,7 +126,7 @@ class TestWorkspaceFunctionality(TestWorkspace):
 
     def test_overwrite_in_collect_reports_script(self):
         steel_ex_path = os.path.join(self.tmp_workspace_path,
-                                     'steelscript-examples')
+                                     'examples', 'steelscript-examples')
         # Test if the overwrite functionality works
         # First we will test that the file doesn't get overwritten
         file_path = os.path.join(steel_ex_path, 'test_example_1.py')

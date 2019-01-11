@@ -35,6 +35,7 @@ except ImportError:
 
 
 import logging
+
 if __name__ == '__main__':
     logger = logging.getLogger('steel')
 else:
