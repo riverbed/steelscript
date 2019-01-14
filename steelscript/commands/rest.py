@@ -81,7 +81,7 @@ class HistoryManager(object):
         try:
             readline.clear_history()
             if self.current.obj:
-                with open(self.current.filename, 'r') as f:
+                with open(self.current.filename, 'rb') as f:
                     lines = pickle.load(f)
 
                 for line in lines:
@@ -103,7 +103,7 @@ class HistoryManager(object):
                 line = readline.get_history_item(i)
                 if line:
                     lines.append(str(line))
-            with open(self.current.filename, 'w') as f:
+            with open(self.current.filename, 'wb') as f:
                 pickle.dump(lines, f)
         else:
             readline.write_history_file(self.current.filename)
@@ -221,7 +221,7 @@ Add custom headers as <header>:<value>"""
             else:
                 body = None
 
-            if self.args > len(self.positional_args):
+            if self.args:
                 params = {}
                 headers = {}
 
