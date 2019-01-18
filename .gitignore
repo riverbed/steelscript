@@ -4,6 +4,7 @@ dist
 RELEASE-VERSION
 steel_bootstrap.*
 
+docs/Build-warnings.log
 docs/_templates/*toc.html
 docs/_build
 docs/appfwk_project
