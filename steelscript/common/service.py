@@ -22,7 +22,6 @@ instantiate two separate objects.
 """
 
 
-
 import base64
 import logging
 import hashlib
@@ -234,11 +233,11 @@ class Service(object):
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
             path = '/api/common/1.0/oauth/token'
             assertion = '.'.join([
-                base64.urlsafe_b64encode('{"alg":"none"}'),
+                base64.urlsafe_b64encode(b'{"alg":"none"}').decode(),
                 self.auth.access_code,
                 ''
             ])
-            state = hashlib.md5(str(time.time())).hexdigest()
+            state = hashlib.md5(str(time.time()).encode()).hexdigest()
             data = {'grant_type': 'access_code',
                     'assertion': assertion,
                     'state': state}
