@@ -9,11 +9,12 @@ import os
 import ssl
 import json
 import errno
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import socket
 import logging
 import tempfile
-import urllib.parse
 import requests
 import mimetypes
 import requests.exceptions

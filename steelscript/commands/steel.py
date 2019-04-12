@@ -308,7 +308,7 @@ class BaseCommand(object):
         try:
             self.main()
         except MainFailed as e:
-            console(e.message, logging.ERROR)
+            console(e, logging.ERROR)
             sys.exit(1)
 
     def validate_args(self):

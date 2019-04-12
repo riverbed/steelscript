@@ -4,22 +4,16 @@
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
-import os
 import sys
 import itertools
 
-try:
-    from setuptools import setup, find_packages, Command
-    packagedata = True
-except ImportError:
-    from distutils.core import setup
-    from distutils.cmd import Command
-    packagedata = False
-
-    def find_packages(where='steelscript', exclude=None):
-        return [p for p, files, dirs in os.walk(where) if '__init__.py' in files]
+from setuptools import setup, find_packages, Command
+from setuptools.command.test import test as TestCommand
 
 from gitpy_versioning import get_version
+
+
+packagedata = True
 
 
 class MakeSteel(Command):
@@ -45,6 +39,23 @@ class MakeSteel(Command):
         print(('{0} written.'.format(bootstrap)))
 
 
+class PyTest(TestCommand):
+    user_options = [("pytest-args=", "a", "Arguments to pass to pytest")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = ""
+
+    def run_tests(self):
+        import shlex
+
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+
+        errno = pytest.main(shlex.split(self.pytest_args))
+        sys.exit(errno)
+
+
 install_requires = [
     'requests==2.21.0',
     'python-dateutil',
@@ -56,6 +67,7 @@ if sys.platform == 'win32':
 # Additional dependencies
 test = ['pytest', 'testfixtures', 'mock']
 doc = ['sphinx', 'sphinx_rtd_theme']
+setup_requires = ['pytest-runner']
 
 setup_args = {
     'name':               'steelscript',
@@ -101,7 +113,7 @@ http://pythonhosted.org/steelscript/
     },
 
     'install_requires': install_requires,
-
+    'setup_requires': setup_requires,
     'extras_require': {
         'test': test,
         'doc': doc,
@@ -111,6 +123,7 @@ http://pythonhosted.org/steelscript/
 
     'cmdclass': {
         'mksteel': MakeSteel,
+        'pytest': PyTest
     }
 
 }

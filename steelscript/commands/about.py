@@ -61,7 +61,7 @@ class Command(BaseCommand):
         for p in core_pkgs:
             pkg = pkg_resources.get_distribution(p)
             if p in corrupted_pkgs:
-                print('  %-40s  corrupted' % (pkg.project_name))
+                print('  %-40s  corrupted' % pkg.project_name)
                 continue
             print('  %-40s  %s' % (pkg.project_name, pkg.version))
 
