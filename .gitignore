@@ -26,3 +26,5 @@ docs/reschema
 .DS_Store
 .idea/
 .tox/
+ve/
+.eggs/

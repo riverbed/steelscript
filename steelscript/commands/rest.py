@@ -228,7 +228,7 @@ Add custom headers as <header>:<value>"""
                 for arg in self.args:
                     m = re.match('[^:=]*([:=])', arg)
                     if not m or m.group(1) not in ':=':
-                        raise 'Invalid argument, expected either k=v for '
+                        raise ValueError('Invalid argument, expected either k=v for ')
 
                     (k, v) = arg.split(m.group(1), 1)
                     if m.group(1) == ':':
