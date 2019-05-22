@@ -62,7 +62,6 @@ LOGFILE = None
 STEELSCRIPT_CORE = ['steelscript',
                     'steelscript.netprofiler',
                     'steelscript.appresponse',
-                    'steelscript.packets',
                     'steelscript.wireshark',
                     ]
 
