@@ -9,11 +9,12 @@ import os
 import ssl
 import json
 import errno
-import urllib
+import urllib.request
+import urllib.parse
+import urllib.error
 import socket
 import logging
 import tempfile
-import urlparse
 import requests
 import mimetypes
 import requests.exceptions
@@ -34,6 +35,10 @@ logger = logging.getLogger(__name__)
 rest_logger = logging.getLogger('REST')
 
 
+warnings.catch_warnings()
+warnings.simplefilter('once')
+
+
 class SSLAdapter(HTTPAdapter):
     """ An HTTPS Transport Adapter that uses an arbitrary SSL version. """
     # handle https connections that don't like to negotiate
@@ -50,11 +55,10 @@ class SSLAdapter(HTTPAdapter):
                                        ssl_version=self.ssl_version)
 
 
-
 def scrub_passwords(data):
     if hasattr(data, 'iteritems'):
         result = {}
-        for (k, v) in data.iteritems():
+        for (k, v) in data.items():
             if k.lower() in ('password', 'authenticate', 'cookie'):
                 result[k] = "********"
             else:
@@ -155,9 +159,13 @@ class Connection(object):
     def __repr__(self):
         return '<{0} to {1}>'.format(self.__class__.__name__, self.hostname)
 
+    def __del__(self):
+        # cleanup after ourselves
+        self.conn.close()
+
     def get_url(self, path):
         """ Returns a fully qualified URL given a path. """
-        return urlparse.urljoin(self.hostname, path)
+        return urllib.parse.urljoin(self.hostname, path)
 
     def set_user_agent(self, extra=None):
         version = get_distribution('steelscript').version
@@ -174,8 +182,6 @@ class Connection(object):
     def _request(self, method, path, body=None, params=None,
                  extra_headers=None, raw_json=None, stream=False,
                  files=None, **kwargs):
-        warnings.catch_warnings()
-        warnings.simplefilter('once')
         p = parse_url(path)
         if not p.host:
             path = self.get_url(path)
@@ -183,12 +189,12 @@ class Connection(object):
             rest_logger.info('%s %s' % (method, str(path)))
             if params:
                 rest_logger.info('Parameters: ')
-                for k, v in params.iteritems():
+                for k, v in params.items():
                     rest_logger.info('... %s: %s' % (k, v))
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Extra request headers: ')
-                for k, v in extra_headers.iteritems():
+                for k, v in extra_headers.items():
                     rest_logger.info('... %s: %s' % (k, v))
             if self.REST_DEBUG >= 2 and body:
                 rest_logger.info('Request body: ')
@@ -225,7 +231,7 @@ class Connection(object):
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Request headers: ')
-                for k, v in scrub_passwords(r.request.headers).iteritems():
+                for k, v in scrub_passwords(r.request.headers).items():
                     rest_logger.info('... %s: %s' % (k, v))
 
             if stream:
@@ -237,7 +243,7 @@ class Connection(object):
 
             if self.REST_DEBUG >= 1 and extra_headers:
                 rest_logger.info('Response headers: ')
-                for k, v in r.headers.iteritems():
+                for k, v in r.headers.items():
                     rest_logger.info('... %s: %s' % (k, v))
 
             if self.REST_DEBUG >= 2 and not stream and r.text:
@@ -292,7 +298,6 @@ class Connection(object):
                 # successful connection, reset token if previously unset
                 self._reauthenticate_handler = handler
                 return r
-
             else:
                 raise exc
 
@@ -381,7 +386,7 @@ class Connection(object):
         extra_headers['Content-Type'] = 'application/x-www-form-urlencoded'
         extra_headers['Accept'] = 'application/json'
 
-        body = urllib.urlencode(body)
+        body = urllib.parse.urlencode(body)
 
         return self._request(method, path, body, params, extra_headers)
 
@@ -427,7 +432,7 @@ class Connection(object):
                                 "dict")
         # Open all of the files
         xfiles = dict()
-        if isinstance(files, basestring):
+        if isinstance(files, str):
             try:
                 xfiles[basename(files)] = {'file': open(files, 'rb')}
             except IOError:
@@ -452,12 +457,12 @@ class Connection(object):
             # single file is a dict object
             for f in xfiles:
                 mtype, _ = mimetypes.guess_type(f)
-                if mtype and file_headers.keys():
+                if mtype and list(file_headers.keys()):
                     req_files = {field_name: (f,
                                               xfiles[f]['file'],
                                               mtype,
                                               file_headers)}
-                elif mtype and not file_headers.keys():
+                elif mtype and not list(file_headers.keys()):
                     req_files = {field_name: (f,
                                               xfiles[f]['file'],
                                               mtype)}
@@ -470,13 +475,13 @@ class Connection(object):
             req_files = list()
             for f in xfiles:
                 mtype, _ = mimetypes.guess_type(f)
-                if mtype and file_headers.keys():
+                if mtype and list(file_headers.keys()):
                     req_files.append((field_name, (f,
                                                    xfiles[f]['file'],
                                                    mtype,
                                                    file_headers)
                                       ))
-                elif mtype and not file_headers.keys():
+                elif mtype and not list(file_headers.keys()):
                     req_files.append((field_name, (f,
                                                    xfiles[f]['file'],
                                                    mtype)

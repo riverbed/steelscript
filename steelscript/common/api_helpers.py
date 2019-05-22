@@ -9,7 +9,7 @@ class APIVersion:
     """Wraps information about the client-side supported API versions"""
 
     def __init__(self, v):
-        if isinstance(v, basestring):
+        if isinstance(v, str):
             L = v.split(".")
             self.major = int(L[0])
             self.minor = int(L[1])
@@ -25,20 +25,24 @@ class APIVersion:
     def __repr__(self):
         return "<APIVersion {}>".format(str(self))
 
-    def __cmp__(self, other):
-        if self.major < other.major:
-            return -1
+    def __eq__(self, other):
+        return (self.major, self.minor) == (other.major, other.minor)
 
-        if self.major > other.major:
-            return 1
+    def __ne__(self, other):
+        return (self.major, self.minor) != (other.major, other.minor)
 
-        if self.minor < other.minor:
-            return -1
+    def __lt__(self, other):
+        return (self.major, self.minor) < (other.major, other.minor)
 
-        if self.minor > other.minor:
-            return 1
+    def __le__(self, other):
+        return (self.major, self.minor) <= (other.major, other.minor)
 
-        return 0
+    def __gt__(self, other):
+        return (self.major, self.minor) > (other.major, other.minor)
+
+    def __ge__(self, other):
+        return (self.major, self.minor) >= (other.major, other.minor)
+
 
 if __name__ == "__main__":
     a = APIVersion("1.0")
@@ -47,10 +51,10 @@ if __name__ == "__main__":
     b = APIVersion("1.1")
     c = APIVersion("2.1")
 
-    print "a, a2, a3, b, c", a, a2, a3, b, c
-    print "a < b", a < b
-    print "a > b", a > b
-    print "a > c", a > c
-    print "a == a2", a == a2
-    print "a > a2", a > a2
-    print "a >= a2", a >= a2
+    print("a, a2, a3, b, c", a, a2, a3, b, c)
+    print("a < b", a < b)
+    print("a > b", a > b)
+    print("a > c", a > c)
+    print("a == a2", a == a2)
+    print("a > a2", a > a2)
+    print("a >= a2", a >= a2)

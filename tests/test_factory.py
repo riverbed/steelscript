@@ -4,8 +4,6 @@
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
-from __future__ import (absolute_import, unicode_literals, print_function,
-                        division)
 import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
@@ -15,7 +13,7 @@ import pytest
 from steelscript.common import factory
 
 import math as ANY_MODULE
-ANY_CONTENTS = (object, file)
+ANY_CONTENTS = (object, )
 BASE_PKG = 'ss_fake'
 SEARCH_LIST = ['four', 'three', 'two', 'one']
 FEATURE = 'legacy_feature'
@@ -78,7 +76,7 @@ def test_feature_import_error():
     # The newest model in this path tries to import something that doesn't
     # exist, in order to genrerate an ImportError distinct from
     # a FactoryLookupError.
-    with pytest.raises(ImportError):
+    with pytest.raises(ModuleNotFoundError):
         factory.get_by_standard_layout(BASE_PKG, 'model',
                                        search_list=SEARCH_LIST,
                                        feature=FEATURE)
@@ -131,8 +129,8 @@ def test_exception_modules():
     try:
         raise factory.NoModuleFound(searched_modules=('one', 'two'))
     except factory.NoModuleFound as fle:
-        assert 'one' in unicode(fle)
-        assert 'two' in unicode(fle)
+        assert 'one' in str(fle)
+        assert 'two' in str(fle)
 
 
 def test_exception_contents():
@@ -140,9 +138,9 @@ def test_exception_contents():
         raise factory.NoMatchingCallable(module=ANY_MODULE,
                                          searched_contents=('Three', 'Four'))
     except factory.FactoryLookupError as fle:
-        assert unicode(ANY_MODULE) in unicode(fle)
-        assert 'Three' in unicode(fle)
-        assert 'Four' in unicode(fle)
+        assert str(ANY_MODULE) in str(fle)
+        assert 'Three' in str(fle)
+        assert 'Four' in str(fle)
 
 
 def test_exception_both_real_obj():
@@ -150,17 +148,17 @@ def test_exception_both_real_obj():
         raise factory.NoMatchingCallable(module=ANY_MODULE,
                                          searched_contents=ANY_CONTENTS)
     except factory.NoMatchingCallable as fle:
-        assert unicode(ANY_MODULE) in unicode(fle)
+        assert str(ANY_MODULE) in str(fle)
         for c in ANY_CONTENTS:
-            assert unicode(c) in unicode(fle)
+            assert str(c) in str(fle)
 
 
 def test_exception_no_callables():
     try:
         raise factory.NoMatchingCallable(module=ANY_MODULE)
     except factory.NoMatchingCallable as fle:
-        assert 'No match' in unicode(fle)
-        assert unicode(ANY_MODULE) in unicode(fle)
+        assert 'No match' in str(fle)
+        assert str(ANY_MODULE) in str(fle)
 
 
 def test_exception_too_many_callables():
@@ -168,11 +166,11 @@ def test_exception_too_many_callables():
         raise factory.TooManyCallables(matched_contents=ANY_CONTENTS,
                                        module=ANY_MODULE)
     except factory.TooManyCallables as fle:
-        uni = unicode(fle)
+        uni = str(fle)
         assert 'too many callables' in uni
         for c in ANY_CONTENTS:
-            assert unicode(c) in uni
-        assert unicode(ANY_MODULE) in uni
+            assert str(c) in uni
+        assert str(ANY_MODULE) in uni
 
 
 def test_not_found_init():
@@ -229,7 +227,7 @@ def test_unversioned():
     # This form is used when a higher layer of factory calculates
     # the base package.
     m = factory.get_by_standard_layout(BASE_PKG, 'unversioned')
-    assert 'unversioned' in unicode(m)
+    assert 'unversioned' in str(m)
 
 
 def test_unversioned_fail():

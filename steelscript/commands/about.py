@@ -30,8 +30,8 @@ class Command(BaseCommand):
         try:
             dist = pkg_resources.get_distribution('steelscript')
         except pkg_resources.DistributionNotFound:
-            print "Package not found: 'steelscript'"
-            print "Check the installation"
+            print("Package not found: 'steelscript'")
+            print("Check the installation")
             sys.exit(1)
 
         e = pkg_resources.AvailableDistributions()
@@ -51,9 +51,9 @@ class Command(BaseCommand):
         if egg_info_pkgs and egg_link_pkgs:
             corrupted_pkgs = egg_link_pkgs
 
-        print ""
-        print "Installed SteelScript Packages"
-        print "Core packages:"
+        print("")
+        print("Installed SteelScript Packages")
+        print("Core packages:")
         core_pkgs = [x for x in e
                      if x.startswith('steel')
                      and 'appfwk' not in x]
@@ -61,12 +61,12 @@ class Command(BaseCommand):
         for p in core_pkgs:
             pkg = pkg_resources.get_distribution(p)
             if p in corrupted_pkgs:
-                print '  %-40s  corrupted' % (pkg.project_name)
+                print('  %-40s  corrupted' % pkg.project_name)
                 continue
-            print '  %-40s  %s' % (pkg.project_name, pkg.version)
+            print('  %-40s  %s' % (pkg.project_name, pkg.version))
 
-        print ""
-        print "Application Framework packages:"
+        print("")
+        print("Application Framework packages:")
 
         appfwk_pkgs = [x for x in e
                        if x.startswith('steel') and 'appfwk' in x]
@@ -75,26 +75,26 @@ class Command(BaseCommand):
             for p in appfwk_pkgs:
                 pkg = pkg_resources.get_distribution(p)
                 if p in corrupted_pkgs:
-                    print '  %-40s  corrupted' % (pkg.project_name)
+                    print('  %-40s  corrupted' % (pkg.project_name))
                     continue
-                print '  %-40s  %s' % (pkg.project_name, pkg.version)
+                print('  %-40s  %s' % (pkg.project_name, pkg.version))
         else:
-            print "  None"
+            print("  None")
 
-        print ""
-        print "REST tools and libraries:"
+        print("")
+        print("REST tools and libraries:")
 
         installed_rest = set(['reschema', 'sleepwalker']).intersection(set(e))
         rest_pkgs = [pkg_resources.get_distribution(p) for p in installed_rest]
 
         if rest_pkgs:
             for pkg in rest_pkgs:
-                print '  %-40s  %s' % (pkg.project_name, pkg.version)
+                print('  %-40s  %s' % (pkg.project_name, pkg.version))
         else:
-            print "  None"
+            print("  None")
 
-        print ""
-        print "Paths to source:"
+        print("")
+        print("Paths to source:")
         paths = [os.path.dirname(p) for p in steelscript.__path__]
 
         for pkg in rest_pkgs:
@@ -104,40 +104,40 @@ class Command(BaseCommand):
 
         paths.sort()
         for p in paths:
-            print "  %s" % p
+            print("  %s" % p)
 
         if corrupted_pkgs:
-            print ""
-            print "WARNING: Corrupted installation detected"
-            print "Instructions to fix corrupted packages:"
-            print "1. pip uninstall <corrupted_package>"
-            print "2. pip install <corrupted_package>"
-            print "   or do the following:"
-            print "      cd <source_directory_of_corrupted_package>"
-            print "      pip install ."
+            print("")
+            print("WARNING: Corrupted installation detected")
+            print("Instructions to fix corrupted packages:")
+            print("1. pip uninstall <corrupted_package>")
+            print("2. pip install <corrupted_package>")
+            print("   or do the following:")
+            print("      cd <source_directory_of_corrupted_package>")
+            print("      pip install .")
 
         if self.options.verbose:
-            print ""
-            print "Python information:"
-            print '  Version      :', platform.python_version()
-            print '  Version tuple:', platform.python_version_tuple()
-            print '  Compiler     :', platform.python_compiler()
-            print '  Build        :', platform.python_build()
-            print '  Architecture :', platform.architecture()
+            print("")
+            print("Python information:")
+            print('  Version      :', platform.python_version())
+            print('  Version tuple:', platform.python_version_tuple())
+            print('  Compiler     :', platform.python_compiler())
+            print('  Build        :', platform.python_build())
+            print('  Architecture :', platform.architecture())
 
-            print ""
-            print "Platform information:"
-            print '  platform :', platform.platform()
-            print '  system   :', platform.system()
-            print '  node     :', platform.node()
-            print '  release  :', platform.release()
-            print '  version  :', platform.version()
-            print '  machine  :', platform.machine()
-            print '  processor:', platform.processor()
+            print("")
+            print("Platform information:")
+            print('  platform :', platform.platform())
+            print('  system   :', platform.system())
+            print('  node     :', platform.node())
+            print('  release  :', platform.release())
+            print('  version  :', platform.version())
+            print('  machine  :', platform.machine())
+            print('  processor:', platform.processor())
 
-            print ""
-            print "Python path:"
-            print sys.path
+            print("")
+            print("Python path:")
+            print(sys.path)
         else:
-            print ""
-            print "(add -v or --verbose for further information)"
+            print("")
+            print("(add -v or --verbose for further information)")

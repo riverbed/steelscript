@@ -81,7 +81,7 @@ class HistoryManager(object):
         try:
             readline.clear_history()
             if self.current.obj:
-                with open(self.current.filename, 'r') as f:
+                with open(self.current.filename, 'rb') as f:
                     lines = pickle.load(f)
 
                 for line in lines:
@@ -103,7 +103,7 @@ class HistoryManager(object):
                 line = readline.get_history_item(i)
                 if line:
                     lines.append(str(line))
-            with open(self.current.filename, 'w') as f:
+            with open(self.current.filename, 'wb') as f:
                 pickle.dump(lines, f)
         else:
             readline.write_history_file(self.current.filename)
@@ -177,7 +177,7 @@ Add custom headers as <header>:<value>"""
 
     def main(self):
         if self.rest.conn is None:
-            print "Not connected - use 'connect HOST'"
+            print("Not connected - use 'connect HOST'")
             return
 
         self.rest.history.set_context('body')
@@ -195,10 +195,10 @@ Add custom headers as <header>:<value>"""
                     try:
                         line = self.rest.raw_input_no_history("")
                     except EOFError:
-                        print ""
+                        print("")
                         break
                     except KeyboardInterrupt:
-                        print "(aborted)"
+                        print("(aborted)")
                         return
 
                     if line == '.':
@@ -221,15 +221,14 @@ Add custom headers as <header>:<value>"""
             else:
                 body = None
 
-            if self.args > len(self.positional_args):
+            if self.args:
                 params = {}
                 headers = {}
 
                 for arg in self.args:
                     m = re.match('[^:=]*([:=])', arg)
                     if not m or m.group(1) not in ':=':
-                        raise ('Invalid argument, expected either k=v for '
-                               'URL param, or k:v for header')
+                        raise ValueError('Invalid argument, expected either k=v for ')
 
                     (k, v) = arg.split(m.group(1), 1)
                     if m.group(1) == ':':
@@ -240,7 +239,7 @@ Add custom headers as <header>:<value>"""
                 headers = None
                 params = None
 
-            print "Issuing %s" % self.keyword
+            print("Issuing %s" % self.keyword)
             outputlines = None
             if self.rest.jsonmode:
                 (data, resp) = self.rest.conn.json_request(
@@ -263,8 +262,8 @@ Add custom headers as <header>:<value>"""
                     else:
                         outputlines = resp.text
 
-            print "HTTP Status %s: %s bytes" % (resp.status_code,
-                                                len(resp.content))
+            print("HTTP Status %s: %s bytes" % (resp.status_code,
+                                                len(resp.content)))
             if outputlines is not None:
                 count = len(outputlines.split('\n'))
                 try:
@@ -320,7 +319,7 @@ class Help(RestCommand):
     help = 'Verbose instructions'
 
     def main(self):
-        print """
+        print("""
 This shell provides an interactive session for issuing REST calls
 to a remote server.
 
@@ -335,11 +334,11 @@ For HTTP methods that require a body, you will be prompted to enter
 the body on a separate line.
 
 Available commands:
-"""
+""")
         w = max([len(sub.keyword) for sub in self.rest.cmd.subcommands])
         for sub in self.rest.cmd.subcommands:
-            print "  %-*s  %s" % (w, sub.keyword, sub.help.split('\n')[0])
-        print ""
+            print("  %-*s  %s" % (w, sub.keyword, sub.help.split('\n')[0]))
+        print("")
 
 
 class Mode(RestCommand):
@@ -386,7 +385,7 @@ class Command(Application):
         if self.filelines:
             return self.filelines.pop(0)
         else:
-            input = raw_input(prompt)
+            input = input(prompt)
             readline.clear_history()
 
             return input
@@ -418,23 +417,23 @@ class Command(Application):
         if self.options.file:
             with open(self.options.file, 'r') as f:
                 self.filelines = [line.rstrip() for line in f]
-        print "REST Shell ('help' or 'quit' when done)"
-        print "Current mode is 'json', use 'mode text' to switch to raw text"
+        print("REST Shell ('help' or 'quit' when done)")
+        print("Current mode is 'json', use 'mode text' to switch to raw text")
         while True:
             if self.filelines:
                 line = self.filelines.pop(0)
                 self.interactive = False
-                print "Command: %s" % line
+                print("Command: %s" % line)
             else:
                 try:
                     if self.conn is not None:
                         prompt = "%s> " % self.conn.hostname
                     else:
                         prompt = "> "
-                    line = raw_input(prompt)
+                    line = input(prompt)
                     self.interactive = True
                 except EOFError:
-                    print ""
+                    print("")
                     break
 
             if not line:
@@ -451,6 +450,6 @@ class Command(Application):
             except SystemExit as e:
                 pass
             except Exception as e:
-                print ('Command raised an error, see log for traceback:\n%s\n'
-                       % str(e))
+                print(('Command raised an error, see log for traceback:\n%s\n'
+                       % str(e)))
                 logger.exception("Command raised an error")

@@ -21,11 +21,10 @@ the Service class.  A script that interacts with both namespaces must
 instantiate two separate objects.
 """
 
-from __future__ import absolute_import
 
 import base64
 import logging
-import md5
+import hashlib
 import time
 
 from steelscript.common import connection
@@ -234,11 +233,11 @@ class Service(object):
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
             path = '/api/common/1.0/oauth/token'
             assertion = '.'.join([
-                base64.urlsafe_b64encode('{"alg":"none"}'),
+                base64.urlsafe_b64encode(b'{"alg":"none"}').decode(),
                 self.auth.access_code,
                 ''
             ])
-            state = md5.md5(str(time.time())).hexdigest()
+            state = hashlib.md5(str(time.time()).encode()).hexdigest()
             data = {'grant_type': 'access_code',
                     'assertion': assertion,
                     'state': state}

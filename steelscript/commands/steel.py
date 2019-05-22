@@ -38,8 +38,10 @@ import logging
 
 if __name__ == '__main__':
     logger = logging.getLogger('steel')
+    logger.setLevel(logging.DEBUG)
 else:
     logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
 
 try:
     __VERSION__ = get_distribution('steelscript').version
@@ -59,15 +61,15 @@ LOGFILE = None
 
 STEELSCRIPT_CORE = ['steelscript',
                     'steelscript.netprofiler',
-                    'steelscript.netshark',
+                    'steelscript.appresponse',
                     'steelscript.wireshark',
-                    'steelscript.appresponse'
                     ]
 
 STEELSCRIPT_APPFW = ['steelscript.appfwk',
                      'steelscript.appfwk.business-hours']
 
 STEELSCRIPT_STEELHEAD = ['steelscript.cmdline',
+                         'steelscript.scc',
                          'steelscript.steelhead']
 
 logging_initialized = False
@@ -306,7 +308,7 @@ class BaseCommand(object):
         try:
             self.main()
         except MainFailed as e:
-            console(e.message, logging.ERROR)
+            console(e, logging.ERROR)
             sys.exit(1)
 
     def validate_args(self):
@@ -396,13 +398,13 @@ class InstallCommand(BaseCommand):
             help='Directory to use for offline installation')
 
         group.add_option(
-            # Install packages from gitlab
+            # Install packages from GitHub
             '-g', '--github', action='store_true',
             help="Install packages from github")
 
         group.add_option(
-            # Install packages from gitlab
-            '-G', '--gitlab', action='store_true',
+            # Dev only - install packages from bitbucket
+            '-B', '--bitbucket', action='store_true',
             help=optparse.SUPPRESS_HELP)
 
         group.add_option(
@@ -412,13 +414,12 @@ class InstallCommand(BaseCommand):
 
         group.add_option(
             '--develop', action='store_true',
-            help='Combine with --gitlab to checkout packages')
+            help='Combine with --github to checkout packages in develop mode')
 
         group.add_option(
             '-p', '--package', action='append', dest='packages',
             help='Package to install (may specify more than once)')
 
-        # Install packages from gitlab
         group.add_option(
             '--appfwk', action='store_true',
             help='Install all application framework packages')
@@ -429,7 +430,7 @@ class InstallCommand(BaseCommand):
 
         group.add_option(
             '--steelhead', action='store_true',
-            help='Install steelhead packages')
+            help='Install optional steelhead packages')
 
         parser.add_option_group(group)
 
@@ -474,8 +475,8 @@ class InstallCommand(BaseCommand):
         if self.options.giturl:
             self.install_git(self.options.giturl)
 
-        elif self.options.gitlab:
-            self.install_gitlab()
+        elif self.options.bitbucket:
+            self.install_bitbucket()
 
         elif self.options.github:
             self.install_github()
@@ -578,17 +579,17 @@ class InstallCommand(BaseCommand):
                     )
 
                 # Now install this git repo in develop mode
-                shell(cmd=('cd {outdir}; python setup.py develop'
+                shell(cmd=('cd {outdir}; pip install -e .'
                            .format(outdir=outdir)),
                       msg=('Installing {pkg}'.format(pkg=pkg)))
             else:
                 suffix = 'git+{repo} '.format(repo=repo)
                 self.pip_install_pkg_with_upgrade(pkg, suffix=suffix)
 
-    def install_gitlab(self):
-        """Install packages from gitlab internal to riverbed."""
+    def install_bitbucket(self):
+        """Install packages from bitbucket internal to riverbed."""
         check_install_pip()
-        self.install_git('https://gitlab.lab.nbttech.com/steelscript')
+        self.install_git('https://code.rvbdtechlabs.net/scm/sct')
 
     def install_github(self):
         """Install packages from github.com/riverbed."""
@@ -747,17 +748,17 @@ def prompt(msg, choices=None, default=None, password=False):
         if password:
             value = getpass.getpass(msg)
         else:
-            value = raw_input(msg)
+            value = input(msg)
 
         if not value:
             if default is not None:
                 value = default
             else:
-                print 'Please enter a valid response.'
+                print('Please enter a valid response.')
 
         if choices and value not in choices:
-            print ('Please choose from the following choices (%s)' %
-                   '/'.join(choices))
+            print(('Please choose from the following choices (%s)' %
+                   '/'.join(choices)))
             value = None
 
     return value
@@ -767,7 +768,7 @@ def add_log_options(parser):
     group = optparse.OptionGroup(parser, "Logging Parameters")
     group.add_option("--loglevel",
                      help="log level: debug, warn, info, critical, error",
-                     choices=LOG_LEVELS.keys(), default="info")
+                     choices=list(LOG_LEVELS.keys()), default="info")
     group.add_option("--logfile",
                      help="log file, use '-' for stdout", default=None)
     parser.add_option_group(group)
@@ -858,13 +859,16 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
         console(msg + '...', newline=False)
 
     def enqueue_output(out, queue):
-        for line in iter(out.readline, b''):
+        for line in iter(out.readline, ''):
+            logger.debug('putting {} on queue'.format(line))
             queue.put(line)
         out.close()
+        logger.debug('closing queue')
 
     logger.info('Running command: %s' % cmd)
     proc = subprocess.Popen(cmd, shell=True, env=env, cwd=cwd, bufsize=1,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            universal_newlines=True)
 
     q = Queue()
     t = Thread(target=enqueue_output, args=(proc.stdout, q))
@@ -915,7 +919,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
         if not allow_fail and exit_on_fail:
             console('Command failed: %s' % cmd)
             for line in tail:
-                print '  ', line
+                print('  ', line)
             if LOGFILE:
                 console('See log for details: %s' % LOGFILE)
             sys.exit(1)
@@ -929,7 +933,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
 
     if save_output:
         if output:
-            return '\n'.join(output)
+            return '\n'.join(str(x) for x in output)
         return ''
     return None
 
@@ -1010,7 +1014,7 @@ def check_virtualenv():
 
 def check_vcpython27():
     try:
-        shell(cmd='where /R C:\Users Visual*C++*2008*-bit*Command*Prompt.lnk',
+        shell(cmd='where /R C:\\Users Visual*C++*2008*-bit*Command*Prompt.lnk',
               allow_fail=True)
         return True
     except ShellFailed:

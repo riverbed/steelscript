@@ -13,22 +13,35 @@ __all__ = ['RvbdException', 'RvbdHTTPException',
 
 
 class RvbdException(Exception):
-    pass
+    def __init__(self, msg, **kwargs):
+        tmp_message = kwargs.get('message', None)
+        if isinstance(msg, str) and tmp_message is None:
+            super().__init__(msg)
+            self.message = msg
+        elif isinstance(tmp_message, str):
+            super().__init__(tmp_message)
+            self.message = tmp_message
+        else:
+            self.message = ''
 
+    def __str__(self):
+        return "{0}".format(self.message)
+
+    def __repr__(self):
+        return ("RvbdException(message={0})".format(self.message))
 
 class RvbdConnectException(RvbdException):
     def __init__(self, message, **kwargs):
-        super(RvbdConnectException, self).__init__(message)
+        super().__init__(message)
         self.errno = kwargs.get('errno', None)
         self.errname = kwargs.get('errname', None)
 
 
 class RvbdHTTPException(RvbdException):
     def __init__(self, result, data, method, urlpath):
-        RvbdException.__init__(
-            self, ('HTTP %s on %s returned status %s (%s)' %
-                   (method, urlpath, result.status_code, result.reason))
-        )
+        super().__init__('HTTP {0} on {1} returned status {2} ({3})'
+                         ''.format(method, urlpath, result.status_code,
+                                   result.reason))
 
         self.status = result.status_code
         self.reason = result.reason
@@ -81,9 +94,9 @@ class RvbdHTTPException(RvbdException):
                     "authenticate using the .authenticate(auth) method."
                 )
 
-        except Exception, e:
+        except Exception as e:
             self.error_id = 'INVALID_ERROR_IDENTIFIER'
-            self.error_text = e.message
+            self.error_text = e
 
     def __str__(self):
         return "{0} {1}".format(self.status, self.error_text)

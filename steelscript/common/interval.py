@@ -224,7 +224,7 @@ class IntervalList(object):
         :return: True or False.
         """
         return len(self) == len(other) and \
-            all([self[i] == other[i] for i in xrange(len(self))])
+            all([self[i] == other[i] for i in range(len(self))])
 
     def __add__(self, other):
         """Merge one Interval object into self.

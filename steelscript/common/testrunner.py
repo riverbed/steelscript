@@ -103,7 +103,7 @@ class LogTestRunner:
             
         #endtime = time.time()
         endtime = 0
-        failed, errored = map(len, (result.failures, result.errors))
+        failed, errored = list(map(len, (result.failures, result.errors)))
         totaltime = endtime - starttime
         totalfailed = failed + errored
         totalpassed = result.testsRun - totalfailed
@@ -138,7 +138,7 @@ class LogTestCommand(setuptools.Command):
 
     def finalize_options(self):
         if self.dir is not None and self.test is not None:
-            raise DistutilsOptionError("Must specify only one of --dir and --test")
+            raise ValueError("Must specify only one of --dir and --test")
         if self.dir is None:
             self.dir = "."
         if self.httpdebug:

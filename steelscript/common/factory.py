@@ -6,7 +6,6 @@
 
 from __future__ import (unicode_literals, print_function, division,
                         absolute_import)
-
 import logging
 
 from importlib import import_module
@@ -31,7 +30,7 @@ class NoModuleFound(FactoryLookupError):
     def __init__(self, searched_modules):
         super(NoModuleFound, self).__init__(
             "Could not find a matching module, searched: [\n\t%s\n]" %
-            '\n\t'.join((unicode(m) for m in searched_modules)))
+            '\n\t'.join((str(m) for m in searched_modules)))
         self.searched_modules = searched_modules
 
 
@@ -45,7 +44,7 @@ class TooManyCallables(FactoryLookupError):
     def __init__(self, module, matched_contents):
         super(TooManyCallables, self).__init__(
             "Found too many callables in %s: [\n\t%s\n]" %
-            (module, '\n\t'.join((unicode(c) for c in matched_contents))))
+            (module, '\n\t'.join((str(c) for c in matched_contents))))
         self.module = module
         self.matched_contents = matched_contents
 
@@ -60,7 +59,7 @@ class NoMatchingCallable(FactoryLookupError):
     def __init__(self, module, searched_contents=()):
         super(NoMatchingCallable, self).__init__(
             "No matching callable in %s, searched: [\n\t%s\n]" %
-            (module, '\n\t'.join((unicode(c) for c in searched_contents))))
+            (module, '\n\t'.join((str(c) for c in searched_contents))))
         self.module = module
         self.searched_contents = searched_contents
 
@@ -261,19 +260,21 @@ def _attempt_import_and_check(searched, mod_path, check, first_fail):
         if thing is not None:
             return thing
 
-    except ImportError as ie:
-        # TODO: Is this message the same in Python 3?
-        # Last token is the import name that failed, which may just be
-        # the tail of our attempted module if parts of the module path
-        # exist.
-        not_found = unicode(ie).split()[-1]
-        if not mod_path.endswith(not_found):
+    except ModuleNotFoundError as me:
+        p_els = mod_path.split('.')
+        parts = ['.'.join(p_els[:x]) for x in range(len(p_els) + 1)][1:]
+        not_found = me.name
+        if not_found not in parts:
             # If we found it and it won't import properly, for some
             # other reason such as a module that *it* imports not
             # existing, we should let that error escape.
             raise
+
         logging.debug("Module '%s' not present.  Continuing lookup..." %
                       mod_path)
+
+    except ImportError as ie:
+        raise ie
 
 
 def _run_check(module, check, first_fail):

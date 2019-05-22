@@ -69,7 +69,7 @@ class JsonDict(dict):
                 if cd is not None:
                     if default is None:
                         default = {}
-                    for key, value in cd.iteritems():
+                    for key, value in cd.items():
                         default[key] = value
             self._default = default
 
@@ -84,11 +84,12 @@ class JsonDict(dict):
                                    '.'.join(key.split("__")))
 
     def __dir__(self):
-        return self.keys()
+        return list(self.keys())
 
     def __str__(self):
         """Return the json-encoded form of the dictionary."""
-        return json.dumps(self)
+        # handle un-encodable items with str operator
+        return json.dumps(self, default=str)
 
     @classmethod
     def loads(cls, s):
@@ -105,7 +106,7 @@ class JsonDict(dict):
     def update(self, dict):
         """Update the object from a dict."""
         if dict is not None:
-            for k, v in dict.iteritems():
+            for k, v in dict.items():
                 self.__setattr__(k, v)
 
     def __getattr__(self, key):
@@ -177,8 +178,8 @@ class JsonDict(dict):
 
         # Treat "__" as a separator like a '.'
         #   so x.a__b ==> x.a.b
-        if isinstance(key, unicode):
-            key = key.encode('utf-8')
+        if isinstance(key, bytes):
+            key = key.decode('utf-8')
         keyparts = key.split("__")
 
         # Navigate to the parent object to be set.
@@ -216,8 +217,8 @@ class JsonDict(dict):
             for item in value:
                 newvalue.append(self._decode(item, None))
         else:
-            if isinstance(value, unicode):
-                newvalue = value.encode('utf-8')
+            if isinstance(value, bytes):
+                newvalue = value.decode('utf-8')
             else:
                 newvalue = value
 
@@ -275,8 +276,8 @@ class DictObject(dict):
         def _decode_list(data):
             rv = []
             for item in data:
-                if isinstance(item, unicode):
-                    item = item.encode('utf-8')
+                if isinstance(item, bytes):
+                    item = item.decode('utf-8')
                 elif isinstance(item, list):
                     item = _decode_list(item)
                 elif isinstance(item, dict):
@@ -286,11 +287,11 @@ class DictObject(dict):
 
         def _decode_dict(data):
             rv = DictObject()
-            for key, value in data.iteritems():
-                if isinstance(key, unicode):
-                    key = key.encode('utf-8')
-                if isinstance(value, unicode):
-                    value = value.encode('utf-8')
+            for key, value in data.items():
+                if isinstance(key, bytes):
+                    key = key.decode('utf-8')
+                if isinstance(value, bytes):
+                    value = value.decode('utf-8')
                 elif isinstance(value, list):
                     value = _decode_list(value)
                 elif isinstance(value, dict):
@@ -306,7 +307,7 @@ class DictObject(dict):
         super(DictObject, self).__init__(d)
 
     def __dir__(self):
-        return self.keys()
+        return list(self.keys())
 
     def __getattr__(self, key):
         try:

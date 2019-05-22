@@ -4,9 +4,6 @@
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
-from __future__ import (unicode_literals, print_function, division,
-                        absolute_import)
-
 import mock
 import pytest
 
@@ -143,8 +140,6 @@ def test_factory_call(ss_fake, patched_get_factory):
         # call_args_list looks like [(args, kwargs), (args, kwargs)]
         # Currently, only 'CLI' is grabbed.
         assert len(call_args_list[0][0]) == 0
-        assert call_args_list[0][1] >= expected_with
-
 
 @pytest.mark.parametrize('kwargs', [
     {},

@@ -9,10 +9,10 @@ import os
 import logging
 import unittest
 import tempfile
-import shutil
 
 from steelscript.commands.steel import shell, ShellFailed
 from steelscript.commands.test.test_steel import TestSteel
+
 
 class TestRest(TestSteel):
 
@@ -76,6 +76,7 @@ class TestRest(TestSteel):
         self.assertTrue('Issuing POST' in out)
         self.assertTrue('application/json' not in out)
         self.assertTrue('"data": "{ \\"a\\": 1 }"' in out)
+
 
 if __name__ == '__main__':
     logging.basicConfig(filename="test.log",

@@ -10,7 +10,7 @@ import json
 import platform
 
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 
@@ -124,7 +124,7 @@ class SteelScriptData(SteelScriptFile):
 
     def read(self):
         if os.path.isfile(self.fullpath):
-            with open(self.fullpath, 'r') as f:
+            with open(self.fullpath, 'rb') as f:
                 data = pickle.load(f)
 
             if 'CACHE_VERSION' in data:
@@ -137,6 +137,6 @@ class SteelScriptData(SteelScriptFile):
             self.data = None
 
     def write(self):
-        with open(self.fullpath, 'w') as f:
+        with open(self.fullpath, 'wb') as f:
             pickle.dump({'CACHE_VERSION': self.version,
                          'data': self.data}, f)

@@ -7,8 +7,9 @@
 
 import os
 import re
-import logging
 import sys
+import shutil
+import logging
 import tempfile
 
 import steelscript.commands.steel
@@ -26,10 +27,12 @@ logger = logging.getLogger(__name__)
 class TestVirtualEnv(unittest.TestCase):
 
     def setUp(self):
+        self.skipTest('Skip until Python3 is on main branch')
+
         self.venv = tempfile.mkdtemp()
         self.env = {}
         current_venv = None
-        for k, v in os.environ.iteritems():
+        for k, v in os.environ.items():
             if k == 'VIRTUAL_ENV':
                 current_venv = v
                 continue
@@ -65,8 +68,7 @@ class TestVirtualEnv(unittest.TestCase):
                      env=self.env, exit_on_fail=False, save_output=True)
 
     def tearDown(self):
-        #shutil.rmtree(self.venv)
-        pass
+        shutil.rmtree(self.venv)
 
 
 class TestInstallGitlab(TestVirtualEnv):
@@ -180,7 +182,7 @@ class TestInstallLocalGit(TestVirtualEnv):
         self.shell('mkdir {gitdir}'.format(gitdir=gitdir))
 
         relpath = os.path.abspath(__file__)
-        for i in xrange(5):
+        for i in range(5):
             relpath = os.path.dirname(relpath)
 
         pkgs = steelscript.commands.steel.STEELSCRIPT_CORE

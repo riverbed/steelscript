@@ -37,8 +37,8 @@ class TimeRangeTests(unittest.TestCase):
         start_units['second'] = 0
         start_units['microsecond'] = 0
 
-        index = start_units.keys().index(unit)
-        for unit in start_units.keys()[index + 1:]:
+        index = list(start_units.keys()).index(unit)
+        for unit in list(start_units.keys())[index + 1:]:
             self.assertTrue(getattr(dt, unit) == start_units[unit])
 
     def test_range_seconds(self):
@@ -123,7 +123,7 @@ class TimeRangeTests(unittest.TestCase):
         self.assertTrue(end - start, parse_timedelta('3 months'))
 
         start, end = parse_range('previous 3 months')
-        self.assertEquals(start, end - relativedelta(months=3))
+        self.assertEqual(start, end - relativedelta(months=3))
         self.on_boundary(end, 'month')
         self.within_unit(end, 'month')
 
@@ -137,7 +137,7 @@ class TimeRangeTests(unittest.TestCase):
         self.assertTrue(end - start, parse_timedelta('3 q'))
 
         start, end = parse_range('previous 3 q')
-        self.assertEquals(start, end - relativedelta(months=9))
+        self.assertEqual(start, end - relativedelta(months=9))
         self.on_boundary(end, 'month')
         self.within_unit(end, 'quarter')
         self.assertTrue(end.month in [1, 4, 7, 10])
@@ -154,7 +154,7 @@ class TimeRangeTests(unittest.TestCase):
         self.assertTrue(end - start, parse_timedelta('3 years'))
 
         start, end = parse_range('previous 3 years')
-        self.assertEquals(start, end - relativedelta(years=3))
+        self.assertEqual(start, end - relativedelta(years=3))
         self.on_boundary(end, 'year')
         self.within_unit(end, 'year')
 
