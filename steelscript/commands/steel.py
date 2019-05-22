@@ -61,15 +61,16 @@ LOGFILE = None
 
 STEELSCRIPT_CORE = ['steelscript',
                     'steelscript.netprofiler',
-                    'steelscript.netshark',
+                    'steelscript.appresponse',
+                    'steelscript.packets',
                     'steelscript.wireshark',
-                    'steelscript.appresponse'
                     ]
 
 STEELSCRIPT_APPFW = ['steelscript.appfwk',
                      'steelscript.appfwk.business-hours']
 
 STEELSCRIPT_STEELHEAD = ['steelscript.cmdline',
+                         'steelscript.scc',
                          'steelscript.steelhead']
 
 logging_initialized = False
@@ -398,13 +399,13 @@ class InstallCommand(BaseCommand):
             help='Directory to use for offline installation')
 
         group.add_option(
-            # Install packages from gitlab
+            # Install packages from GitHub
             '-g', '--github', action='store_true',
             help="Install packages from github")
 
         group.add_option(
-            # Install packages from gitlab
-            '-G', '--gitlab', action='store_true',
+            # Dev only - install packages from bitbucket
+            '-B', '--bitbucket', action='store_true',
             help=optparse.SUPPRESS_HELP)
 
         group.add_option(
@@ -414,13 +415,12 @@ class InstallCommand(BaseCommand):
 
         group.add_option(
             '--develop', action='store_true',
-            help='Combine with --gitlab to checkout packages')
+            help='Combine with --github to checkout packages in develop mode')
 
         group.add_option(
             '-p', '--package', action='append', dest='packages',
             help='Package to install (may specify more than once)')
 
-        # Install packages from gitlab
         group.add_option(
             '--appfwk', action='store_true',
             help='Install all application framework packages')
@@ -431,7 +431,7 @@ class InstallCommand(BaseCommand):
 
         group.add_option(
             '--steelhead', action='store_true',
-            help='Install steelhead packages')
+            help='Install optional steelhead packages')
 
         parser.add_option_group(group)
 
@@ -476,8 +476,8 @@ class InstallCommand(BaseCommand):
         if self.options.giturl:
             self.install_git(self.options.giturl)
 
-        elif self.options.gitlab:
-            self.install_gitlab()
+        elif self.options.bitbucket:
+            self.install_bitbucket()
 
         elif self.options.github:
             self.install_github()
@@ -580,17 +580,17 @@ class InstallCommand(BaseCommand):
                     )
 
                 # Now install this git repo in develop mode
-                shell(cmd=('cd {outdir}; python setup.py develop'
+                shell(cmd=('cd {outdir}; pip install -e .'
                            .format(outdir=outdir)),
                       msg=('Installing {pkg}'.format(pkg=pkg)))
             else:
                 suffix = 'git+{repo} '.format(repo=repo)
                 self.pip_install_pkg_with_upgrade(pkg, suffix=suffix)
 
-    def install_gitlab(self):
-        """Install packages from gitlab internal to riverbed."""
+    def install_bitbucket(self):
+        """Install packages from bitbucket internal to riverbed."""
         check_install_pip()
-        self.install_git('https://gitlab.lab.nbttech.com/steelscript')
+        self.install_git('https://code.rvbdtechlabs.net/scm/sct')
 
     def install_github(self):
         """Install packages from github.com/riverbed."""

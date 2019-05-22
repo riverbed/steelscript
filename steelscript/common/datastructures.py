@@ -88,7 +88,8 @@ class JsonDict(dict):
 
     def __str__(self):
         """Return the json-encoded form of the dictionary."""
-        return json.dumps(self)
+        # handle un-encodable items with str operator
+        return json.dumps(self, default=str)
 
     @classmethod
     def loads(cls, s):
