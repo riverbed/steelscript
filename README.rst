@@ -40,7 +40,7 @@ Not sure about pip, but you know you have Python?
 License
 =======
 
-Copyright (c) 2014 Riverbed Technology, Inc.
+Copyright (c) 2019 Riverbed Technology, Inc.
 
 SteelScript is licensed under the terms and conditions of the MIT License
 accompanying the software ("License").  SteelScript is distributed "AS
