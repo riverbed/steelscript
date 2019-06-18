@@ -17,6 +17,14 @@ import sys
 import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('sphinxext'))
+
+if os.path.exists('/.dockerenv'):
+    try:
+        os.system('apt-get update && install -y libpcap-dev --no-install-recommends')
+        os.system('pip install -e git+https://github.com/riverbed/steelscript-packets.git@setup#egg=steelscript.packets')
+    except Exception:
+        print('ERROR installing steelscript-packets')
+
 import _ext.helpers as helpers
 #from _ext.django_doc_helpers import process_docstring
 
