@@ -18,7 +18,7 @@ import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('sphinxext'))
 import _ext.helpers as helpers
-from _ext.django_doc_helpers import process_docstring
+#from _ext.django_doc_helpers import process_docstring
 
 helpers.create_symlinks()
 helpers.write_toc_templates()
@@ -289,4 +289,4 @@ def setup(app):
     # add custom css that overrides the default theme
     app.add_stylesheet('theme.css')
     # Register the docstring processor with sphinx
-    app.connect('autodoc-process-docstring', process_docstring)
+    #app.connect('autodoc-process-docstring', process_docstring)

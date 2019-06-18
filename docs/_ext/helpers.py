@@ -2,26 +2,35 @@
 
 import os
 import sys
+import pkg_resources
+
 
 PROJECTS = [
-    ('common', 'SteelScript Common', '..'),
-    ('netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'),
-    ('netshark', 'SteelScript NetShark', '../../steelscript-netshark'),
-    ('appresponse', 'SteelScript AppResponse', '../../steelscript-appresponse'),
-    ('wireshark', 'SteelScript WireShark', '../../steelscript-wireshark'),
-    ('packets', 'SteelScript Packets', '../../steelscript-packets'),
-    ('steelhead', 'SteelScript SteelHead', '../../steelscript-steelhead'),
-    ('scc', 'SteelScript SteelCentral Controller', '../../steelscript-scc'),
-    ('appfwk', 'SteelScript Application Framework', '../../steelscript-appfwk'),
-    ('cmdline', 'SteelScript Command Line', '../../steelscript-cmdline'),
-    ('vmconfig', 'SteelScript VM', '../../steelscript-vm-config'),
-    ('reschema', 'reschema', '../../reschema'),
-    ('sleepwalker', 'sleepwalker', '../../sleepwalker')
+    ['common', 'steelscript', 'SteelScript Common', '..'],
+    ['netprofiler', 'steelscript.netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'],
+    ['appresponse', 'steelscript.appresponse', 'SteelScript AppResponse', '../../steelscript-appresponse'],
+    ['wireshark', 'steelscript.packets', 'SteelScript WireShark', '../../steelscript-wireshark'],
+    ['packets', 'steelscript.wireshark', 'SteelScript Packets', '../../steelscript-packets'],
+    ['steelhead', 'steelscript.cmdline', 'SteelScript SteelHead', '../../steelscript-steelhead'],
+    ['scc', 'steelscript.scc', 'SteelScript SteelCentral Controller', '../../steelscript-scc'],
+    ['cmdline', 'steelscript.steelhead', 'SteelScript Command Line', '../../steelscript-cmdline'],
+    ['reschema', 'reschema', 'reschema', '../../reschema'],
+    ['sleepwalker', 'sleepwalker', 'sleepwalker', '../../sleepwalker']
 ]
+
+for p in PROJECTS:
+    proj, pkg, title, path = p
+
+    if proj == 'common':
+        continue
+
+    package = pkg_resources.get_distribution(pkg)
+    if package.location != os.path.abspath(path):
+        p[3] = package.location
 
 
 def create_symlinks():
-    for proj, title, path in PROJECTS:
+    for proj, pkg, title, path in PROJECTS:
         # Create a symlink, ignore common since its part of package
         if proj == 'common':
             continue
@@ -32,17 +41,18 @@ def create_symlinks():
             pass
 
         src = '{path}/docs'.format(path=path)
-        if not os.path.exists(src):
+        if os.path.exists(src):
+            os.symlink(src, proj)
+        else:
+            from IPython import embed;embed()
             raise Exception(
                 'Could not find related project source tree: %s' % src)
-
-        os.symlink(src, proj)
 
 
 def write_toc_templates():
     if not os.path.exists('_templates'):
         os.mkdir('_templates')
-    for proj, title, path in PROJECTS:
+    for proj, pkg, title, path in PROJECTS:
         # Write a custom TOC template file
         tocfile = '%s_toc.html' % proj
         template_tocfile = '_templates/%s' % tocfile
@@ -55,7 +65,7 @@ def write_toc_templates():
 
 
 def setup_html_sidebards(html_sidebars):
-    for proj, title, path in PROJECTS:
+    for proj, pkg, title, path in PROJECTS:
         tocfile = '%s_toc.html' % proj
         html_sidebars['%s/*' % proj] = \
                              [tocfile, 'relations.html', 'sourcelink.html',
@@ -63,7 +73,7 @@ def setup_html_sidebards(html_sidebars):
 
 
 def setup_sys_path():
-    for proj, title, path in PROJECTS:
+    for proj, pkg, title, path in PROJECTS:
         if not os.path.exists(path):
             raise Exception('Could not find related project source tree: %s' % path)
         sys.path.insert(0, os.path.abspath(path))
