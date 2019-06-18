@@ -11,22 +11,29 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
 import sys
+import pkg_resources
+
 import sphinx_rtd_theme
+
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('sphinxext'))
 
 if os.path.exists('/.dockerenv'):
+    # we need to add some dependencies for packets
     try:
-        os.system('apt-get update && install -y libpcap-dev --no-install-recommends')
-        os.system('pip install -e git+https://github.com/riverbed/steelscript-packets.git@setup#egg=steelscript.packets')
+        test = pkg_resources.get_distribution('steelscript.packets')
+    except Exception:
+        # let's install it then
+        os.system('cd /tmp && apt-get download libpcap0.8-dev libpcap0.8')
+        os.system('dpkg -x libpcap0.8_1.8.1-6ubuntu1_amd64.deb libpcap-dev')
+        os.system('dpkg -x libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb libpcap-dev')
+        os.system('CFLAGS="-I/tmp/libpcap-dev/usr/include -L/tmp/libpcap-dev/usr/lib/x86_64-linux-gnu" pip3.7 install -e git+https://github.com/riverbed/steelscript-packets.git@setup#egg=steelscript.packets')
     except Exception:
         print('ERROR installing steelscript-packets')
 
 import _ext.helpers as helpers
-#from _ext.django_doc_helpers import process_docstring
 
 helpers.create_symlinks()
 helpers.write_toc_templates()
