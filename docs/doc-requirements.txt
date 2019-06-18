@@ -7,7 +7,7 @@ sphinx-rtd-theme==0.4.3
 -e git+https://github.com/riverbed/steelscript-netprofiler.git#egg=steelscript.netprofiler
 -e git+https://github.com/riverbed/steelscript-wireshark.git#egg=steelscript.wireshark
 -e git+https://github.com/riverbed/steelscript-cmdline.git#egg=steelscript.cmdline
--e git+https://github.com/riverbed/steelscript-packets.git#egg=steelscript.packets
+-e git+https://github.com/riverbed/steelscript-packets.git@setup#egg=steelscript.packets
 -e git+https://github.com/riverbed/steelscript-scc.git#egg=steelscript.scc
 -e git+https://github.com/riverbed/steelscript-steelhead.git#egg=steelscript.steelhead
 -e git+https://github.com/riverbed/reschema.git#egg=reschema
