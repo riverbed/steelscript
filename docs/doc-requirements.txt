@@ -1,0 +1,12 @@
+Cython==0.29.10
+recommonmark==0.5.0
+Sphinx==2.1.1
+sphinx-rtd-theme==0.4.3
+-e git+https://github.com/riverbed/steelscript-appresponse.git#egg=steelscript.appresponse
+-e git+https://github.com/riverbed/steelscript-netprofiler.git#egg=steelscript.netprofiler
+-e git+https://github.com/riverbed/steelscript-wireshark.git#egg=steelscript.wireshark
+-e git+https://github.com/riverbed/steelscript-cmdline.git#egg=steelscript.cmdline
+-e git+https://github.com/riverbed/steelscript-scc.git#egg=steelscript.scc
+-e git+https://github.com/riverbed/steelscript-steelhead.git#egg=steelscript.steelhead
+-e git+https://github.com/riverbed/reschema.git#egg=reschema
+-e git+https://github.com/riverbed/sleepwalker.git#egg=sleepwalker
