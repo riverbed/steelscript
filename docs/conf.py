@@ -29,7 +29,7 @@ if os.path.exists('/.dockerenv'):
         os.system('cd /tmp && apt-get download libpcap0.8-dev libpcap0.8')
         os.system('cd /tmp && dpkg -x libpcap0.8_1.8.1-6ubuntu1_amd64.deb libpcap-dev')
         os.system('cd /tmp && dpkg -x libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb libpcap-dev')
-        os.system('CFLAGS="-I/tmp/libpcap-dev/usr/include -L/tmp/libpcap-dev/usr/lib/x86_64-linux-gnu" pip3.7 install -e git+https://github.com/riverbed/steelscript-packets.git@setup#egg=steelscript.packets')
+        os.system('CFLAGS="-I/tmp/libpcap-dev/usr/include -L/tmp/libpcap-dev/usr/lib/x86_64-linux-gnu" pip3.7 install -e git+https://github.com/riverbed/steelscript-packets.git#egg=steelscript.packets')
     except Exception:
         print('ERROR installing steelscript-packets')
 
