@@ -5,7 +5,7 @@ Installation of SteelScript varies depending on the platform you are using.
 Start with the specific instructions for :doc:`Linux or Mac OS <linuxmac>` or
 :doc:`Windows <windows>` for greater detail.
 
-The quicket and easiest is probably the version :doc:`Docker version <docker>`
+The quickest and easiest is probably the :doc:`Docker container <docker>`
 
 Getting the Application Framework running takes a few additional steps in some
 cases, but can usually be done with one command, ``steel install --appfwk``.
