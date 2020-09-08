@@ -12,9 +12,9 @@ For a complete guide to installation, see:
 Python Compatibility Note
 -------------------------
 
-The 1.8.X series of SteelScript packages are the last anticipated to support
-Python 2.  Future development will focus on Python 3, starting with version
-2.0.
+The SteelScript 2.x series of packages support Python 3. The 1.8.X series of SteelScript packages are the last to support
+Python 2.  
+
 
 Quick Start
 -----------
@@ -40,7 +40,7 @@ Not sure about pip, but you know you have Python?
 License
 =======
 
-Copyright (c) 2019 Riverbed Technology, Inc.
+Copyright (c) 2020 Riverbed Technology, Inc.
 
 SteelScript is licensed under the terms and conditions of the MIT License
 accompanying the software ("License").  SteelScript is distributed "AS
