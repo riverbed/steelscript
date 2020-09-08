@@ -7,7 +7,7 @@ SteelScript and associated modules on Windows.
 Dependencies
 ------------
 
-* Python version 2.7.x - see `python.org <http://python.org/download/>`_
+* Python version 3.8.x - see `python.org <http://python.org/download/>`_
 * Python `setuptools <https://pypi.python.org/pypi/setuptools>`_
 
 .. _installsys-windows:
@@ -15,14 +15,11 @@ Dependencies
 Online Installation
 -------------------
 
-If your machine has access to the internet, then follow these steps.
+If your machine has access to the Internet, then follow these steps.
 It is usually easiest to install as administrator:
 
 1. If you don't yet have Python installed on your system, download
-   Python from `python.org`_.  Be sure to pick the
-   installer from the Python 2 section (2.7.11 at the time this
-   document is written) since SteelScript does not currently support
-   Python 3.  Download the installer for your platform (32bit
+   Python from `python.org`_. Download the installer for your platform (32bit
    vs. 64bit).
 
 2. Double-click the Python installer and follow the instructions.
@@ -41,8 +38,8 @@ It is usually easiest to install as administrator:
 
 5. Install one or more product specific SteelScript packages::
 
+      > pip.exe install steelscript.appresponse
       > pip.exe install steelscript.netprofiler
-      > pip.exe install steelscript.netshark
       > pip.exe install steelscript.wireshark
 
 .. _verify-windows:
@@ -51,14 +48,14 @@ It is usually easiest to install as administrator:
    the SteelScript packages.  Run the ``steel about`` script as a
    simple test::
 
-      C:\Python27\Scripts>steel about
+      C:\Python38\Scripts>steel about
 
       Installed SteelScript Packages
       Core packages:
-        steelscript                               1.0.1
-        steelscript.netprofiler                   1.0.2
-        steelscript.netshark                      1.0
-        steelscript.wireshark                     1.0.1
+        steelscript                               2.0
+        steelscript.appresponse                   2.0.2
+        steelscript.netprofiler                   2.0
+        steelscript.wireshark                     2.0
 
       Application Framework packages:
         None
@@ -67,7 +64,7 @@ It is usually easiest to install as administrator:
         None
 
       Paths to source:
-        C:\Python27\lib\site-packages
+        C:\Python38\lib\site-packages
 
       (add -v or --verbose for further information)
 
@@ -93,10 +90,10 @@ SteelScript packages and their dependencies as described below:
 
    > mkdir steelscript-packages
    > cd steelscript-packages
-   > pip install --download . --no-use-wheel steelscript
-   > pip install --download . --no-use-wheel steelscript.netprofiler
-   > pip install --download . --no-use-wheel steelscript.netshark
-   > pip install --download . --no-use-wheel steelscript.wireshark
+   > pip install --download . --no-binary :all: steelscript
+   > pip install --download . --no-binary :all: steelscript.appresponse
+   > pip install --download . --no-binary :all: steelscript.netprofiler
+   > pip install --download . --no-binary :all: steelscript.wireshark
 
 2. Zip up this directory and transfer the zip file to your offline machine.
 
@@ -107,8 +104,8 @@ SteelScript packages and their dependencies as described below:
 
    > cd steelscript-packages
    > pip install --no-index --find-links . steelscript
+   > pip install --no-index --find-links . steelscript.appresponse
    > pip install --no-index --find-links . steelscript.netprofiler
-   > pip install --no-index --find-links . steelscript.netshark
    > pip install --no-index --find-links . steelscript.wireshark
 
 5. :ref:`Verify <verify-windows>` your installation with ``steel.py about``

@@ -96,21 +96,21 @@ You can check your installation using ``steel about``:
 
    Installed SteelScript Packages
    Core packages:
-     steelscript                               0.9.6
-     steelscript.cmdline                       0.5.0
-     steelscript.netprofiler                   0.9.4
-     steelscript.netshark                      0.9.4
-     steelscript.steelhead                     0.5.0
-     steelscript.wireshark                     0.9.4
+     steelscript                               2.0
+     steelscript.appresponse		       2.0.2
+     steelscript.cmdline                       2.0
+     steelscript.netprofiler                   2.0
+     steelscript.scc 			       2.0
+     steelscript.steelhead                     2.0
+     steelscript.wireshark                     2.0
 
    Application Framework packages:
-     steelscript.appfwk                        0.9.7.1
-     steelscript.appfwk.business-hours         0.9.6
+     None
 
    REST tools and libraries:
      None
 
    Paths to source:
-     ~/steelscript/venv/lib/python2.7/site-packages
+     ~/steelscript/venv/lib/python3.8/site-packages
 
    (add -v or --verbose for further information)
