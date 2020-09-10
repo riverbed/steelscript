@@ -1,13 +1,9 @@
 Riverbed SteelScript for Python
 ===============================
 
-Welcome, this is the documentation for Riverbed SteelScript for Python
-and the SteelScript Application Framework.  The core SteelScript is a
-collection of Python modules that build upon REST APIs and other
-interfaces to interact with Riverbed appliances and software.
-The Application Framework is a Django-based web application infrastructure
-that makes it easy to built web applications mashing up configuration
-and statistics from throughout your network.
+Welcome, this is the documentation for Riverbed SteelScript for Python.
+The core SteelScript is a collection of Python modules that build upon 
+REST APIs and other interfaces to interact with Riverbed appliances and software.
 
 Quick Start
 -----------
@@ -25,20 +21,6 @@ Not sure about pip, but you know you have Python?
 2. Run it (in a `virtualenv <http://www.virtualenv.org/>`_)::
 
       $ python steel_bootstrap.py install
-
-SteelScript Application Framework
----------------------------------
-
-The SteelScript Application Framework makes it easy to create a fully
-custom web application that mashes up data from multiple sources.  It comes
-pre-configured with several reports for NetProfiler and NetShark.
-
-Get started with App Framework by downloading and running a Virtual
-Machine with it pre-installed and configured.  The latest links
-and guides can be found on our
-`Splash site <https://splash.riverbed.com/docs/DOC-4860>`_.
-
-For more details, see the :doc:`complete documentation <appfwk/overview>`.
 
 SteelScript SteelHead
 ---------------------
@@ -63,7 +45,6 @@ Documentation
 
   * :doc:`Core Install Linux / Mac <install/linuxmac>`
   * :doc:`Core Install Windows <install/windows>`
-  * :doc:`Install Application Framework <install/appfwk>`
   * :doc:`Install SteelScript SteelHead <install/steelhead>`
 
 * :doc:`steel`
@@ -71,34 +52,20 @@ Documentation
 * Tutorials
 
   * :doc:`netprofiler/tutorial`
-  * :doc:`netshark/tutorial`
   * :doc:`appresponse/tutorial`
-  * :doc:`steelhead/tutorial`
   * :doc:`scc/tutorial`
-  * :doc:`packets/tutorial`
 
 * Device modules
 
   * :doc:`netprofiler/overview`
-  * :doc:`netshark/overview`
   * :doc:`appresponse/overview`
   * :doc:`steelhead/overview`
   * :doc:`scc/overview`
-
-* App Framework and VM
-
-  * :doc:`appfwk/overview`
-  * :doc:`vmconfig/overview`
 
 * Library modules
 
   * :doc:`common/overview`
   * :doc:`cmdline/overview`
-
-* REST tools and libraries
-
-  * `reschema <reschema/index.html>`__
-  * `sleepwalker <sleepwalker/index.html>`__
 
 License
 -------
@@ -118,14 +85,10 @@ information.
    steel
    common/toc
    netprofiler/toc
-   netshark/toc
    appresponse/toc
    wireshark/toc
    packets/toc
    steelhead/toc
    scc/toc
-   appfwk/toc
    cmdline/toc
    vmconfig/toc
-   reschema/toc
-   sleepwalker/toc

@@ -9,7 +9,7 @@ all users.
 Dependencies
 ------------
 
-* Python version 2.7.x - see `python.org <http://python.org/download/>`_
+* Python version 3.8.x or later - see `python.org <http://python.org/download/>`_
 * Python `setuptools <https://pypi.python.org/pypi/setuptools>`_
 
 You must already have Python and the setuptools package installed on your
@@ -21,7 +21,7 @@ You can check that Python is installed and running the appropriate version:
 .. code-block:: bash
 
    $ python -V
-   Python 2.7.3
+   Python 3.8.3
 
 .. _installsys-linuxmac-online:
 
@@ -29,10 +29,10 @@ Online Installation - Virtualenv
 --------------------------------
 
 This is the recommended approach when your target system has access to the
-internet.  If access is limited, see below for
+Internet.  If access is limited, see below for
 :ref:`installsys-linuxmac-offline` instructions.
 
-These steps will install steelscript inside an isolated python environment
+These steps will install SteelScript inside an isolated python environment
 called a ``virtualenv``.  The great thing about virtualenv's are how they can
 allow you to experiment and upgrade packages without worrying about overwriting
 any system requirements, and you can create as many as you'd like in order to
@@ -42,11 +42,9 @@ separate different projects from one another.
 
        $ sudo easy_install virtualenv
 
-
     On a Ubuntu or Debian flavor of Linux, you can use your package manager::
 
        $ sudo apt-get install python-virtualenv
-
 
     For Red Hat or CentOS flavors::
 
@@ -55,7 +53,7 @@ separate different projects from one another.
 .. _installsys-linuxmac-mkvirtualenv:
 
 2. Now create a fresh virtualenv to install the packages into.  Let's create a
-   working folder to hold all of your steelscript projects inside too, we will
+   working folder to hold all of your SteelScript projects inside too, we will
    create this folder in your home directory::
 
        $ cd ~
@@ -66,7 +64,7 @@ separate different projects from one another.
        Installing setuptools, pip...done.
 
 
-3. Whenever you want to work on a steelscript project, you will need
+3. Whenever you want to work on a SteelScript project, you will need
    to run the following command to activate this virtualenv in your
    shell session::
 
@@ -83,7 +81,7 @@ separate different projects from one another.
 
 
 4. Since virtualenv comes with a built-in pip installer, we can easily
-   install the base steelscript package ``steelscript``::
+   install the base SteelScript package ``steelscript``::
 
        (venv)$ pip install steelscript
 
@@ -107,16 +105,16 @@ separate different projects from one another.
 
 .. _verify-linuxmac:
 
-5. Verify your installation by running a simple test::
+6. Verify your installation by running a simple test::
 
       $ steel about
 
       Installed SteelScript Packages
       Core packages:
-        steelscript                               1.0
-        steelscript.netprofiler                   1.0
-        steelscript.netshark                      1.0
-        steelscript.wireshark                     1.0
+        steelscript                               2.0
+	steelscript.appresponse			  2.0.2
+        steelscript.netprofiler                   2.0
+        steelscript.wireshark                     2.0
 
       Application Framework packages:
         None
@@ -125,16 +123,16 @@ separate different projects from one another.
         None
 
       Paths to source:
-        ~/steelscript/venv/lib/python2.7/site-packages
+        ~/steelscript/venv/lib/python3.8/site-packages
 
       (add -v or --verbose for further information)
 
-6. Make a workspace to copy over the included example scripts and create
+7. Make a workspace to copy over the included example scripts and create
    a sandbox to work around with::
 
       $ steel mkworkspace
 
-7. Take a look at your new files and start developing!
+8. Take a look at your new files and start developing!
 
 
 .. _installsys-linuxmac-offline:
@@ -156,7 +154,7 @@ and their dependencies instead of directly installing them.
 
        $ mkdir steelscript_packages
 
-2. Create a local archive of the core steelscript package and its
+2. Create a local archive of the core SteelScript package and its
    dependencies::
 
        $ pip install -d steelscript_packages steelscript
@@ -164,17 +162,17 @@ and their dependencies instead of directly installing them.
    Inside the folder ``steelscript_packages`` you should see
    archives for ``steelscript``, ``requests``, and ``importlib``.
 
-3. Add any additional steelscript packages of interest.  The following
-   will download the netprofiler, netshark, and wireshark packages to the
+3. Add any additional SteelScript packages of interest.  The following
+   will download the appresponse, netprofiler, and wireshark packages to the
    same archive directory along with ``virtualenv``::
 
-       $ pip install --no-use-wheel -d steelscript_packages steelscript.netprofiler
-       $ pip install --no-use-wheel -d steelscript_packages steelscript.netshark
-       $ pip install --no-use-wheel -d steelscript_packages steelscript.wireshark
-       $ pip install --no-use-wheel -d steelscript_packages virtualenv
+       $ pip install --no-binary -d steelscript_packages steelscript.appresponse
+       $ pip install --no-binary -d steelscript_packages steelscript.netprofiler
+       $ pip install --no-binary -d steelscript_packages steelscript.wireshark
+       $ pip install --no-binary -d steelscript_packages virtualenv
 
    .. note::
-       The ``--no-use-wheel`` option makes sure the packages can be installed
+       The ``--no-binary`` option makes sure the packages can be installed
        on a barebones system that may not have ``pip`` available.
 
 4. Add any other packages of interest you may need using the same approach
@@ -205,14 +203,14 @@ and their dependencies instead of directly installing them.
    and activate it for the remaining steps (just omit ``sudo`` from the
    rest of the commands!)
 
-8. Use ``pip`` to install the base steelscript package, telling it
+8. Use ``pip`` to install the base SteelScript package, telling it
    to use ``steelscript_packages`` as the place to find relevant files::
 
       $ sudo pip install --no-index -f steelscript_packages steelscript
 
    Repeat that command replacing the last ``steelscript`` name with the
    name of any extra packages you want included.  Don't worry about
-   steelscript packages, those can be installed with the following::
+   SteelScript packages, those can be installed with the following::
 
       $ sudo steel install --pip-options="--no-index -f pkgs"
 
@@ -239,14 +237,13 @@ In case you would prefer to install system wide, then extract the steelscript_pa
     $ tar xvzf steelscript_packages.tar.gz
     $ cd steelscript_packages
 
-
 Repeat the following steps for each the following packages, in order:
 
 1. importlib
 2. requests
 3. steelscript
-4. steelscript.netprofiler
-5. steelscript.netshark
+4. steelscript.appresponse
+5. steelscript.netprofiler
 6. steelscript.wireshark
 
 Replace ``<packagename>`` below with the filename from the tarball::
@@ -254,7 +251,6 @@ Replace ``<packagename>`` below with the filename from the tarball::
     $ tar xvzf <packagename>.tar.gz
     $ cd <packagename>
     $ python setup.py install
-
 
 :ref:`Verify your installation <verify-linuxmac>` with ``steel about``
 
