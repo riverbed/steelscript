@@ -2,5 +2,8 @@ include RELEASE-VERSION
 include AUTHORS
 include LICENSE
 include README.md
+include CHANGELOG
+include Dockerfile
 recursive-include docs *
 include gitpy_versioning/__init__.py
+recursive-include tests *.py

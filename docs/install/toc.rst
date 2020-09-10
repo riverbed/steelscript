@@ -3,8 +3,16 @@ SteelScript Installation
 
 SteelScript is provided as open source on GitHub (https://github.com/riverbed).
 Installation of SteelScript varies depending on the platform you are using.
+
 Start with the specific instructions for :doc:`Docker <docker>`, 
 :doc:`Linux or Mac OS <linuxmac>` or :doc:`Windows <windows>` for greater detail.
+
+The quickest and easiest is probably the :doc:`Docker container <docker>`
+
+Getting the Application Framework running takes a few additional steps in some
+cases, but can usually be done with one command, ``steel install --appfwk``.
+See the :doc:`App Framework installation instructions <appfwk>` for more
+details.
 
 Installing SteelScript SteelHead package requires executing the command ``steel install --steelhead``.
 But it might take a few more steps, see :doc:`SteelHead Installation Instructions <steelhead>` for more details.  

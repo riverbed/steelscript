@@ -1,11 +1,23 @@
-SteelScript Installation - Docker
-=================================
+SteelScript in a Docker
+======================================
 
-Install Docker on your laptop or on any VM, then run the following commands to get
-a fresh workspace waiting::
+SteelScript for Python SDK - includes all of the core SteelScript packages in one simple container. 
 
-$docker pull riverbed/steelscript:latest
-$docker run -it riverbed/steelscript
+Quickstart
+-----------------
+
+Get Docker installed on your machine, laptop or VM. (Docker website: https://docs.docker.com/get-docker/)
+
+Then the following commands run a SteelScript container and get a fresh workspace waiting. It will pull the latest version and drop you into a bash shell inside a SteelScript workspace.
+
+.. code-block:: bash
+  
+  docker run -it riverbed/steelscript
+
+Now you can run some examples or start your own interactive Python session from here.
+For example:
+
+.. code-block:: bash
 
 root@ad362292781f:~/steelscript-workspace# steel about
 
