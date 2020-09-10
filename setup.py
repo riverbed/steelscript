@@ -104,7 +104,7 @@ http://pythonhosted.org/steelscript/
     
     'python_requires': '>3.5.0',
 
-    'packages': find_packages(exclude=('gitpy_versioning',)),
+    'packages': find_packages(exclude=('gitpy_versioning', 'tests*')),
 
     'entry_points': {
         'console_scripts': [
