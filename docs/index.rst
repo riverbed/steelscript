@@ -86,9 +86,6 @@ information.
    common/toc
    netprofiler/toc
    appresponse/toc
-   wireshark/toc
-   packets/toc
    steelhead/toc
    scc/toc
    cmdline/toc
-   vmconfig/toc

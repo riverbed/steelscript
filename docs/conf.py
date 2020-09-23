@@ -20,19 +20,6 @@ import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('sphinxext'))
 
-if os.path.exists('/.dockerenv'):
-    # we need to add some dependencies for packets
-    try:
-        test = pkg_resources.get_distribution('steelscript.packets')
-    except Exception:
-        # let's install it then
-        os.system('cd /tmp && apt-get download libpcap0.8-dev libpcap0.8')
-        os.system('cd /tmp && dpkg -x libpcap0.8_1.8.1-6ubuntu1_amd64.deb libpcap-dev')
-        os.system('cd /tmp && dpkg -x libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb libpcap-dev')
-        os.system('CFLAGS="-I/tmp/libpcap-dev/usr/include -L/tmp/libpcap-dev/usr/lib/x86_64-linux-gnu" pip3.7 install -e git+https://github.com/riverbed/steelscript-packets.git#egg=steelscript.packets')
-    except Exception:
-        print('ERROR installing steelscript-packets')
-
 import _ext.helpers as helpers
 
 helpers.create_symlinks()
@@ -79,7 +66,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'steelscript'
-copyright = u'2018 Riverbed Technology, Inc.'
+copyright = u'2020 Riverbed Technology, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
