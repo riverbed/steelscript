@@ -9,13 +9,11 @@ PROJECTS = [
     ['common', 'steelscript', 'SteelScript Common', '..'],
     ['netprofiler', 'steelscript.netprofiler', 'SteelScript NetProfiler', '../../steelscript-netprofiler'],
     ['appresponse', 'steelscript.appresponse', 'SteelScript AppResponse', '../../steelscript-appresponse'],
-    ['wireshark', 'steelscript.packets', 'SteelScript WireShark', '../../steelscript-wireshark'],
-    ['packets', 'steelscript.wireshark', 'SteelScript Packets', '../../steelscript-packets'],
-    ['steelhead', 'steelscript.cmdline', 'SteelScript SteelHead', '../../steelscript-steelhead'],
+    ['steelhead', 'steelscript.steelhead', 'SteelScript SteelHead', '../../steelscript-steelhead'],
     ['scc', 'steelscript.scc', 'SteelScript SteelCentral Controller', '../../steelscript-scc'],
-    ['cmdline', 'steelscript.steelhead', 'SteelScript Command Line', '../../steelscript-cmdline'],
-    ['reschema', 'reschema', 'reschema', '../../reschema'],
-    ['sleepwalker', 'sleepwalker', 'sleepwalker', '../../sleepwalker']
+    ['cmdline', 'steelscript.cmdline', 'SteelScript Command Line', '../../steelscript-cmdline'],
+    ['reschema', 'reschema', 'Reschema', '../../reschema'],
+    ['sleepwalker', 'sleepwalker', 'Sleepwalker', '../../sleepwalker']
 ]
 
 for p in PROJECTS:
@@ -24,9 +22,9 @@ for p in PROJECTS:
     if proj == 'common':
         continue
 
-    package = pkg_resources.get_distribution(pkg)
-    if package.location != os.path.abspath(path):
-        p[3] = package.location
+    #package = pkg_resources.get_distribution(pkg)
+    #if package.location != os.path.abspath(path):
+    #    p[3] = package.location
 
 
 def create_symlinks():

@@ -19,21 +19,19 @@ For example:
 
 .. code-block:: bash
 
-root@ad362292781f:~/steelscript-workspace# steel about
+  root@ad362292781f:~/steelscript-workspace# steel about
 
-Installed SteelScript Packages
-Core packages:
-  steelscript                               2.0
-  steelscript.appresponse                   2.0.1
-  steelscript.cmdline                       2.0
-  steelscript.netprofiler                   2.0
-  steelscript.packets                       2.0
-  steelscript.scc                           2.0
-  steelscript.steelhead                     2.0
-  steelscript.wireshark                     2.0
+  Installed SteelScript Packages
+  Core packages:
+    steelscript                               2.0
+    steelscript.appresponse                   2.0.1
+    steelscript.cmdline                       2.0
+    steelscript.netprofiler                   2.0
+    steelscript.scc                           2.0
+    steelscript.steelhead                     2.0
 
-Application Framework packages:
-  None
+  Application Framework packages:
+    None
 
 Inside that steelscript-workspace directory you will see exxample scripts for our various
 packages which you can use right away, or copy to start your own scripts.
@@ -45,10 +43,3 @@ The Docker containers for Jupyter notebooks have also been updated. Jupyter note
 a really great way to play around and develop in the world of Python. Instructions on how
 to get started are on the Docker page `https://hub.docker.com/r/riverbed/steelscript <https://hub.docker.com/r/riverbed/steelscript>`_
 
-
-.. toctree::
-
-   docker
-   linuxmac
-   windows
-   steelhead

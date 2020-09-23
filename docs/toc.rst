@@ -10,15 +10,10 @@ Table of Contents
    steel
    common/toc
    netprofiler/toc
-   netshark/toc
    appresponse/toc
-   wireshark/toc
-   packets/toc
    steelhead/toc
    scc/toc
-   appfwk/toc
    cmdline/toc
-   vmconfig/toc
 
 * `reschema <reschema/index.html>`__
 * `sleepwalker <sleepwalker/index.html>`__
