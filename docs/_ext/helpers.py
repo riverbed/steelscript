@@ -22,9 +22,9 @@ for p in PROJECTS:
     if proj == 'common':
         continue
 
-    #package = pkg_resources.get_distribution(pkg)
-    #if package.location != os.path.abspath(path):
-    #    p[3] = package.location
+    package = pkg_resources.get_distribution(pkg)
+    if package.location != os.path.abspath(path):
+        p[3] = package.location
 
 
 def create_symlinks():
