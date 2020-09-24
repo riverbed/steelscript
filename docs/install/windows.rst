@@ -90,10 +90,9 @@ SteelScript packages and their dependencies as described below:
 
    > mkdir steelscript-packages
    > cd steelscript-packages
-   > pip install --download . --no-binary :all: steelscript
-   > pip install --download . --no-binary :all: steelscript.appresponse
-   > pip install --download . --no-binary :all: steelscript.netprofiler
-   > pip install --download . --no-binary :all: steelscript.wireshark
+   > pip download . --no-binary :all: steelscript
+   > pip download . --no-binary :all: steelscript.appresponse
+   > pip download . --no-binary :all: steelscript.netprofiler
 
 2. Zip up this directory and transfer the zip file to your offline machine.
 
@@ -106,7 +105,6 @@ SteelScript packages and their dependencies as described below:
    > pip install --no-index --find-links . steelscript
    > pip install --no-index --find-links . steelscript.appresponse
    > pip install --no-index --find-links . steelscript.netprofiler
-   > pip install --no-index --find-links . steelscript.wireshark
 
 5. :ref:`Verify <verify-windows>` your installation with ``steel.py about``
 
