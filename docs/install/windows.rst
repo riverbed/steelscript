@@ -90,9 +90,9 @@ SteelScript packages and their dependencies as described below:
 
    > mkdir steelscript-packages
    > cd steelscript-packages
-   > pip download . --no-binary :all: steelscript
-   > pip download . --no-binary :all: steelscript.appresponse
-   > pip download . --no-binary :all: steelscript.netprofiler
+   > pip download -d . --no-binary :all: steelscript
+   > pip download -d . --no-binary :all: steelscript.appresponse
+   > pip download -d . --no-binary :all: steelscript.netprofiler
 
 2. Zip up this directory and transfer the zip file to your offline machine.
 
