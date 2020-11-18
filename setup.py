@@ -57,7 +57,7 @@ class PyTest(TestCommand):
 
 
 install_requires = [
-    'requests>=2.21.0',
+    'requests>=2.25.0',
     'python-dateutil',
 ]
 
