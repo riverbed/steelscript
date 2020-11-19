@@ -18,7 +18,7 @@ Quick Start
 -----------
 
 If you have git and Docker installed.
-Open your shell (bash or PowerSehll), build SteelScript from the latest source code and run it locally in a Docker container as follows:
+Open your shell (bash or PowerShell), build SteelScript from the latest source code and run it locally in a Docker container as follows:
 
 .. code:: shell
 
