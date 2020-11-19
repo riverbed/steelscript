@@ -5,37 +5,34 @@ This is the top-level directory for the Riverbed SteelScript for
 Python, a collection of libraries and scripts in Python for interacting
 with Riverbed devices and other network infrastructure.
 
-For a complete guide to installation, see:
+For a complete guide and installation methods, see:
 
   `https://support.riverbed.com/apis/steelscript/index.html <https://support.riverbed.com/apis/steelscript/index.html>`_
+
+Contribute
+-----------
+
+Feel free to use, enhance and contribute by creating issues, sendind pull requests (PR), ...
+
+Quick Start 
+-----------
+
+If you have git and Docker installed.
+Open your shell, build SteelScript from the latest source code and run it locally in a Docker container as follows:
+
+.. code:: shell
+
+  git clone https://github.com/riverbed/steelscript.git
+  cd steelscript
+  docker build --tag steelscript:latest .
+  
+  docker run -it steelscript:latest /bin/bash
 
 Python Compatibility Note
 -------------------------
 
 The SteelScript 2.x series of packages support Python 3. The 1.8.X series of SteelScript packages are the last to support
 Python 2.  
-
-
-Quick Start
------------
-
-If you already have pip, just run the following (in a
-`virtualenv <http://www.virtualenv.org/>`_):
-
-.. code:: bash
-
-   $ pip install steelscript
-   $ steel install
-
-Not sure about pip, but you know you have Python?
-
-1. Download ``steel_bootstrap.py`` `from here <https://support.riverbed.com/apis/steelscript/index.html#quick-start>`_
-
-2. Run it (in a `virtualenv <http://www.virtualenv.org/>`_):
-
-   .. code:: bash
-
-      $ python steel_bootstrap.py install
 
 License
 =======
