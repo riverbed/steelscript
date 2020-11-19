@@ -7,7 +7,7 @@ with Riverbed devices and other network infrastructure.
 
 For a complete guide and installation methods, see:
 
-  `https://support.riverbed.com/apis/steelscript/index.html <https://support.riverbed.com/apis/steelscript/index.html>`_
+  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
 
 Contribute
 -----------
