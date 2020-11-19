@@ -5,7 +5,7 @@ This is the top-level directory for the Riverbed SteelScript for
 Python, a collection of libraries and scripts in Python for interacting
 with Riverbed devices and other network infrastructure.
 
-For a complete guide and installation methods, see:
+For a complete guide with installation details, see:
 
   `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
 
@@ -18,7 +18,7 @@ Quick Start
 -----------
 
 If you have git and Docker installed.
-Open your shell, build SteelScript from the latest source code and run it locally in a Docker container as follows:
+Open your shell (bash or PowerSehll), build SteelScript from the latest source code and run it locally in a Docker container as follows:
 
 .. code:: shell
 
