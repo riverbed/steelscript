@@ -1,18 +1,19 @@
 Riverbed SteelScript
 ====================
 
-This is the top-level directory for the Riverbed SteelScript for
-Python, a collection of libraries and scripts in Python for interacting
-with Riverbed devices and other network infrastructure.
+Riverbed SteelScript is a collection of libraries and scripts written in Python for interacting
+with Riverbed solutions and appliances, and other network infrastructure devices.
 
 For a complete guide with installation details, see:
 
   `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
 
+**Recommendation**: Use SteelScript in a Docker container or directly from the python source code in Github!
+
 Contribute
 -----------
 
-Feel free to use, enhance and contribute by creating issues, sendind pull requests (PR), ...
+Feel free to use, enhance and contribute by creating issues, sendind pull requests (PR), extending with new modules ...
 
 Quick Start 
 -----------
@@ -32,7 +33,106 @@ Python Compatibility Note
 -------------------------
 
 The SteelScript 2.x series of packages support Python 3. The 1.8.X series of SteelScript packages are the last to support
-Python 2.  
+Python 2.
+
+
+Framework
+=========
+
+The common module for SteelScript is in the `SteelScript repo https://github.com/riverbed/steelscript`__
+It contains common code but also it is the entrypoint for Documentation, Build, Test and releases.
+
+Other SteelScript modules have their own repository which
+can be found in the `Riverbed GitHub org https://github.com/riverbed`__, the name is prefixed by "steelscript".
+
+Modules for Riverbed solutions and appliances:
+
+- `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
+- `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
+- `Packets <https://github.com/riverbed/steelscript-packets>`__
+- `SteelHead <https://github.com/riverbed/steelscript-steelhead>`__
+- `SteelHead Controller (a.k.a SCC) <https://github.com/riverbed/steelscript-scc>`__
+- `Wireshark <https://github.com/riverbed/steelscript-wireshark>`__
+- `NetShark <https://github.com/riverbed/steelscript-netshark>`__
+
+Extra modules
+
+- `Command line Access <https://github.com/riverbed/steelscript-cmdline>`__
+
+Other repos for components and SteelScript extensions:
+
+- `Application Framework <https://github.com/riverbed/steelscript-appfwk>`__
+- `- Business hour reporting plugin for Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
+- `- Stock report demo with Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
+- `VM Config <https://github.com/riverbed/steelscript-vm-config>`__ 
+
+Folder Structure for Modules
+----------------------------
+
+The repos of SteelScript modules have a common structure 
+
+Mandatory:
+
+- README.rst: simple description using reStructured Text (rst) file format
+- setup.py: Python setup file containing meta descriptions, requirements and unit test. Based on setuptools, distutils, gitpy-versioning (custom versioning tool https://github.com/riverbed/gitpy-versioning) and pytest.
+- /docs: Documentation using reStructured Text (rst) file format.
+- /steelscript: The actual code, written in Python. Must be Python3 only.
+- /tests: Test plans and unit test. Can be organized in subfolders. Test plan are ideally documented and easy to run scripts but can be anything defining a test plan (script, text, ...), for example a python script based on pytest.
+- /examples: Python scripts samples showing how to use the module.
+- CHANGELOG: Simple text file tracking major changes
+- LICENSE: Riverbed Technology copyright, terms and conditions based on MIT
+
+Optional:
+
+- /notebook: Notebooks based on `Jupyter <https://jupyter.org/>`__
+
+Build
+-----
+
+Build are defined in the `SteelScript repo https://github.com/riverbed/steelscript`__ 
+
+
+**Prebuild test-plans validations**
+
+*todo*
+
+**Building Docker containers**
+
+3 flavors of the SteelScript image are available.
+
+- Dockerfile: standard build
+- Dockerfile-slim: optimized build
+- Dockerfile-notebook: build for demo and learning with Notebooks
+
+Run the docker build replace {{version}} with the actual version.
+
+.. code:: shell
+
+  docker build --tag steelscript:{{version}} -f Dockerfile .
+
+
+  .. code:: shell
+
+  docker build --tag steelscript-slim:{{version}} -f Dockerfile-slim .
+
+
+  .. code:: shell
+
+  docker build --tag steelscript-notebook:{{version}} -f Dockerfile-notebook .
+
+
+
+Distribution
+------------
+
+The recommendation is to use SteelScript in a Docker container or install directly from the python code publicly available in Github.
+In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>` thre more details about other installation method.
+
+The goal is to be able to release each new version at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`
+
+For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...) a dedicated repo might be required.
+
+*todo*
 
 License
 =======
