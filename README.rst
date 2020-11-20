@@ -137,8 +137,6 @@ The goal is to be able to release each new version at least in a Docker public r
 
 For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...) a dedicated repo might be required.
 
-*todo*
-
 License
 =======
 
