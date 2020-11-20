@@ -98,13 +98,13 @@ Build are defined in the `SteelScript repo <https://github.com/riverbed/steelscr
 
 **Building Docker containers**
 
-3 flavors of the SteelScript image are available.
+3 Dockerfile are available to build different flavors of the SteelScript container image:
 
 - Dockerfile: standard build
 - Dockerfile-slim: optimized build
 - Dockerfile-notebook: build for demo and learning with Notebooks
 
-Run the docker build replace {{version}} with the actual version.
+In the following code snippet just replace {{version}} with the actual version and run to get it built.
 
 Standard:
 
