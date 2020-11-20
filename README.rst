@@ -13,7 +13,7 @@ For a complete guide with installation details, see:
 Contribute
 -----------
 
-Feel free to use, enhance and contribute by creating issues, sendind pull requests (PR), extending with new modules ...
+Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
 
 Quick Start 
 -----------
@@ -39,11 +39,11 @@ Python 2.
 Framework
 =========
 
-The common module for SteelScript is in the `SteelScript repo https://github.com/riverbed/steelscript`__
+The common module for SteelScript is in the `SteelScript repo <https://github.com/riverbed/steelscript>`__
 It contains common code but also it is the entrypoint for Documentation, Build, Test and releases.
 
 Other SteelScript modules have their own repository which
-can be found in the `Riverbed GitHub org https://github.com/riverbed`__, the name is prefixed by "steelscript".
+can be found in the `Riverbed GitHub org <https://github.com/riverbed>`__, the name is prefixed by "steelscript".
 
 Modules for Riverbed solutions and appliances:
 
@@ -89,7 +89,7 @@ Optional:
 Build
 -----
 
-Build are defined in the `SteelScript repo https://github.com/riverbed/steelscript`__ 
+Build are defined in the `SteelScript repo <https://github.com/riverbed/steelscript>`__ 
 
 
 **Prebuild test-plans validations**
