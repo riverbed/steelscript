@@ -106,17 +106,22 @@ Build are defined in the `SteelScript repo https://github.com/riverbed/steelscri
 
 Run the docker build replace {{version}} with the actual version.
 
+Standard:
+
 .. code:: shell
 
   docker build --tag steelscript:{{version}} -f Dockerfile .
 
 
-  .. code:: shell
+Slim:
+
+.. code:: shell
 
   docker build --tag steelscript-slim:{{version}} -f Dockerfile-slim .
 
+Notebook
 
-  .. code:: shell
+.. code:: shell
 
   docker build --tag steelscript-notebook:{{version}} -f Dockerfile-notebook .
 
