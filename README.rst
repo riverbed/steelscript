@@ -74,7 +74,7 @@ The repos of SteelScript modules have a common structure
 Mandatory:
 
 - README.rst: simple description using reStructured Text (rst) file format
-- setup.py: Python setup file containing meta descriptions, requirements and unit test. Based on setuptools, distutils, gitpy-versioning (custom versioning tool https://github.com/riverbed/gitpy-versioning) and pytest.
+- setup.py: Python setup file containing meta descriptions and requirements. Based on setuptools, distutils, gitpy-versioning (custom versioning tool https://github.com/riverbed/gitpy-versioning) and pytest. Should NOT contain unit test (use Tox and /tests folder instead)
 - /docs: Documentation using reStructured Text (rst) file format.
 - /steelscript: The actual code, written in Python. Must be Python3 only.
 - /tests: Test plans and unit test. Can be organized in subfolders. Test plan are ideally documented and easy to run scripts but can be anything defining a test plan (script, text, ...), for example a python script based on pytest.
@@ -84,6 +84,7 @@ Mandatory:
 
 Optional:
 
+- /tox.ini : standardized python testing definition based on `Tox <https://tox.readthedocs.io/en/latest/>`__
 - /notebook: Notebooks based on `Jupyter <https://jupyter.org/>`__
 
 Build
@@ -91,11 +92,17 @@ Build
 
 Build are defined in the `SteelScript repo <https://github.com/riverbed/steelscript>`__ 
 
-
 **Prebuild test-plans validations**
 
 *todo*
 
+Execute test-plans with tox
+
+.. code:: shell
+
+  pip install tox
+  tox
+ 
 **Building Docker containers**
 
 3 Dockerfile are available to build different flavors of the SteelScript container image:
@@ -112,7 +119,6 @@ Standard:
 
   docker build --tag steelscript:{{version}} -f Dockerfile .
 
-
 Slim:
 
 .. code:: shell
@@ -124,7 +130,6 @@ Notebook
 .. code:: shell
 
   docker build --tag steelscript-notebook:{{version}} -f Dockerfile-notebook .
-
 
 
 Distribution
