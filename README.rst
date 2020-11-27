@@ -74,7 +74,7 @@ The repos of SteelScript modules have a common structure
 Mandatory:
 
 - README.rst: simple description using reStructured Text (rst) file format
-- setup.py: Python setup file containing meta descriptions and requirements. Based on setuptools, distutils, gitpy-versioning (custom versioning tool https://github.com/riverbed/gitpy-versioning) and pytest. Should NOT contain unit test (use Tox and /tests folder instead)
+- setup.py: Python setup file containing meta descriptions and requirements. Based on setuptools, distutils, gitpy-versioning (custom versioning tool https://github.com/riverbed/gitpy-versioning) and pytest. Should NOT contain unit test (use Tox and put unit test inside /tests folder instead)
 - /docs: Documentation using reStructured Text (rst) file format.
 - /steelscript: The actual code, written in Python. Must be Python3 only.
 - /tests: Test plans and unit test. Can be organized in subfolders. Test plan are ideally documented and easy to run scripts but can be anything defining a test plan (script, text, ...), for example a python script based on pytest.
@@ -84,8 +84,8 @@ Mandatory:
 
 Optional:
 
-- /tox.ini : standardized python testing definition based on `Tox <https://tox.readthedocs.io/en/latest/>`__
-- /notebook: Notebooks based on `Jupyter <https://jupyter.org/>`__
+- /tox.ini: standardized python testing definition based on `Tox <https://tox.readthedocs.io/en/latest/>`__
+- /notebooks: Notebooks based on `Jupyter <https://jupyter.org/>`__
 
 Build
 -----
@@ -136,9 +136,9 @@ Distribution
 ------------
 
 The recommendation is to use SteelScript in a Docker container or install directly from the python code publicly available in Github.
-In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>` thre more details about other installation method.
+In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>`__ thre more details about other installation method.
 
-The goal is to be able to release each new version at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`
+The goal is to be able to release each new version at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`__
 
 For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...) a dedicated repo might be required.
 
