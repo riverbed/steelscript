@@ -136,7 +136,7 @@ Distribution
 ------------
 
 The recommendation is to use SteelScript in a Docker container or install directly from the python code publicly available in Github.
-In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>`__ thre more details about other installation method.
+In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>`__ there are more details about other installation methods but Docker is the easiest.
 
 The goal is to be able to release each new version at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`__
 
