@@ -23,11 +23,22 @@ Open your shell (bash or PowerShell), build SteelScript from the latest source c
 
 .. code:: shell
 
+  # Fetch the code and build a docker image
   git clone https://github.com/riverbed/steelscript.git
   cd steelscript
   docker build --tag steelscript:latest .
   
+  # Run the image in an interactive container
   docker run -it steelscript:latest /bin/bash
+  
+From here you can start to use the SteelScript framework.
+
+You can try some app examples like printing the Host Groups of an AppResponse appliance:
+
+.. code:: shell
+
+  python /examples/appresponse-examples/hostgroup.py appliance-ip-address -u admin -p password --operation=show
+  
 
 Python Compatibility Note
 -------------------------
