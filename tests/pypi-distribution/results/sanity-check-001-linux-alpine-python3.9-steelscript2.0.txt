@@ -1,0 +1,66 @@
+# sanity-check-001.sh
+# result: PASS
+# date: 201203
+
+# pip list
+Package                 Version
+----------------------- ---------
+bcrypt                  3.2.0
+certifi                 2020.11.8
+cffi                    1.14.4
+chardet                 3.0.4
+cryptography            3.2.1
+idna                    2.8
+ipaddress               1.0.23
+jsonpointer             2.0
+Markdown                3.3.3
+netaddr                 0.8.0
+paramiko                2.7.2
+pip                     20.2.4
+pycparser               2.20
+PyNaCl                  1.4.0
+python-dateutil         2.8.1
+pytz                    2020.4
+PyYAML                  5.3.1
+requests                2.21.0
+reschema                2.0
+scp                     0.13.3
+setuptools              50.3.2
+six                     1.15.0
+sleepwalker             2.0
+steelscript             2.0
+steelscript.appresponse 2.0.2
+steelscript.cmdline     2.0
+steelscript.netprofiler 2.0
+steelscript.scc         2.0
+steelscript.steelhead   2.0
+steelscript.wireshark   2.0
+tzlocal                 2.1
+uritemplate             3.0.1
+urllib3                 1.24.3
+wheel                   0.35.1
+WARNING: You are using pip version 20.2.4; however, version 20.3 is available.
+You should consider upgrading via the '/usr/local/bin/python -m pip install --upgrade pip' command.
+
+# steel
+Usage: steel [command] ...
+
+  SteelScript commands
+
+Sub Commands:
+  about        Show information about SteelScript packages installed
+  appresponse  Commands for steelscript.appresponse.commands module
+  install      Package installation
+  mkworkspace  Create new workspace for running and creating SteelScript scripts
+  netprofiler  Commands for steelscript.netprofiler.commands module
+  rest         Interactive shell for issuing REST commands
+  uninstall    Uninstall all SteelScript packages
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+
+  Logging Parameters:
+    --loglevel=LOGLEVEL
+                        log level: debug, warn, info, critical, error
+    --logfile=LOGFILE   log file, use '-' for stdout
