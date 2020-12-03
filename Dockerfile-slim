@@ -1,5 +1,5 @@
 # start with slim version
-FROM python:3.7-slim
+FROM python:3.9-slim
 MAINTAINER Riverbed Technology
 
 RUN set -ex \

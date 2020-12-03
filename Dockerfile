@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.9
 MAINTAINER Riverbed Technology
 
 # separate out steelhead package to it picks up already installed dependencies
