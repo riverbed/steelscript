@@ -897,7 +897,7 @@ def shell(cmd, msg=None, allow_fail=False, exit_on_fail=True,
     lastdot = time.time()
     interval = 0.002
     max_interval = 0.5
-    while t.isAlive():
+    while t.is_alive():
         now = time.time()
         if now - lastdot > 4 and msg:
             sys.stdout.write('.')

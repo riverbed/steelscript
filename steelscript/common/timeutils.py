@@ -407,7 +407,7 @@ _timedelta_units = {
     'y': 365*24*60*60, 'year': 365*24*60*60, 'years': 365*24*60*60
 }
 
-_timedelta_re = re.compile("([0-9]*\.*[0-9]*) *([a-zA-Z]*)")
+_timedelta_re = re.compile("([0-9]*\\.*[0-9]*) *([a-zA-Z]*)")
 
 # Build map from casual units to standard units recognizable by datetime
 units_map = {}
