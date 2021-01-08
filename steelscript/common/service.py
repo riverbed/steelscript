@@ -119,7 +119,8 @@ class Service(object):
         self.port = port
 
         # Connection object.  Use this to make REST requests to the device.
-        self.conn = None
+        self.auth = auth
+        self.conn = connection.Connection(self.host, verify=False)
 
         self.verify_ssl = verify_ssl
 
@@ -127,11 +128,14 @@ class Service(object):
 
         self.supported_versions = None
 
-        self.connect()
-        self.check_api_versions(versions)
+        """self.connect()"""
+        
 
         if auth is not None:
             self.authenticate(auth)
+
+        """self.check_api_versions(versions)"""
+        
 
     def __enter__(self):
         return self
@@ -146,7 +150,7 @@ class Service(object):
         self.conn = connection.Connection(
             self.host, port=self.port,
             verify=self.verify_ssl,
-            reauthenticate_handler=self.reauthenticate
+            reauthenticate_handler=self.reauthenticate()
         )
 
     def logout(self):
@@ -188,7 +192,7 @@ class Service(object):
     def _get_supported_versions(self):
         """Get the common list of services and versions supported."""
         # uses the GL7 'services' resource.
-        path = '/api/common/1.0/services'
+        path = '/api/appliance/1.0.0/services'
         services = self.conn.json_request('GET', path)
 
         for service in services:
@@ -200,7 +204,7 @@ class Service(object):
     def _detect_auth_methods(self):
         """Get the list of authentication methods supported."""
         # uses the GL7 'auth_info' resource
-        path = '/api/common/1.0/auth_info'
+        path = '/api/common/1.0.0/auth_info'
 
         try:
             auth_info = self.conn.json_request('GET', path)
@@ -231,7 +235,7 @@ class Service(object):
         self._detect_auth_methods()
 
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
-            path = '/api/common/1.0/oauth/token'
+            path = '/api/common/1.0.0/oauth/token'
             assertion = '.'.join([
                 base64.urlsafe_b64encode(b'{"alg":"none"}').decode(),
                 self.auth.access_code,
@@ -259,6 +263,8 @@ class Service(object):
                 raise RvbdException(msg)
             self.conn.add_headers({'Authorization': auth_header})
             logger.info('Authenticated using OAUTH2.0')
+
+            return self.conn
 
         elif self._supports_auth_cookie and Auth.COOKIE in self.auth.methods:
             path = '/api/common/1.0/login'
@@ -296,7 +302,7 @@ class Service(object):
     def ping(self):
         """Ping the service.  On failure, this raises an exception"""
 
-        res = self.conn.request('/api/common/1.0/ping', method="GET")
+        res = self.conn.request('/api/common/1.0.0/ping', method="GET")
 
         # drain the response object...
         res.read()
