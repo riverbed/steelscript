@@ -65,6 +65,7 @@ Modules for Riverbed solutions and appliances:
 - `SteelHead Controller (a.k.a SCC) <https://github.com/riverbed/steelscript-scc>`__
 - `Wireshark <https://github.com/riverbed/steelscript-wireshark>`__
 - `NetShark <https://github.com/riverbed/steelscript-netshark>`__
+- Client Accelerator Controller (a.k.a. SMC) <https://github.com/riverbed/steelscript-client-accelerator-controller>`__
 
 Extra modules
 
