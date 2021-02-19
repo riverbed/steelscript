@@ -37,7 +37,7 @@ You can try some app examples like printing the Host Groups of an AppResponse ap
 
 .. code:: shell
 
-  python /examples/appresponse-examples/hostgroup.py appliance-ip-address -u admin -p password --operation=show
+  python examples/appresponse-examples/print_hostgroups-formatted.py appliance-ip-address -u admin -p password --operation=show
   
 
 Python Compatibility Note
