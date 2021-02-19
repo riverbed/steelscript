@@ -1,10 +1,14 @@
-# Copyright (c) 2019 Riverbed Technology, Inc.
+# Copyright (c) 2021 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
 """
+Riverbed Community SteelScript
+
+service.py
+
 This module defines the Service class and associated authentication classes.
 The Service class is not instantiated directly, but is instead subclassed
 to implement handlers for particular REST namespaces.
@@ -20,7 +24,6 @@ exposed via NetShark and NetProfiler classes respectively, both based on the
 the Service class.  A script that interacts with both namespaces must
 instantiate two separate objects.
 """
-
 
 import base64
 import logging
@@ -91,7 +94,13 @@ class Service(object):
     is created.  Requests can be made via the `Service.conn` property.
     """
     def __init__(self, service, host=None, port=None, auth=None,
-                 verify_ssl=False, versions=None):
+                 verify_ssl=False, versions=None,
+                 enable_auth_detection = True, override_auth_info_api='/api/common/1.0/auth_info',
+                 supports_auth_basic=True,
+                 supports_auth_cookie=False, override_cookie_login_api = '/api/common/1.0/login',
+                 supports_auth_oauth=False, override_oauth_token_api='/api/common/1.0/oauth/token',
+                 enable_services_version_detection=True,override_services_api='/api/appliance/1.0/services'
+                 ):
         """Establish a connection to the named host.
 
         `host` is the name or IP address of the device to connect to
@@ -112,6 +121,25 @@ class Service(object):
             if unspecified, this will use the latest version supported
             by both this implementation and service requested.  This does
             not apply to the "common" resource requests.
+
+        `verify_api_version` when set to True it will fails when the api 
+            does not support the steelscript api version check feature
+
+        `enable_auth_detection set False to bypass the detection feature
+
+        `override_auth_info_api set properly for the detection feature
+            For example: '/api/common/1.0/auth_info' or '/api/common/1.0.0/auth_info'
+
+        `override_oauth_token_api to set the oauth api path
+            For example: '/api/common/1.0/oauth/token' or '/api/common/1.0.0/oauth/token'
+        
+        `override_cookie_login_api to set the cookie login api path
+            For example: '/api/common/1.0/login'
+        
+        `enable_services_version_detection  set False to bypass the detection feature
+
+        `override_services_api the services api or set to None if not supported.
+            For example: '/api/appliance/1.0/services' '/api/appliance/1.0.0/services'
         """
 
         self.service = service
@@ -119,11 +147,7 @@ class Service(object):
         self.port = port
 
         # Connection object.  Use this to make REST requests to the device.
-        if self.service == "cac":
-            self.auth = auth
-            self.conn = connection.Connection(self.host, verify=False)
-        else:
-            self.conn = None
+        self.conn = None
 
         self.verify_ssl = verify_ssl
 
@@ -131,15 +155,32 @@ class Service(object):
 
         self.supported_versions = None
 
-        if self.service != "cac":
-            self.connect()
+        self._auth_detection_enabled = enable_auth_detection
+        self._auth_info_api = override_auth_info_api
+
+        self._supports_auth_basic = supports_auth_basic
+
+        self._supports_auth_cookie = supports_auth_cookie
+        self._cookie_login_api = override_cookie_login_api
+
+        self._supports_auth_oauth = supports_auth_oauth
+        self._oauth_token_api = override_oauth_token_api
+        
+        self._services_version_detection_enabled = enable_services_version_detection
+        self._services_api = override_services_api
+
+        # TODO: Update steelscript-client-accelerator-controller module to remove this patch
+        if self.service == "cac":
+            self._auth_info_api = '/api/common/1.0.0/auth_info'
+            self._oauth_token_api = '/api/common/1.0.0/oauth/token'
+            self._services_api = '/api/appliance/1.0.0/services'
+        
+        self.connect()
+        if enable_services_version_detection:
             self.check_api_versions(versions)
 
         if auth is not None:
-            self.authenticate(auth)
-
-
-        
+            self.authenticate(auth)        
 
     def __enter__(self):
         return self
@@ -196,10 +237,7 @@ class Service(object):
     def _get_supported_versions(self):
         """Get the common list of services and versions supported."""
         # uses the GL7 'services' resource.
-        if self.service == "cac":
-            path = '/api/appliance/1.0.0/services'
-        else:
-            path = '/api/appliance/1.0/services'
+        path = self._services_api
         services = self.conn.json_request('GET', path)
 
         for service in services:
@@ -209,13 +247,9 @@ class Service(object):
         return None
 
     def _detect_auth_methods(self):
-        """Get the list of authentication methods supported."""
+        """Get the list of authentication methods supported from API auth_info"""
         # uses the GL7 'auth_info' resource
-        if self.service == "cac":
-            path = '/api/common/1.0.0/auth_info'
-        else:
-            path = '/api/common/1.0/auth_info'
-
+        path = self._auth_info_api
         try:
             auth_info = self.conn.json_request('GET', path)
             supported_methods = auth_info['supported_methods']
@@ -242,13 +276,12 @@ class Service(object):
         assert auth is not None
 
         self.auth = auth
-        self._detect_auth_methods()
+
+        if self._auth_detection_enabled:
+            self._detect_auth_methods()
 
         if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
-            if self.service == "cac":
-                path = '/api/common/1.0.0/oauth/token'
-            else:
-                path = '/api/common/1.0/oauth/token'
+            path = self._oauth_token_api
             assertion = '.'.join([
                 base64.urlsafe_b64encode(b'{"alg":"none"}').decode(),
                 self.auth.access_code,
@@ -281,7 +314,7 @@ class Service(object):
                 return self.conn
 
         elif self._supports_auth_cookie and Auth.COOKIE in self.auth.methods:
-            path = '/api/common/1.0/login'
+            path = self._cookie_login_api
             data = {
                 "username": self.auth.username,
                 "password": self.auth.password
@@ -300,8 +333,7 @@ class Service(object):
         elif self._supports_auth_basic and Auth.BASIC in self.auth.methods:
 
             # Use HTTP Basic authentication
-            s = base64.b64encode("%s:%s" % (self.auth.username,
-                                            self.auth.password))
+            s = base64.b64encode(bytes(f'{self.auth.username}:{self.auth.password}',encoding='ascii')).decode('ascii')
             self.conn.add_headers({'Authorization': 'Basic %s' % s})
 
             logger.info("Authenticated using BASIC")
