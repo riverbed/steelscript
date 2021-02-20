@@ -57,6 +57,7 @@ can be found in the `Riverbed GitHub org <https://github.com/riverbed>`__, the n
 Modules for Riverbed solutions and appliances:
 
 - `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
+- `NetIM <https://github.com/riverbed/steelscript-netim>`__
 - `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
 - `Packets <https://github.com/riverbed/steelscript-packets>`__
 - `SteelHead <https://github.com/riverbed/steelscript-steelhead>`__
