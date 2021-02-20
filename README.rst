@@ -23,10 +23,8 @@ Open your shell (bash or PowerShell), build SteelScript from the latest source c
 
 .. code:: shell
 
-  # Fetch the code and build a docker image
-  git clone https://github.com/riverbed/steelscript.git
-  cd steelscript
-  docker build --tag steelscript:latest .
+  # Build a docker image from latest code
+  docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
   
   # Run the image in an interactive container
   docker run -it steelscript:latest /bin/bash
@@ -37,7 +35,7 @@ You can try some app examples like printing the Host Groups of an AppResponse ap
 
 .. code:: shell
 
-  python examples/appresponse-examples/print_hostgroups-formatted.py appliance-ip-address -u admin -p password --operation=show
+  python examples/appresponse-examples/print_hostgroups-formatted.py appresponse-appliance-ip-address -u admin -p password
   
 
 Python Compatibility Note
