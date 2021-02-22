@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Riverbed Technology, Inc.
+# Copyright (c) 2021 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -74,8 +74,8 @@ setup_args = {
     'namespace_packages': ['steelscript'],
     'version':            get_version(),
     'author':             'Riverbed Technology',
-    'author_email':       'eng-github@riverbed.com',
-    'url':                'http://pythonhosted.org/steelscript',
+    'author_email':       'community@riverbed.com',
+    'url':                'https://community.riverbed.com',
     'license':            'MIT',
     'description':        'Core Python module for interacting with Riverbed devices',
 
@@ -102,7 +102,7 @@ http://pythonhosted.org/steelscript/
         'Topic :: System :: Networking',
     ],
     
-    'python_requires': '>3.5.0',
+    'python_requires': '>=3.9',
 
     'packages': find_packages(exclude=('gitpy_versioning', 'tests*')),
 
