@@ -35,8 +35,20 @@ You can try some app examples like printing the Host Groups of an AppResponse ap
 
 .. code:: shell
 
-  examples/appresponse-examples/print_hostgroups-formatted.py appresponse-appliance-ip-address -u admin -p password
+  python examples/appresponse-examples/print_hostgroups-formatted.py {appresponse-appliance-ip-address} -u {admin account} -p {password}
   
+
+Get the licenses and services of a Client Accelerator Controller appliance:
+
+.. code:: shell
+   
+   python examples/cacontroller-examples/cacontroller-rest_api.py {client accelerator controller fqdn or ip address} --access_code {access_code}
+
+List the devices from NetIM Core:
+
+.. code:: shell
+   
+   python examples/netim-examples/print-netim-devices-raw.python {netim core fqdn or ip address} -u {admin account} -p {password}
 
 Python Compatibility Note
 -------------------------
