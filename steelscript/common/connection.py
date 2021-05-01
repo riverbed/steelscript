@@ -26,7 +26,6 @@ from requests.adapters import HTTPAdapter
 from requests.structures import CaseInsensitiveDict
 from requests.packages.urllib3.util import parse_url
 from requests.packages.urllib3.poolmanager import PoolManager
-from pkg_resources import get_distribution
 
 from steelscript.common.exceptions import RvbdException, RvbdHTTPException, \
     RvbdConnectException
@@ -168,7 +167,8 @@ class Connection(object):
         return urllib.parse.urljoin(self.hostname, path)
 
     def set_user_agent(self, extra=None):
-        version = get_distribution('steelscript').version
+        #TODO: replace hardcoded version (but without adding a dependency on the distribution package version)
+        version = '3.0'
         ua = '%s SteelScript/%s' % (default_user_agent(), version)
         if extra:
             ua = '%s %s' % (ua, extra)
