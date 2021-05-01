@@ -16,6 +16,7 @@ RUN set -ex \
             -e git+https://github.com/riverbed/steelscript-scc#egg=steelscript-scc \
             -e git+https://github.com/riverbed/steelscript-appresponse#egg=steelscript-appresponse \
             -e git+https://github.com/riverbed/steelscript-netim.git#egg=steelscript-netim \
+            -e git+https://github.com/riverbed/steelscript-client-accelerator-controller#egg=steelscript-cacontroller \
         && pip install Cython \
         && pip install --src /src \
             -e git+https://github.com/riverbed/steelscript-steelhead#egg=steelscript-steelhead \
