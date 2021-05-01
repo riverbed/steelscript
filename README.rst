@@ -48,7 +48,7 @@ List the devices from NetIM Core:
 
 .. code:: shell
    
-   python examples/netim-examples/print-netim-devices-raw.python {netim core fqdn or ip address} -u {admin account} -p {password}
+   python examples/netim-examples/print-netim-devices-raw.py {netim core fqdn or ip address} -u {admin account} -p {password}
 
 Python Compatibility Note
 -------------------------
