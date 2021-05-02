@@ -38,10 +38,10 @@ import logging
 
 if __name__ == '__main__':
     logger = logging.getLogger('steel')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.ERROR)
 else:
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.ERROR)
 
 try:
     __VERSION__ = get_distribution('steelscript').version
