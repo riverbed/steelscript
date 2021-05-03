@@ -66,20 +66,22 @@ It contains common code but also it is the entrypoint for Documentation, Build, 
 Other SteelScript modules have their own repository which
 can be found in the `Riverbed GitHub org <https://github.com/riverbed>`__, the name is prefixed by "steelscript".
 
-Modules for Riverbed solutions and appliances:
+Modules for Riverbed products and appliances:
 
-- `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
-- `NetIM <https://github.com/riverbed/steelscript-netim>`__
-- `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
-- `Packets <https://github.com/riverbed/steelscript-packets>`__
 - `SteelHead <https://github.com/riverbed/steelscript-steelhead>`__
 - `SteelHead Controller (a.k.a SCC) <https://github.com/riverbed/steelscript-scc>`__
+- `Client Accelerator Controller (formerly called SteelHead Mobile controller, SMC or SCCM) <https://github.com/riverbed/steelscript-client-accelerator-controller>`__
+- `NetIM <https://github.com/riverbed/steelscript-netim>`__
+- `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
+- `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
 - `Wireshark <https://github.com/riverbed/steelscript-wireshark>`__
 - `NetShark <https://github.com/riverbed/steelscript-netshark>`__
-- `Client Accelerator Controller (formerly called SteelHead Mobile controller, SMC or SCCM) <https://github.com/riverbed/steelscript-client-accelerator-controller>`__
+- SteelConnect-CX
+- SteelConnect-EX
 
 Extra modules
 
+- `Packets <https://github.com/riverbed/steelscript-packets>`__
 - `Command line Access <https://github.com/riverbed/steelscript-cmdline>`__
 
 Other repos for components and SteelScript extensions:
