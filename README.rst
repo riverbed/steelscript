@@ -154,31 +154,29 @@ Execute test-plans with tox
  
 **Building Docker containers**
 
-3 Dockerfile are available to build different flavors of the SteelScript container image:
+Some Dockerfile are provided to build different flavors of the SteelScript container image:
 
 - Dockerfile: standard build
 - Dockerfile.slim: optimized build
 - Dockerfile.notebook: build for demo and learning with Notebooks
 
-In the following code snippet just replace {{version}} with the actual version and run to get it built.
-
 Standard:
 
 .. code:: shell
 
-  docker build --tag steelscript:{{version}} -f Dockerfile .
+  docker build --tag steelscript -f Dockerfile .
 
 Slim:
 
 .. code:: shell
 
-  docker build --tag steelscript-slim:{{version}} -f Dockerfile.slim .
+  docker build --tag steelscript.slim -f Dockerfile.slim .
 
 Notebook
 
 .. code:: shell
 
-  docker build --tag steelscript-notebook:{{version}} -f Dockerfile.notebook .
+  docker build --tag steelscript.notebook -f Dockerfile.notebook .
 
 
 Distribution
