@@ -1,5 +1,6 @@
 FROM riverbed/steelscript:latest
-MAINTAINER Riverbed Technology
+LABEL org.opencontainers.image.authors Riverbed Community
+LABEL org.opencontainers.image.source https://github.com/riverbed/steelscript
 
 RUN set -ex \
         && pip install ipython jupyter

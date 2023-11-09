@@ -1,5 +1,8 @@
 CHANGELOG
 ---------
+[3.0.1]
+ * Python 3.12
+
 
 [1.8]
  * Last release planned to support python 2.7 for anything other than security fixes to the SteelScript codebase.
