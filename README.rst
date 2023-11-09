@@ -4,17 +4,6 @@ Riverbed SteelScript
 Riverbed SteelScript is a collection of libraries and scripts written in Python for interacting
 with Riverbed solutions and appliances, and other network infrastructure devices.
 
-For a complete guide with installation details, see:
-
-  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
-
-**Recommendation**: Use SteelScript in a Docker container or directly from the python source code in Github!
-
-Contribute
------------
-
-Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
-
 Quick Start 
 -----------
 
@@ -50,11 +39,22 @@ List the devices from NetIM Core:
    
    python examples/netim-examples/print-netim-devices-raw.py {netim core fqdn or IP address} --username {account} --password {password}
 
+
+Contribute
+-----------
+
+Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
+
+
 Python Compatibility Note
 -------------------------
 
 The SteelScript 2.x series of packages support Python 3. The 1.8.X series of SteelScript packages are the last to support
 Python 2.
+
+For a complete guide with installation details, see:
+
+  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
 
 
 Framework
@@ -154,31 +154,29 @@ Execute test-plans with tox
  
 **Building Docker containers**
 
-3 Dockerfile are available to build different flavors of the SteelScript container image:
+Some Dockerfile are provided to build different flavors of the SteelScript container image:
 
 - Dockerfile: standard build
-- Dockerfile-slim: optimized build
-- Dockerfile-notebook: build for demo and learning with Notebooks
-
-In the following code snippet just replace {{version}} with the actual version and run to get it built.
+- Dockerfile.slim: optimized build
+- Dockerfile.notebook: build for demo and learning with Notebooks
 
 Standard:
 
 .. code:: shell
 
-  docker build --tag steelscript:{{version}} -f Dockerfile .
+  docker build --tag steelscript -f Dockerfile .
 
 Slim:
 
 .. code:: shell
 
-  docker build --tag steelscript-slim:{{version}} -f Dockerfile-slim .
+  docker build --tag steelscript.slim -f Dockerfile.slim .
 
 Notebook
 
 .. code:: shell
 
-  docker build --tag steelscript-notebook:{{version}} -f Dockerfile-notebook .
+  docker build --tag steelscript.notebook -f Dockerfile.notebook .
 
 
 Distribution
