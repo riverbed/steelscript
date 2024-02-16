@@ -182,7 +182,7 @@ Notebook
 
   docker build --tag steelscript.notebook -f Dockerfile.notebook .
 
-Dev
+Dev from master
 
 .. code:: shell
 
@@ -196,6 +196,24 @@ Dev
   git clone https://github.com/riverbed/steelscript-client-accelerator-controller --depth 1 --recurse-submodules
   git clone https://github.com/riverbed/steelscript-steelhead --depth 1 --recurse-submodules
   git clone https://github.com/riverbed/steelscript-packets.git --depth 1 --recurse-submodules
+
+  docker build --tag steelscript.dev --progress=plain -f steelscript/Dockerfile.dev .
+
+
+Dev from your_fork/your_branch
+
+.. code:: shell
+
+  git clone https://github.com/your_fork/steelscript --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-netprofiler --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-wireshark --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-cmdline --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-scc --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-appresponse --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-netim --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-client-accelerator-controller --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-steelhead --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-packets.git --depth 1 --recurse-submodules -b your_branch
 
   docker build --tag steelscript.dev --progress=plain -f steelscript/Dockerfile.dev .
 
