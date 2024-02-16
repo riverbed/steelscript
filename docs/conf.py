@@ -13,7 +13,6 @@
 
 import os
 import sys
-import pkg_resources
 
 import sphinx_rtd_theme
 

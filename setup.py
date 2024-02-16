@@ -10,7 +10,8 @@ import itertools
 from setuptools import setup, find_packages, Command
 from setuptools.command.test import test as TestCommand
 
-from gitpy_versioning import get_version
+# TODO: clean gitpy_versioning
+# from gitpy_versioning import get_version
 
 
 packagedata = True
@@ -72,7 +73,7 @@ setup_requires = ['pytest-runner']
 setup_args = {
     'name':               'steelscript',
     'namespace_packages': ['steelscript'],
-    'version':            get_version(),
+    'version':            '24.2.1',
     'author':             'Riverbed Technology',
     'author_email':       'community@riverbed.com',
     'url':                'https://community.riverbed.com',

@@ -9,9 +9,9 @@ import sys
 import shutil
 import steelscript
 from optparse import OptionGroup
-from pkg_resources import (get_distribution, AvailableDistributions,
-                           DistributionNotFound)
-
+# TODO: clean up deprecated pkg_resources
+# from pkg_resources import (get_distribution, AvailableDistributions, DistributionNotFound)
+from importlib.metadata import distribution, distributions
 from steelscript.commands.steel import (BaseCommand, prompt, console,
                                         shell, check_git, ShellFailed)
 
@@ -123,8 +123,11 @@ class Command(BaseCommand):
         examples found in the installed packages /examples directories.
         """
         try:
-            get_distribution('steelscript')
-        except DistributionNotFound:
+            # TODO: clean up deprecated pkg_resources
+            # get_distribution('steelscript') 
+        # except DistributionNotFound:            
+            dist = distribution('steelscript')  
+        except importlib.metadata.PackageNotFoundError:
             console("Package not found: 'steelscript'")
             console("Check the installation")
             return
@@ -142,9 +145,13 @@ class Command(BaseCommand):
     @classmethod
     def _cp_examples_from_docs(cls, dirpath, overwrite):
         """Copy all examples and notebooks from the virtualenv."""
-        e = AvailableDistributions()
         # Get packages with prefix steel (ex. steelscript.netshark)
-        steel_pkgs = [x for x in e if x.startswith('steel')]
+        # TODO: clean up deprecated pkg_resources
+        # e = AvailableDistributions()
+        # steel_pkgs = [x for x in e if x.startswith('steel')]
+        all_distributions = list(distributions())
+        steel_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel')]
+
         # Remove the 'steelscript.' prefix
         no_prefix_pkgs = [x.split('.', 1)[1]
                           if '.' in x else x for x in steel_pkgs]

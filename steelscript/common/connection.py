@@ -33,6 +33,8 @@ from steelscript.common.exceptions import RvbdException, RvbdHTTPException, \
 logger = logging.getLogger(__name__)
 rest_logger = logging.getLogger('REST')
 
+# TODO: Fix properly. Temporary following warning will just be logged "InsecureRequestWarning: Unverified HTTPS request is being made to host 'beta32rle2aanet.aternity-ims.net'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings"
+logging.captureWarnings(True)
 
 warnings.catch_warnings()
 warnings.simplefilter('once')

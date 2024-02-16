@@ -1,0 +1,47 @@
+FROM python:3.12
+LABEL org.opencontainers.image.authors Riverbed Community
+LABEL org.opencontainers.image.source https://github.com/riverbed/steelscript
+
+COPY steelscript /src-dev/steelscript 
+COPY steelscript-netprofiler /src-dev/steelscript-netprofiler
+COPY steelscript-wireshark /src-dev/steelscript-wireshark
+COPY steelscript-cmdline /src-dev/steelscript-cmdline
+COPY steelscript-scc /src-dev/steelscript-scc
+COPY steelscript-appresponse /src-dev/steelscript-appresponse
+COPY steelscript-netim /src-dev/steelscript-netim
+COPY steelscript-client-accelerator-controller /src-dev/steelscript-client-accelerator-controller
+COPY steelscript-steelhead /src-dev/steelscript-steelhead
+COPY steelscript-packets /src-dev/steelscript-packets
+
+RUN ls -lisa /src-dev
+
+RUN set -ex \
+        && buildDeps=' \
+                libpcap-dev \
+        ' \
+        && apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* 
+
+RUN set -ex \
+        && pip install --src /src \
+            -e /src-dev/steelscript \
+            -e /src-dev/steelscript-netprofiler \
+            -e /src-dev/steelscript-wireshark \
+            -e /src-dev/steelscript-cmdline \
+            -e /src-dev/steelscript-scc \
+            -e /src-dev/steelscript-appresponse \
+            -e /src-dev/steelscript-netim \
+            -e /src-dev/steelscript-client-accelerator-controller \
+        && pip install Cython \
+        && pip install --src /src \
+            -e /src-dev/steelscript-steelhead \
+            -e /src-dev/steelscript-packets \
+        && rm -f /src/pip-delete-this-directory.txt \
+        && rm -rf ~/.cache
+
+RUN set -ex \
+        && steel mkworkspace -d /root/steelscript-workspace
+
+WORKDIR /root/steelscript-workspace
+
+# Configure container startup
+CMD ["/bin/bash"]

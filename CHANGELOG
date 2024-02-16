@@ -1,8 +1,11 @@
 CHANGELOG
 ---------
+[24.2.1]
+* Remove deprecated libs and functions (pkg_resources, datetime, gitpy_versioning)
+* Log warnings
+
 [3.0.1]
  * Python 3.12
-
 
 [1.8]
  * Last release planned to support python 2.7 for anything other than security fixes to the SteelScript codebase.

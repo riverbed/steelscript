@@ -49,12 +49,16 @@ Feel free to use, enhance and contribute by creating issues, sending pull reques
 Python Compatibility Note
 -------------------------
 
-The SteelScript 2.x series of packages support Python 3. The 1.8.X series of SteelScript packages are the last to support
-Python 2.
+SteelScript is now based on Python 3.
+
+
+Guide
+-------------------------
 
 For a complete guide with installation details, see:
 
-  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
+- *pending refresh*  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
+
 
 
 Framework
@@ -68,28 +72,27 @@ can be found in the `Riverbed GitHub org <https://github.com/riverbed>`__, the n
 
 Modules for Riverbed products and appliances:
 
+- `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
+- `NetIM <https://github.com/riverbed/steelscript-netim>`__
+- `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
 - `SteelHead <https://github.com/riverbed/steelscript-steelhead>`__
 - `SteelHead Controller (a.k.a SCC) <https://github.com/riverbed/steelscript-scc>`__
 - `Client Accelerator Controller (formerly called SteelHead Mobile controller, SMC or SCCM) <https://github.com/riverbed/steelscript-client-accelerator-controller>`__
-- `NetIM <https://github.com/riverbed/steelscript-netim>`__
-- `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
-- `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
-- `Wireshark <https://github.com/riverbed/steelscript-wireshark>`__
-- `NetShark <https://github.com/riverbed/steelscript-netshark>`__
-- SteelConnect-CX
-- SteelConnect-EX
 
 Extra modules
 
+- `Wireshark <https://github.com/riverbed/steelscript-wireshark>`__
+- `NetShark <https://github.com/riverbed/steelscript-netshark>`__
 - `Packets <https://github.com/riverbed/steelscript-packets>`__
 - `Command line Access <https://github.com/riverbed/steelscript-cmdline>`__
 
 Other repos for components and SteelScript extensions:
 
-- `Application Framework <https://github.com/riverbed/steelscript-appfwk>`__
-- `- Business hour reporting plugin for Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
-- `- Stock report demo with Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
-- `VM Config <https://github.com/riverbed/steelscript-vm-config>`__ 
+- *known issues, pending maintenance* `Application Framework <https://github.com/riverbed/steelscript-appfwk>`__
+- *known issues, pending maintenance* `- Business hour reporting plugin for Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
+- *known issues, pending maintenance* `- Stock report demo with Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
+- *known issues, pending maintenance* `VM Config <https://github.com/riverbed/steelscript-vm-config>`__ 
+
 
 Folder Structure for Modules
 ----------------------------
@@ -106,7 +109,7 @@ The repos of SteelScript modules have a common structure
    ├── docs
    ├── examples
    ├── steelscript
-   │   ├── __init__.py          # default content: __import__("pkg_resources").declare_namespace(__name__)
+   │   ├── __init__.py
    │   └── module-name          # for example: appresponse
    │       ├── core
    │       │   └── __init__.py
@@ -159,6 +162,7 @@ Some Dockerfile are provided to build different flavors of the SteelScript conta
 - Dockerfile: standard build
 - Dockerfile.slim: optimized build
 - Dockerfile.notebook: build for demo and learning with Notebooks
+- Dockerfile.dev: buil dev from local source
 
 Standard:
 
@@ -178,6 +182,22 @@ Notebook
 
   docker build --tag steelscript.notebook -f Dockerfile.notebook .
 
+Dev
+
+.. code:: shell
+
+  git clone https://github.com/riverbed/steelscript --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-netprofiler --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-wireshark --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-cmdline --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-scc --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-appresponse --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-netim --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-client-accelerator-controller --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-steelhead --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-packets.git --depth 1 --recurse-submodules
+
+  docker build --tag steelscript.dev --progress=plain -f steelscript/Dockerfile.dev .
 
 Distribution
 ------------
@@ -192,7 +212,7 @@ For contribution for alternative distribution methods and packaging (like pypi, 
 License
 =======
 
-Copyright (c) 2021 Riverbed Technology, Inc.
+Copyright (c) 2021-2024 Riverbed Technology, Inc.
 
 SteelScript is licensed under the terms and conditions of the MIT License
 accompanying the software ("License").  SteelScript is distributed "AS

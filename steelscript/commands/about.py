@@ -8,10 +8,9 @@
 
 
 from steelscript.commands.steel import BaseCommand
-
+# TODO: clean up deprecated pkg_resources
+from importlib.metadata import distribution, distributions
 import sys
-import pkg_resources
-
 import os.path
 import platform
 import steelscript
@@ -28,22 +27,32 @@ class Command(BaseCommand):
 
     def main(self):
         try:
-            dist = pkg_resources.get_distribution('steelscript')
-        except pkg_resources.DistributionNotFound:
+            # TODO: clean up deprecated pkg_resources
+            # dist = pkg_resources.get_distribution('steelscript')
+        # except pkg_resources.DistributionNotFound:
+            dist = distribution('steelscript')
+        except importlib.metadata.PackageNotFoundError:
             print("Package not found: 'steelscript'")
             print("Check the installation")
             sys.exit(1)
 
-        e = pkg_resources.AvailableDistributions()
-
-        steelscript_pkgs = [x for x in e if x.startswith('steel')]
+        # Get packages with prefix steel (ex. steelscript.netshark)
+        # TODO: clean up deprecated pkg_resources
+        # e = pkg_resources.AvailableDistributions()
+        # steelscript_pkgs = [x for x in e if x.startswith('steel')]
+        all_distributions = list(distributions())
+        steel_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel')]
         egg_info_pkgs = []
         egg_link_pkgs = []
         corrupted_pkgs = []
 
-        for p in steelscript_pkgs:
-            pkg = pkg_resources.get_distribution(p)
-            if pkg.location.endswith('site-packages'):
+        for p in steel_pkgs:
+            # TODO: clean up deprecated pkg_resources
+            # pkg = pkg_resources.get_distribution(p)
+            # if pkg.location.endswith('site-packages'):
+            dist = distribution(p)
+            location = str(dist.locate_file(""))
+            if location.endswith('site-packages'):            
                 egg_info_pkgs.append(p)
             else:
                 egg_link_pkgs.append(p)
@@ -54,42 +63,63 @@ class Command(BaseCommand):
         print("")
         print("Installed SteelScript Packages")
         print("Core packages:")
-        core_pkgs = [x for x in e
-                     if x.startswith('steel')
-                     and 'appfwk' not in x]
+        # TODO: clean up deprecated pkg_resources
+        # core_pkgs = [x for x in e if x.startswith('steel') and 'appfwk' not in x]
+        core_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel') and 'appfwk' not in dist.name]
         core_pkgs.sort()
         for p in core_pkgs:
-            pkg = pkg_resources.get_distribution(p)
+            # TODO: clean up deprecated pkg_resources
+            # pkg = pkg_resources.get_distribution(p)
+            # if p in corrupted_pkgs:
+            #     print('  %-40s  corrupted' % pkg.project_name)
+            #     continue
+            # print('  %-40s  %s' % (pkg.project_name, pkg.version))
+            dist = distribution(p)
             if p in corrupted_pkgs:
-                print('  %-40s  corrupted' % pkg.project_name)
+                print('  %-40s  corrupted' % dist.name)
                 continue
-            print('  %-40s  %s' % (pkg.project_name, pkg.version))
+            print('  %-40s  %s' % (dist.name, dist.version))
 
         print("")
         print("Application Framework packages:")
 
-        appfwk_pkgs = [x for x in e
-                       if x.startswith('steel') and 'appfwk' in x]
+        # TODO: clean up deprecated pkg_resources
+        # appfwk_pkgs = [x for x in e if x.startswith('steel') and 'appfwk' in x]
+        appfwk_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel') and 'appfwk' in dist.name]
+
         if appfwk_pkgs:
             appfwk_pkgs.sort()
             for p in appfwk_pkgs:
-                pkg = pkg_resources.get_distribution(p)
+                # TODO: clean up deprecated pkg_resources
+                # pkg = pkg_resources.get_distribution(p)
+                # if p in corrupted_pkgs:
+                #     print('  %-40s  corrupted' % (pkg.project_name))
+                #     continue
+                # print('  %-40s  %s' % (pkg.project_name, pkg.version))
+                dist = distribution(p)
                 if p in corrupted_pkgs:
-                    print('  %-40s  corrupted' % (pkg.project_name))
+                    print('  %-40s  corrupted' % (dist.name))
                     continue
-                print('  %-40s  %s' % (pkg.project_name, pkg.version))
+                print('  %-40s  %s' % (dist.name, dist.version))
         else:
             print("  None")
 
         print("")
         print("REST tools and libraries:")
-
-        installed_rest = set(['reschema', 'sleepwalker']).intersection(set(e))
-        rest_pkgs = [pkg_resources.get_distribution(p) for p in installed_rest]
-
+        # TODO: clean up deprecated pkg_resources
+        # installed_rest = set(['reschema', 'sleepwalker']).intersection(set(e))
+        # rest_pkgs = [pkg_resources.get_distribution(p) for p in installed_rest]
+        # if rest_pkgs:
+        #     for pkg in rest_pkgs:
+        #         print('  %-40s  %s' % (pkg.project_name, pkg.version))
+        # else:
+        #     print("  None")
+        all_pkgs = [dist.name for dist in all_distributions]
+        installed_rest = set(['reschema', 'sleepwalker']).intersection(set(all_pkgs))
+        rest_pkgs = [distribution(p) for p in installed_rest]
         if rest_pkgs:
-            for pkg in rest_pkgs:
-                print('  %-40s  %s' % (pkg.project_name, pkg.version))
+            for dist in rest_pkgs:
+                print('  %-40s  %s' % (dist.name, dist.version))
         else:
             print("  None")
 
@@ -97,10 +127,13 @@ class Command(BaseCommand):
         print("Paths to source:")
         paths = [os.path.dirname(p) for p in steelscript.__path__]
 
-        for pkg in rest_pkgs:
-            loc = pkg.location
-            if loc not in paths:
-                paths.append(loc)
+        # TODO: clean up deprecated pkg_resources
+        # for pkg in rest_pkgs:
+        #     loc = pkg.location
+        for dist in rest_pkgs:
+            location = str(dist.locate_file(""))
+            if location not in paths:
+                paths.append(location)
 
         paths.sort()
         for p in paths:
