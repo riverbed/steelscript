@@ -93,7 +93,7 @@ http://pythonhosted.org/steelscript/
         'Intended Audience :: Information Technology',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.12',
         'Topic :: System :: Networking',
     ],
     
