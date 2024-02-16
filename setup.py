@@ -10,12 +10,7 @@ import itertools
 from setuptools import setup, find_packages, Command
 from setuptools.command.test import test as TestCommand
 
-# TODO: clean gitpy_versioning
-# from gitpy_versioning import get_version
-
-
 packagedata = True
-
 
 class MakeSteel(Command):
     description = "Create a bootstrap steel.py script for distribution"

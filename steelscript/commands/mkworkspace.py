@@ -9,8 +9,6 @@ import sys
 import shutil
 import steelscript
 from optparse import OptionGroup
-# TODO: clean up deprecated pkg_resources
-# from pkg_resources import (get_distribution, AvailableDistributions, DistributionNotFound)
 from importlib.metadata import distribution, distributions
 from steelscript.commands.steel import (BaseCommand, prompt, console,
                                         shell, check_git, ShellFailed)
@@ -123,9 +121,6 @@ class Command(BaseCommand):
         examples found in the installed packages /examples directories.
         """
         try:
-            # TODO: clean up deprecated pkg_resources
-            # get_distribution('steelscript') 
-        # except DistributionNotFound:            
             dist = distribution('steelscript')  
         except importlib.metadata.PackageNotFoundError:
             console("Package not found: 'steelscript'")
@@ -146,9 +141,6 @@ class Command(BaseCommand):
     def _cp_examples_from_docs(cls, dirpath, overwrite):
         """Copy all examples and notebooks from the virtualenv."""
         # Get packages with prefix steel (ex. steelscript.netshark)
-        # TODO: clean up deprecated pkg_resources
-        # e = AvailableDistributions()
-        # steel_pkgs = [x for x in e if x.startswith('steel')]
         all_distributions = list(distributions())
         steel_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel')]
 

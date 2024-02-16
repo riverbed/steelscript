@@ -22,10 +22,6 @@ for p in PROJECTS:
     if proj == 'common':
         continue
 
-    # TODO: clean up deprecated pkg_resources
-    # package = pkg_resources.get_distribution(pkg)
-    # if package.location != os.path.abspath(path):
-    #     p[3] = package.location
     dist = distribution(pkg)
     location = str(dist.locate_file(""))
     if location != os.path.abspath(path):

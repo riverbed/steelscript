@@ -19,9 +19,6 @@ from optparse import OptionParser, OptionGroup
 from threading import Thread
 from functools import partial
 from collections import deque
-
-# TODO: clean up deprecated pkg_resources
-# from pkg_resources import (get_distribution, iter_entry_points, parse_version, DistributionNotFound, AvailableDistributions)
 from importlib.metadata import distribution, distributions, entry_points
 
 try:
@@ -46,9 +43,6 @@ else:
     logger.setLevel(logging.ERROR)
 
 try:
-    # TODO: clean up deprecated pkg_resources
-    # __VERSION__ = get_distribution('steelscript').version
-# except DistributionNotFound:
     __VERSION__ = distribution('steelscript').version
 except importlib.metadata.PackageNotFoundError:
     __VERSION__ = None
@@ -371,8 +365,6 @@ class SteelCommand(BaseCommand):
         if not self._subcommands_loaded:
             super(SteelCommand, self).subcommands
 
-            # TODO: clean up deprecated pkg_resources
-            # for obj in iter_entry_points(group='steel.commands', name=None):
             for obj in entry_points(group='steel.commands', name=None):
                 i = obj.load(obj)
                 # See if the entry point has a Command defined
@@ -691,10 +683,6 @@ class UninstallCommand(BaseCommand):
 
     def uninstall(self):
         # Get packages with prefix steel (ex. steelscript.netshark)
-        # TODO: clean up deprecated pkg_resources
-        # e = AvailableDistributions()
-        # pkgs = [x for x in e if x.startswith('steel')]
-        # pkgs.sort()
         all_distributions = list(distributions())
         steel_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel')]
         steel_pkgs.sort()

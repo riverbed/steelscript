@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2019 Riverbed Technology, Inc.
+# Copyright (c) 2019-2024 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
 # as set forth in the License.
 
-
 from steelscript.commands.steel import BaseCommand
-# TODO: clean up deprecated pkg_resources
 from importlib.metadata import distribution, distributions
 import sys
 import os.path
@@ -27,9 +25,6 @@ class Command(BaseCommand):
 
     def main(self):
         try:
-            # TODO: clean up deprecated pkg_resources
-            # dist = pkg_resources.get_distribution('steelscript')
-        # except pkg_resources.DistributionNotFound:
             dist = distribution('steelscript')
         except importlib.metadata.PackageNotFoundError:
             print("Package not found: 'steelscript'")
@@ -37,9 +32,6 @@ class Command(BaseCommand):
             sys.exit(1)
 
         # Get packages with prefix steel (ex. steelscript.netshark)
-        # TODO: clean up deprecated pkg_resources
-        # e = pkg_resources.AvailableDistributions()
-        # steelscript_pkgs = [x for x in e if x.startswith('steel')]
         all_distributions = list(distributions())
         steel_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel')]
         egg_info_pkgs = []
@@ -47,9 +39,6 @@ class Command(BaseCommand):
         corrupted_pkgs = []
 
         for p in steel_pkgs:
-            # TODO: clean up deprecated pkg_resources
-            # pkg = pkg_resources.get_distribution(p)
-            # if pkg.location.endswith('site-packages'):
             dist = distribution(p)
             location = str(dist.locate_file(""))
             if location.endswith('site-packages'):            
@@ -63,17 +52,9 @@ class Command(BaseCommand):
         print("")
         print("Installed SteelScript Packages")
         print("Core packages:")
-        # TODO: clean up deprecated pkg_resources
-        # core_pkgs = [x for x in e if x.startswith('steel') and 'appfwk' not in x]
         core_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel') and 'appfwk' not in dist.name]
         core_pkgs.sort()
         for p in core_pkgs:
-            # TODO: clean up deprecated pkg_resources
-            # pkg = pkg_resources.get_distribution(p)
-            # if p in corrupted_pkgs:
-            #     print('  %-40s  corrupted' % pkg.project_name)
-            #     continue
-            # print('  %-40s  %s' % (pkg.project_name, pkg.version))
             dist = distribution(p)
             if p in corrupted_pkgs:
                 print('  %-40s  corrupted' % dist.name)
@@ -82,20 +63,11 @@ class Command(BaseCommand):
 
         print("")
         print("Application Framework packages:")
-
-        # TODO: clean up deprecated pkg_resources
-        # appfwk_pkgs = [x for x in e if x.startswith('steel') and 'appfwk' in x]
         appfwk_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel') and 'appfwk' in dist.name]
 
         if appfwk_pkgs:
             appfwk_pkgs.sort()
             for p in appfwk_pkgs:
-                # TODO: clean up deprecated pkg_resources
-                # pkg = pkg_resources.get_distribution(p)
-                # if p in corrupted_pkgs:
-                #     print('  %-40s  corrupted' % (pkg.project_name))
-                #     continue
-                # print('  %-40s  %s' % (pkg.project_name, pkg.version))
                 dist = distribution(p)
                 if p in corrupted_pkgs:
                     print('  %-40s  corrupted' % (dist.name))
@@ -106,14 +78,6 @@ class Command(BaseCommand):
 
         print("")
         print("REST tools and libraries:")
-        # TODO: clean up deprecated pkg_resources
-        # installed_rest = set(['reschema', 'sleepwalker']).intersection(set(e))
-        # rest_pkgs = [pkg_resources.get_distribution(p) for p in installed_rest]
-        # if rest_pkgs:
-        #     for pkg in rest_pkgs:
-        #         print('  %-40s  %s' % (pkg.project_name, pkg.version))
-        # else:
-        #     print("  None")
         all_pkgs = [dist.name for dist in all_distributions]
         installed_rest = set(['reschema', 'sleepwalker']).intersection(set(all_pkgs))
         rest_pkgs = [distribution(p) for p in installed_rest]
@@ -127,9 +91,6 @@ class Command(BaseCommand):
         print("Paths to source:")
         paths = [os.path.dirname(p) for p in steelscript.__path__]
 
-        # TODO: clean up deprecated pkg_resources
-        # for pkg in rest_pkgs:
-        #     loc = pkg.location
         for dist in rest_pkgs:
             location = str(dist.locate_file(""))
             if location not in paths:
