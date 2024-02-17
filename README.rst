@@ -62,7 +62,7 @@ Run the container with Jupyter Notebook server, by default on port 8888
 .. code:: shell
 
   # Start the steelscript.notebook container with built-in Jupyter Notebook
-  docker run --init --rm -p 8888 --name=steelscript.notebook steelscript.notebook
+  docker run --init --rm -p 8888:8888 --name=steelscript.notebook steelscript.notebook
 
 In the output, grab the url containing the *token*, for example *http://127.0.0.1:8888/tree?token=123456* ,
 and open it in your browser to log into the Jupyter web-console.
