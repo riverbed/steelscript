@@ -64,7 +64,7 @@ Run the container with Jupyter Notebook server, for example on port 9999.
   # Start the steelscript.notebook container with built-in Jupyter Notebook
   docker run -p 9999:8888 --name=steelscript.notebook -d steelscript.notebook
 
-Grab the *token* in that output.
+Grab the *token* in the output.
 
 Then in your browser, navigate to http://localhost:9999, log in using the token and browse the Notebooks folder that contains samples.
 
