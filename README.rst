@@ -14,7 +14,12 @@ Open your shell (bash or PowerShell), build SteelScript from the latest source c
 
   # Build a docker image from latest code
   docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
-  
+
+Run examples from the shell
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: shell
+
   # Run the image in an interactive container
   docker run -it steelscript:latest /bin/bash
   
@@ -40,17 +45,44 @@ List the devices from NetIM Core:
    python examples/netim-examples/print-netim-devices-raw.py {netim core fqdn or IP address} --username {account} --password {password}
 
 
+Run Jupyter Notebooks
+~~~~~~~~~~~~~~~~~~~~~
+
+Prepare the images
+
+.. code:: shell
+
+  # Build the steelscript docker image
+  docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
+
+  # Build the steelscript docker image with built-in Jupyter Notebook
+  docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript.git
+
+
+Start the image with the Jupyter notebook server listening on port 9999.
+
+.. code:: shell
+
+  # Start the steelscript docker image with built-in Jupyter Notebook
+  docker run -p 9999:8888 --name=notebook -d steelscript.notebook
+
+Grab the *token* in that output and then in your browser navigate to http://localhost:9999.
+Browse the Notebooks folder that contains samples.
+
+Distribution
+------------
+
+The recommendation is to use SteelScript in a Docker container or install directly from the python code publicly available in Github.
+In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>`__ there are more details about other installation methods but Docker is the easiest.
+
+The goal is to be able to release each new version (corresponding to a tag in the master branch) at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`__
+
+For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...), artifacts will be organized inside /packaging and /test subfolders. We might need to dedicate another repo.
+
 Contribute
 -----------
 
 Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
-
-
-Python Compatibility Note
--------------------------
-
-SteelScript is now based on Python 3.
-
 
 Guide
 -------------------------
@@ -58,7 +90,6 @@ Guide
 For a complete guide with installation details, see:
 
 - *pending refresh*  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
-
 
 
 Framework
@@ -97,6 +128,7 @@ Other repos for components and SteelScript extensions:
 Folder Structure for Modules
 ----------------------------
 
+SteelScript is based on Python 3.
 The repos of SteelScript modules have a common structure 
 
 .. code-block:: raw
@@ -162,7 +194,7 @@ Some Dockerfile are provided to build different flavors of the SteelScript conta
 - Dockerfile: standard build
 - Dockerfile.slim: optimized build
 - Dockerfile.notebook: build for demo and learning with Notebooks
-- Dockerfile.dev: buil dev from local source
+- Dockerfile.dev: build development and testing container from master or fork/branch
 
 Standard:
 
@@ -216,16 +248,6 @@ Dev from your_fork/your_branch
   git clone https://github.com/your_fork/steelscript-packets.git --depth 1 --recurse-submodules -b your_branch
 
   docker build --tag steelscript.dev --progress=plain -f steelscript/Dockerfile.dev .
-
-Distribution
-------------
-
-The recommendation is to use SteelScript in a Docker container or install directly from the python code publicly available in Github.
-In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>`__ there are more details about other installation methods but Docker is the easiest.
-
-The goal is to be able to release each new version (corresponding to a tag in the master branch) at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`__
-
-For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...), artifacts will be organized inside /packaging and /test subfolders. We might need to dedicate another repo.
 
 License
 =======
