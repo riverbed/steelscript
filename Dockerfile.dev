@@ -1,3 +1,6 @@
+# Dockerfile.dev
+# version: 24.2.1
+
 FROM python:3.12
 LABEL org.opencontainers.image.authors Riverbed Community
 LABEL org.opencontainers.image.source https://github.com/riverbed/steelscript
