@@ -7,7 +7,7 @@
 #   docker build --tag steelscript.notebook -f Dockerfile.notebook .
 # 
 #   # Run with --init (tini)
-#   docker run --init --rm -p 9999:8888 --name=steelscript.notebook steelscript.notebook
+#   docker run --init --rm -p 8888 --name=steelscript.notebook steelscript.notebook
 
 FROM steelscript:latest
 LABEL org.opencontainers.image.authors Riverbed Community
