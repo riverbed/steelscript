@@ -67,7 +67,7 @@ Run the container with Jupyter Notebook server, by default on port 8888
 In the output, grab the url containing the *token*, for example ` http://127.0.0.1:8888/tree?token=123456`,
 and open it in your browser to log into Jupyter.
 
-From there you can find example in the notebooks folder.
+From there you can find examples in the *Notebooks* folder.
 
 Guide
 -------------------------
