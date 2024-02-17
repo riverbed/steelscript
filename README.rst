@@ -23,21 +23,21 @@ Run examples from the shell
   # Run the image in an interactive container
   docker run -it steelscript:latest /bin/bash
   
-From here you can start to use the SteelScript framework
+From here you can start to use the SteelScript framework. You can try some script examples.
 
-You can try some script examples like printing the Host Groups of an AppResponse appliance:
+1. Print the Host Groups of an AppResponse appliance:
 
 .. code:: shell
 
   python examples/appresponse-examples/print_hostgroups-formatted.py {appresponse fqdn or IP address} -u {admin account} -p {password}
 
-Get the licenses and services of a Client Accelerator Controller appliance:
+2. Get the licenses and services of a Client Accelerator Controller appliance:
 
 .. code:: shell
    
    python examples/cacontroller-examples/cacontroller-rest_api.py {client accelerator controller fqdn or IP address} --access_code {access_code}
 
-List the devices from NetIM Core:
+3. List the devices from NetIM Core:
 
 .. code:: shell
    
