@@ -23,14 +23,13 @@ Run examples from the shell
   # Run the image in an interactive container
   docker run -it steelscript:latest /bin/bash
   
-From here you can start to use the SteelScript framework.
+From here you can start to use the SteelScript framework
 
-You can try some app examples like printing the Host Groups of an AppResponse appliance:
+You can try some script examples like printing the Host Groups of an AppResponse appliance:
 
 .. code:: shell
 
   python examples/appresponse-examples/print_hostgroups-formatted.py {appresponse fqdn or IP address} -u {admin account} -p {password}
-  
 
 Get the licenses and services of a Client Accelerator Controller appliance:
 
@@ -48,26 +47,26 @@ List the devices from NetIM Core:
 Run Jupyter Notebooks
 ~~~~~~~~~~~~~~~~~~~~~
 
-Prepare the images
+Build a steelscript container image that includes the Jupyter Notebook server.
 
 .. code:: shell
 
-  # Build the steelscript docker image
+  # Build the steelscript base image
   docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
 
-  # Build the steelscript docker image with built-in Jupyter Notebook
+  # Build the steelscript image for Jupyter Notebook
   docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript.git
 
-
-Start the image with the Jupyter notebook server listening on port 9999.
+Run the container with Jupyter Notebook server, for example on port 9999.
 
 .. code:: shell
 
-  # Start the steelscript docker image with built-in Jupyter Notebook
-  docker run -p 9999:8888 --name=notebook -d steelscript.notebook
+  # Start the steelscript.notebook container with built-in Jupyter Notebook
+  docker run -p 9999:8888 --name=steelscript.notebook -d steelscript.notebook
 
-Grab the *token* in that output and then in your browser navigate to http://localhost:9999.
-Browse the Notebooks folder that contains samples.
+Grab the *token* in that output.
+
+Then in your browser, navigate to http://localhost:9999, log in using the token and browse the Notebooks folder that contains samples.
 
 Distribution
 ------------
