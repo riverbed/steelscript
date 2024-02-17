@@ -57,16 +57,17 @@ Build a steelscript container image that includes the Jupyter Notebook server.
   # Build the steelscript image for Jupyter Notebook
   docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript.git
 
-Run the container with Jupyter Notebook server, for example on port 9999.
+Run the container with Jupyter Notebook server, by default on port 8888
 
 .. code:: shell
 
   # Start the steelscript.notebook container with built-in Jupyter Notebook
-  docker run -p 9999:8888 --name=steelscript.notebook -d steelscript.notebook
+  docker run -p 8888 --name=steelscript.notebook -d steelscript.notebook
 
-Grab the *token* in the output.
+In the output, grab the url containing the *token*, for example ` http://127.0.0.1:8888/tree?token=123456`,
+and open it in your browser to log into Jupyter.
 
-Then in your browser, navigate to http://localhost:9999, log in using the token and browse the Notebooks folder that contains samples.
+From there you can find example in the notebooks folder.
 
 Guide
 -------------------------
