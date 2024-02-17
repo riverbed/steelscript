@@ -68,6 +68,18 @@ Grab the *token* in the output.
 
 Then in your browser, navigate to http://localhost:9999, log in using the token and browse the Notebooks folder that contains samples.
 
+Guide
+-------------------------
+
+For a complete guide with installation details, see:
+
+- *the doc needs a good refresh*  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
+
+Contribute
+-----------
+
+Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
+
 Distribution
 ------------
 
@@ -78,17 +90,6 @@ The goal is to be able to release each new version (corresponding to a tag in th
 
 For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...), artifacts will be organized inside /packaging and /test subfolders. We might need to dedicate another repo.
 
-Contribute
------------
-
-Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
-
-Guide
--------------------------
-
-For a complete guide with installation details, see:
-
-- *pending refresh*  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
 
 
 Framework
