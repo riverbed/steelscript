@@ -3,7 +3,7 @@
 #
 # Usage
 #   
-#   # Buid
+#   # Build
 #   docker build --tag steelscript.notebook -f Dockerfile.notebook .
 # 
 #   # Run with --init (tini)
