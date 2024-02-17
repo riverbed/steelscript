@@ -71,9 +71,9 @@ Then in your browser, navigate to http://localhost:9999, log in using the token 
 Guide
 -------------------------
 
-For a complete guide with installation details, see:
+For a complete guide with installation details, see `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
 
-- *the doc needs a good refresh*  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
+*The doc needs a good refresh*  
 
 Contribute
 -----------
