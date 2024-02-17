@@ -75,11 +75,6 @@ For a complete guide with installation details, see `https://support.riverbed.co
 
 *The doc needs a good refresh*  
 
-Contribute
------------
-
-Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
-
 Distribution
 ------------
 
@@ -90,6 +85,10 @@ The goal is to be able to release each new version (corresponding to a tag in th
 
 For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...), artifacts will be organized inside /packaging and /test subfolders. We might need to dedicate another repo.
 
+Contribute
+----------
+
+Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
 
 
 Framework
