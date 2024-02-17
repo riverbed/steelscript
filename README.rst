@@ -44,8 +44,8 @@ List the devices from NetIM Core:
    python examples/netim-examples/print-netim-devices-raw.py {netim core fqdn or IP address} --username {account} --password {password}
 
 
-Run Jupyter Notebooks
-~~~~~~~~~~~~~~~~~~~~~
+Run examples with Jupyter Notebook
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Build a steelscript container image that includes the Jupyter Notebook server.
 
@@ -65,9 +65,9 @@ Run the container with Jupyter Notebook server, by default on port 8888
   docker run --init --rm -p 8888 --name=steelscript.notebook steelscript.notebook
 
 In the output, grab the url containing the *token*, for example ` http://127.0.0.1:8888/tree?token=123456`,
-and open it in your browser to log into Jupyter.
+and open it in your browser to log into the Jupyter web-console.
 
-From there you can find some notebook examples based on SteelScript, in the *Notebooks* folder.
+From there, in the *Notebooks* folder you can find some notebook examples based on SteelScript.
 
 Guide
 -------------------------
