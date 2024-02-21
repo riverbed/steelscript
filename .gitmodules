@@ -1,3 +1,0 @@
-[submodule "gitpy_versioning"]
-	path = gitpy_versioning
-	url = ../gitpy-versioning.git

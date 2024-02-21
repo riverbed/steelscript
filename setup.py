@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Riverbed Technology, Inc.
+# Copyright (c) 2021-2024 Riverbed Technology, Inc.
 #
 # This software is licensed under the terms and conditions of the MIT License
 # accompanying the software ("License").  This software is distributed "AS IS"
@@ -10,11 +10,7 @@ import itertools
 from setuptools import setup, find_packages, Command
 from setuptools.command.test import test as TestCommand
 
-from gitpy_versioning import get_version
-
-
 packagedata = True
-
 
 class MakeSteel(Command):
     description = "Create a bootstrap steel.py script for distribution"
@@ -71,8 +67,7 @@ setup_requires = ['pytest-runner']
 
 setup_args = {
     'name':               'steelscript',
-    'namespace_packages': ['steelscript'],
-    'version':            get_version(),
+    'version':            '24.2.1',
     'author':             'Riverbed Technology',
     'author_email':       'community@riverbed.com',
     'url':                'https://community.riverbed.com',
@@ -98,7 +93,7 @@ http://pythonhosted.org/steelscript/
         'Intended Audience :: Information Technology',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.12',
         'Topic :: System :: Networking',
     ],
     

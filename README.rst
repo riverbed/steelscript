@@ -14,47 +14,82 @@ Open your shell (bash or PowerShell), build SteelScript from the latest source c
 
   # Build a docker image from latest code
   docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
-  
+
+Run examples from the shell
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: shell
+
   # Run the image in an interactive container
   docker run -it steelscript:latest /bin/bash
   
-From here you can start to use the SteelScript framework.
+From here you can start to use the SteelScript framework. You can try some script examples.
 
-You can try some app examples like printing the Host Groups of an AppResponse appliance:
+1. Print the Host Groups of an AppResponse appliance:
 
 .. code:: shell
 
   python examples/appresponse-examples/print_hostgroups-formatted.py {appresponse fqdn or IP address} -u {admin account} -p {password}
-  
 
-Get the licenses and services of a Client Accelerator Controller appliance:
+2. Get the licenses and services of a Client Accelerator Controller appliance:
 
 .. code:: shell
    
    python examples/cacontroller-examples/cacontroller-rest_api.py {client accelerator controller fqdn or IP address} --access_code {access_code}
 
-List the devices from NetIM Core:
+3. List the devices from NetIM Core:
 
 .. code:: shell
    
    python examples/netim-examples/print-netim-devices-raw.py {netim core fqdn or IP address} --username {account} --password {password}
 
 
-Contribute
------------
+Run examples with Jupyter Notebook
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
+Build a steelscript container image that includes the Jupyter Notebook server.
 
+.. code:: shell
 
-Python Compatibility Note
+  # Build the steelscript base image
+  docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
+
+  # Build the steelscript image for Jupyter Notebook
+  docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript.git
+
+Run the container with Jupyter Notebook server, by default on port 8888
+
+.. code:: shell
+
+  # Start the steelscript.notebook container with built-in Jupyter Notebook
+  docker run --init --rm -p 8888:8888 --name=steelscript.notebook steelscript.notebook
+
+In the output, grab the url containing the *token*, for example *http://127.0.0.1:8888/tree?token=123456* ,
+and open it in your browser to log into the Jupyter web-console.
+
+From there, in the *Notebooks* folder you can find some notebook examples based on SteelScript.
+
+Guide
 -------------------------
 
-The SteelScript 2.x series of packages support Python 3. The 1.8.X series of SteelScript packages are the last to support
-Python 2.
+For a complete guide with installation details, see `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
 
-For a complete guide with installation details, see:
+*The doc needs a good refresh*  
 
-  `https://support.riverbed.com/apis/steelscript <https://support.riverbed.com/apis/steelscript>`_
+Distribution
+------------
+
+The recommendation is to use SteelScript in a Docker container or install directly from the python code publicly available in Github.
+In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>`__ there are more details about other installation methods but Docker is the easiest.
+
+The goal is to be able to release each new version (corresponding to a tag in the master branch) at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`__
+
+For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...), artifacts will be organized inside /packaging and /test subfolders. We might need to dedicate another repo.
+
+Contribute
+----------
+
+Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
 
 
 Framework
@@ -68,32 +103,32 @@ can be found in the `Riverbed GitHub org <https://github.com/riverbed>`__, the n
 
 Modules for Riverbed products and appliances:
 
+- `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
+- `NetIM <https://github.com/riverbed/steelscript-netim>`__
+- `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
 - `SteelHead <https://github.com/riverbed/steelscript-steelhead>`__
 - `SteelHead Controller (a.k.a SCC) <https://github.com/riverbed/steelscript-scc>`__
 - `Client Accelerator Controller (formerly called SteelHead Mobile controller, SMC or SCCM) <https://github.com/riverbed/steelscript-client-accelerator-controller>`__
-- `NetIM <https://github.com/riverbed/steelscript-netim>`__
-- `NetProfiler <https://github.com/riverbed/steelscript-netprofiler>`__
-- `AppResponse <https://github.com/riverbed/steelscript-appresponse>`__
-- `Wireshark <https://github.com/riverbed/steelscript-wireshark>`__
-- `NetShark <https://github.com/riverbed/steelscript-netshark>`__
-- SteelConnect-CX
-- SteelConnect-EX
 
 Extra modules
 
+- `Wireshark <https://github.com/riverbed/steelscript-wireshark>`__
+- `NetShark <https://github.com/riverbed/steelscript-netshark>`__
 - `Packets <https://github.com/riverbed/steelscript-packets>`__
 - `Command line Access <https://github.com/riverbed/steelscript-cmdline>`__
 
 Other repos for components and SteelScript extensions:
 
-- `Application Framework <https://github.com/riverbed/steelscript-appfwk>`__
-- `- Business hour reporting plugin for Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
-- `- Stock report demo with Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
-- `VM Config <https://github.com/riverbed/steelscript-vm-config>`__ 
+- *known issues, pending maintenance* `Application Framework <https://github.com/riverbed/steelscript-appfwk>`__
+- *known issues, pending maintenance* `- Business hour reporting plugin for Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
+- *known issues, pending maintenance* `- Stock report demo with Application Framework <https://github.com/riverbed/steelscript-appfwk-business-hours>`__
+- *known issues, pending maintenance* `VM Config <https://github.com/riverbed/steelscript-vm-config>`__ 
+
 
 Folder Structure for Modules
 ----------------------------
 
+SteelScript is based on Python 3.
 The repos of SteelScript modules have a common structure 
 
 .. code-block:: raw
@@ -106,7 +141,7 @@ The repos of SteelScript modules have a common structure
    ├── docs
    ├── examples
    ├── steelscript
-   │   ├── __init__.py          # default content: __import__("pkg_resources").declare_namespace(__name__)
+   │   ├── __init__.py
    │   └── module-name          # for example: appresponse
    │       ├── core
    │       │   └── __init__.py
@@ -159,6 +194,7 @@ Some Dockerfile are provided to build different flavors of the SteelScript conta
 - Dockerfile: standard build
 - Dockerfile.slim: optimized build
 - Dockerfile.notebook: build for demo and learning with Notebooks
+- Dockerfile.dev: build development and testing container from master or fork/branch
 
 Standard:
 
@@ -178,21 +214,45 @@ Notebook
 
   docker build --tag steelscript.notebook -f Dockerfile.notebook .
 
+Dev from master
 
-Distribution
-------------
+.. code:: shell
 
-The recommendation is to use SteelScript in a Docker container or install directly from the python code publicly available in Github.
-In the `SteelScripts docs <https://support.riverbed.com/apis/steelscript>`__ there are more details about other installation methods but Docker is the easiest.
+  git clone https://github.com/riverbed/steelscript --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-netprofiler --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-wireshark --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-cmdline --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-scc --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-appresponse --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-netim --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-client-accelerator-controller --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-steelhead --depth 1 --recurse-submodules
+  git clone https://github.com/riverbed/steelscript-packets.git --depth 1 --recurse-submodules
 
-The goal is to be able to release each new version (corresponding to a tag in the master branch) at least in a Docker public repository: `SteelScript on Docker Hub <https://hub.docker.com/r/riverbed/steelscript>`__
+  docker build --tag steelscript.dev --progress=plain -f steelscript/Dockerfile.dev .
 
-For contribution for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz,...), artifacts will be organized inside /packaging and /test subfolders. We might need to dedicate another repo.
+
+Dev from your_fork/your_branch
+
+.. code:: shell
+
+  git clone https://github.com/your_fork/steelscript --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-netprofiler --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-wireshark --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-cmdline --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-scc --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-appresponse --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-netim --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-client-accelerator-controller --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-steelhead --depth 1 --recurse-submodules -b your_branch
+  git clone https://github.com/your_fork/steelscript-packets.git --depth 1 --recurse-submodules -b your_branch
+
+  docker build --tag steelscript.dev --progress=plain -f steelscript/Dockerfile.dev .
 
 License
 =======
 
-Copyright (c) 2021 Riverbed Technology, Inc.
+Copyright (c) 2021-2024 Riverbed Technology, Inc.
 
 SteelScript is licensed under the terms and conditions of the MIT License
 accompanying the software ("License").  SteelScript is distributed "AS

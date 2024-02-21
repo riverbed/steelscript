@@ -19,8 +19,7 @@ from optparse import OptionParser, OptionGroup
 from threading import Thread
 from functools import partial
 from collections import deque
-from pkg_resources import (get_distribution, iter_entry_points, parse_version,
-                           DistributionNotFound, AvailableDistributions)
+from importlib.metadata import distribution, distributions, entry_points
 
 try:
     import importlib
@@ -44,8 +43,8 @@ else:
     logger.setLevel(logging.ERROR)
 
 try:
-    __VERSION__ = get_distribution('steelscript').version
-except DistributionNotFound:
+    __VERSION__ = distribution('steelscript').version
+except importlib.metadata.PackageNotFoundError:
     __VERSION__ = None
 
 
@@ -365,7 +364,8 @@ class SteelCommand(BaseCommand):
         # for entry points labeled 'steel.commands'
         if not self._subcommands_loaded:
             super(SteelCommand, self).subcommands
-            for obj in iter_entry_points(group='steel.commands', name=None):
+
+            for obj in entry_points(group='steel.commands', name=None):
                 i = obj.load(obj)
                 # See if the entry point has a Command defined
                 # in __init__.py
@@ -682,9 +682,11 @@ class UninstallCommand(BaseCommand):
         self.uninstall()
 
     def uninstall(self):
-        e = AvailableDistributions()
-        pkgs = [x for x in e if x.startswith('steel')]
-        pkgs.sort()
+        # Get packages with prefix steel (ex. steelscript.netshark)
+        all_distributions = list(distributions())
+        steel_pkgs = [dist.name for dist in all_distributions if dist.name.startswith('steel')]
+        steel_pkgs.sort()
+        pkgs=steel_pkgs
 
         if not self.options.non_interactive:
             if pkgs:
@@ -981,8 +983,9 @@ def check_install_pip():
                     allow_fail=True, save_output=True)
         version = out.split()[1]
 
-        if parse_version(version) < parse_version('1.4.0'):
-            upgrade_pip()
+        # TODO: remove pip upgrade
+        # if parse_version(version) < parse_version('1.4.0'):
+        #     upgrade_pip()
 
         return
     except ShellFailed:

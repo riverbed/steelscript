@@ -9,8 +9,7 @@ import os
 import sys
 import glob
 import shutil
-import pkg_resources
-
+import importlib.resources
 
 def link_pkg_dir(pkgname, src_path, dest_dir, symlink=True,
                  replace=True, buf=None):
@@ -28,7 +27,7 @@ def link_pkg_dir(pkgname, src_path, dest_dir, symlink=True,
     else:
         debug = buf
 
-    src_dir = pkg_resources.resource_filename(pkgname, src_path)
+    src_dir = importlib.resources.files(pkgname) / src_path
 
     if os.path.islink(dest_dir) and not os.path.exists(dest_dir):
         debug(' unlinking %s ...\n' % dest_dir)
@@ -71,7 +70,8 @@ def link_pkg_files(pkgname, src_pattern, dest_dir, symlink=True,
     else:
         debug = buf
 
-    src_dir = pkg_resources.resource_filename(pkgname, src_pattern)
+    src_dir = importlib.resources.files(pkgname) / src_pattern
+
     src_files = glob.glob(src_dir)
 
     if os.path.islink(dest_dir):

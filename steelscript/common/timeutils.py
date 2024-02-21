@@ -12,7 +12,7 @@ dates and times, in conjunction with the python `datetime` module.
 import re
 import time
 import calendar
-from datetime import datetime, timedelta, tzinfo
+from datetime import datetime, timedelta, tzinfo, timezone
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
@@ -29,7 +29,7 @@ __all__ = ['ensure_timezone', 'force_to_utc', 'datetime_to_seconds',
 #
 
 ZERO = timedelta(0)
-EPOCHORDINAL = datetime.utcfromtimestamp(0).toordinal()
+EPOCHORDINAL = datetime.fromtimestamp(0,tz=timezone.utc).toordinal()
 
 
 class tzutc(tzinfo):
