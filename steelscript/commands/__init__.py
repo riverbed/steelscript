@@ -1,1 +1,1 @@
-__import__("pkg_resources").declare_namespace(__name__)
+# Copyright (c) 2019 Riverbed Technology, Inc.
