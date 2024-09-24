@@ -1,5 +1,5 @@
 # Dockerfile.notebook
-# version: 24.2.1
+# version: 24.9.1
 #
 # Usage
 #   
@@ -10,8 +10,8 @@
 #   docker run --init --rm -p 8888:8888 --name=steelscript.notebook steelscript.notebook
 
 FROM steelscript:latest
-LABEL org.opencontainers.image.authors Riverbed Community
-LABEL org.opencontainers.image.source https://github.com/riverbed/steelscript
+LABEL org.opencontainers.image.authors="Riverbed Community"
+LABEL org.opencontainers.image.source="https://github.com/riverbed/steelscript"
 
 RUN set -ex \
         && pip install ipython jupyter

@@ -1,9 +1,9 @@
 # Dockerfile.dev
-# version: 24.2.1
+# version: 24.9.1
 
 FROM python:3.12
-LABEL org.opencontainers.image.authors Riverbed Community
-LABEL org.opencontainers.image.source https://github.com/riverbed/steelscript
+LABEL org.opencontainers.image.authors="Riverbed Community"
+LABEL org.opencontainers.image.source="https://github.com/riverbed/steelscript"
 
 COPY steelscript /src-dev/steelscript 
 COPY steelscript-netprofiler /src-dev/steelscript-netprofiler
