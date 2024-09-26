@@ -58,7 +58,7 @@ install_requires = [
 ]
 
 if sys.platform == 'win32':
-    install_requires.append('pyreadline') # readline subsitute for Windows
+    install_requires.append('pyreadline3') # readline substitute for Windows
 
 # Additional dependencies
 test = ['pytest', 'testfixtures', 'mock']
