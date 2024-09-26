@@ -9,7 +9,6 @@ RUN set -ex \
         ' \
         && apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
         \
-        && pip install setuptools \
         && pip install --src /src \
             -e git+https://github.com/riverbed/steelscript#egg=steelscript \
             -e git+https://github.com/riverbed/steelscript-netprofiler#egg=steelscript-netprofiler \

@@ -55,6 +55,7 @@ class PyTest(TestCommand):
 install_requires = [
     'requests>=2.21.0',
     'python-dateutil',
+    'setuptools'
 ]
 
 if sys.platform == 'win32':
