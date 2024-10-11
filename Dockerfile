@@ -1,6 +1,9 @@
+# Dockerfile
+# version: 24.9.1
+
 FROM python:3.12
-LABEL org.opencontainers.image.authors Riverbed Community
-LABEL org.opencontainers.image.source https://github.com/riverbed/steelscript
+LABEL org.opencontainers.image.authors="Riverbed Community"
+LABEL org.opencontainers.image.source="https://github.com/riverbed/steelscript"
 
 # separate out steelhead package to it picks up already installed dependencies
 RUN set -ex \
