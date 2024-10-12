@@ -163,19 +163,27 @@ class Command(BaseCommand):
     @classmethod
     def _cp_examples_from_src(cls, dirpath, overwrite):
         """Copy all examples and notebooks from steelscript root dirs."""
+        # Get the dir of src for steelscript. ex. /src/steelscript/steelscript
+        # Remove suffix to get the root path of the packages, ex. /src
+        steelscript_src_path = os.path.dirname(steelscript.__file__)
+        suffix = "steelscript/steelscript"
+        pkgs_src_root_path="src"
+        if steelscript_src_path.endswith(suffix):
+           pkgs_src_root_path = steelscript_src_path[:-len(suffix)].rstrip('/')
+
+        # Get package names with prefix steel (ex. steelscript.netshark)
+        # Replace '.' with '-' in case 'steelscript.' is a prefix
         # Get the paths of installed packages (ex /src/steelscript-netprofiler)
-        pkg_paths = [os.path.dirname(p) for p in steelscript.__path__]
+        all_distributions = list(distributions())
+        steel_pkg_names = [dist.name.replace("steelscript.","steelscript-") for dist in all_distributions if dist.name.startswith('steel')]
 
         for kind in ('examples', 'notebooks'):
-            paths = [os.path.join(p, kind) for p in pkg_paths
-                     if os.path.exists(os.path.join(p, kind))]
-
-            mkname = lambda x: (cls.path_leaf(x) + '-' + kind).split('-', 1)[1]
-            dst_paths = [os.path.join(dirpath, kind,
-                                      mkname(os.path.dirname(p)))
-                         for p in paths]
-
-            cls._cp_files(kind, paths, dst_paths, overwrite)
+            for pkg_name in steel_pkg_names:
+                steel_pkg_src_path = os.path.join(pkgs_src_root_path,pkg_name)
+                content_path = os.path.join(steel_pkg_src_path, kind)
+                if os.path.exists(content_path):
+                    destination_path = os.path.join(dirpath, kind, pkg_name)
+                    cls._cp_files(kind, [content_path], [destination_path], overwrite)
 
     @classmethod
     def _cp_files(cls, kind, src_paths, dst_paths, overwrite):
