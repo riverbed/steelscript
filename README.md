@@ -158,8 +158,8 @@ Feel free to use, enhance and contribute by creating issues, sending pull reques
 The common module for SteelScript is in the [SteelScript repository](https://github.com/riverbed/steelscript)
 It contains common code but also it is the entrypoint for Documentation, Build, Test and releases.
 
-Other SteelScript modules have their own repository which
-can be found in the [Riverbed GitHub org](https://github.com/riverbed), the name is prefixed by "steelscript".
+Other SteelScript modules have their own repository. The repository name is prefixed by "steelscript": 
+[see steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
 
 #### Modules for Riverbed products and appliances:
 
