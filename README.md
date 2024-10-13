@@ -34,19 +34,19 @@ docker run -it steelscript:latest /bin/bash
 You can try some script examples.
 
 
-1. **AppResponse**, print the Host Groups:
+1. **AppResponse example**, print the Host Groups:
 
 ```shell
 python examples/steelscript-appresponse/print_hostgroups-formatted.py {appresponse fqdn or IP address} -u {admin account} -p {password}
 ```
 
-2. **Client Accelerator Controller**, get the licenses and services:
+2. **Client Accelerator Controller example**, get the licenses and services:
 
 ```shell
 python examples/steelscript-cacontroller/cacontroller-rest_api.py {client accelerator controller fqdn or IP address} --access_code {access_code}
 ```
 
-3. **NetIM**, list the devices:
+3. **NetIM example**, list the devices:
 
 ```shell   
 python examples/steelscript-netim/print-netim-devices-raw.py {netim core fqdn or IP address} --username {account} --password {password}
@@ -58,7 +58,7 @@ python examples/steelscript-netim/print-netim-devices-raw.py {netim core fqdn or
   <summary>Use SteelScript notebooks, just with git and Docker</summary>
 
 If you have git and Docker installed.
-You can build a steelscript container image that includes the Jupyter server and allow to run notebooks.
+You can build a steelscript container image that includes the Jupyter server and allows to run notebooks.
 
 Build both steelscript bash imags and notebook image:
 
@@ -146,20 +146,20 @@ can be found in the [Riverbed GitHub org](https://github.com/riverbed), the name
 
 #### Extra modules
 
-- [Wireshark](https://github.com/riverbed/steelscript-wireshark]
-- [NetShark](https://github.com/riverbed/steelscript-netshark>]
-- [Packets](https://github.com/riverbed/steelscript-packets>]
-- [Command line Access](https://github.com/riverbed/steelscript-cmdline]
+- [Wireshark](https://github.com/riverbed/steelscript-wireshark)
+- [NetShark](https://github.com/riverbed/steelscript-netshark)
+- [Packets](https://github.com/riverbed/steelscript-packets)
+- [Command line Access](https://github.com/riverbed/steelscript-cmdline)
 
 #### Other repos for components and SteelScript extensions:
 
 > [!NOTE]
 > The following have known issues and maintenance is pending
 
-- *pending mantenance* [Application Framework](https://github.com/riverbed/steelscript-appfwk]
-- *pending mantenance* [Business hour reporting plugin for Application Framework](https://github.com/riverbed/steelscript-appfwk-business-hours]
-- *pending mantenance* [Stock report demo with Application Framework](https://github.com/riverbed/steelscript-appfwk-business-hours]
-- *pending mantenance* [VM Config](https://github.com/riverbed/steelscript-vm-config]
+- *pending mantenance* [Application Framework](https://github.com/riverbed/steelscript-appfwk)
+- *pending mantenance* [Business hour reporting plugin for Application Framework](https://github.com/riverbed/steelscript-appfwk-business-hours)
+- *pending mantenance* [Stock report demo with Application Framework](https://github.com/riverbed/steelscript-appfwk-business-hours)
+- *pending mantenance* [VM Config](https://github.com/riverbed/steelscript-vm-config)
 
 ### Folder Structure for Modules
 
