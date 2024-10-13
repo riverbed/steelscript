@@ -10,7 +10,7 @@ Here are 4 things you can do to start quick and easy with SteelScript.
 <details>
   <summary>Try examples just with git and Docker</summary>
 
-### Quick Start
+### Quick Start SteelScript examples in a container
 
 If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
 Open your shell (bash or PowerShell), build SteelScript from the latest source code and run it locally in a Docker container as follows:
@@ -59,7 +59,7 @@ python examples/steelscript-netim/print-netim-devices-raw.py {netim core fqdn or
 <details>
   <summary>Try SteelScript notebooks, just with git and Docker</summary>
 
-### Quick Start
+### Quick Start SteelScript notebooks in a container 
 
 If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
 You can build a steelscript container image that includes the Jupyter server and allows to run notebooks.
@@ -90,7 +90,7 @@ From there, in the *Notebooks* folder you can find some notebook  based on Steel
 <details>
   <summary>Try SteelScript notebooks in your own SteelScript environment, just with python, pip, git and vscode</summary>
 
-### Quick Start
+### Quick Start SteelScript notebooks in your environment
 
 If you have all the tools ready:
 1. [Python](https://www.python.org/downloads) and pip
@@ -111,7 +111,7 @@ Download a notebook for SteelScript, open it in Visual Studio Code and your good
 <details>
   <summary>Just install SteelScript modules in your Python environment, with pip and git</summary>
 
-### Quick Start
+### Quick Start SteelScript in your environment
 
 If you have all the tools installed in your environment: [Python](https://www.python.org/downloads), pip, and [git](https://git-scm.com/downloads)
 
