@@ -74,7 +74,7 @@ docker build --tag steelscript:latest https://github.com/riverbed/steelscript
 docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript
 ```
 
-Run the container the steelscript.notebook image that contains the Jupyter Notebook server, listening on port 8888 by default.
+Run a container with the steelscript.notebook image. It contains the Jupyter Notebook server and will be listening on port 8888 by default.
 
 ```shell
 # Start the steelscript.notebook container with built-in Jupyter Notebook
@@ -121,8 +121,10 @@ Then, open your shell (bash or PowerShell) to install SteelScript and modules (d
 # Install SteelScript and modules
 pip install git+https://github.com/riverbed/steelscript
 pip install git+https://github.com/riverbed/steelscript-appresponse
-pip install git+https://github.com/riverbed/steelscript-netprofiler
 pip install git+https://github.com/riverbed/steelscript-netim
+pip install git+https://github.com/riverbed/steelscript-netprofiler
+pip install git+https://github.com/riverbed/steelscript-steelhead
+pip install git+https://github.com/riverbed/steelscript-scc
 # ... and others check the list on https://github.com/orgs/riverbed/repositories?q=steelscript
 ```
 
