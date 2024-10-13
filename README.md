@@ -10,7 +10,7 @@ Here are 3 things you can do to start quick and easy with SteelScript.
 <details>
   <summary>Use examples just with git and Docker</summary>
 
-If you have git and Docker installed.
+If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
 Open your shell (bash or PowerShell), build SteelScript from the latest source code and run it locally in a Docker container as follows:
 
 ### Build and run SteelScript in a container
@@ -57,7 +57,7 @@ python examples/steelscript-netim/print-netim-devices-raw.py {netim core fqdn or
 <details>
   <summary>Use SteelScript notebooks, just with git and Docker</summary>
 
-If you have git and Docker installed.
+If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
 You can build a steelscript container image that includes the Jupyter server and allows to run notebooks.
 
 Build both steelscript bash imags and notebook image:
@@ -87,15 +87,15 @@ From there, in the *Notebooks* folder you can find some notebook  based on Steel
   <summary>Install in your Python environment</summary>
 
 
-If you have git, Python and pip installed.
+If you have [git](https://git-scm.com/downloads), [Python](https://www.python.org/downloads) and pip installed.
 Open your shell (bash or PowerShell), install the SteelScript modules directly from the latest source code:
 
 ```shell
 # Install SteelScript and modules
-pip install https://github.com/riverbed/steelscript
-pip install https://github.com/riverbed/steelscript-appresponse
-pip install https://github.com/riverbed/steelscript-netprofiler
-pip install https://github.com/riverbed/steelscript-netim
+pip install git+https://github.com/riverbed/steelscript
+pip install git+https://github.com/riverbed/steelscript-appresponse
+pip install git+https://github.com/riverbed/steelscript-netprofiler
+pip install git+https://github.com/riverbed/steelscript-netim
 # .... and others check the list on https://github.com/riverbed/steelscript
 ```
 
