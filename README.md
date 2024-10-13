@@ -113,10 +113,7 @@ pip install https://github.com/riverbed/steelscript-netim
 
 SteelScript and modules are distributed via [Riverbed in GitHub](https://github.com/riverbed). The main repository is [SteelScript](https://github.com/riverbed/steelscript).
 
-The recommendation is to use SteelScript latest version  available in Github, wether building your own container or installing python modules in your own environment, directly from the source code. See the quickstarts above. 
-
-> [!NOTE]
-> The docs requires provides details about other installation methods but requires refresh.
+The recommendation is to use SteelScript latest version  available in Github, wether building your own container or installing python modules in your own environment, directly from the source code. See the quickstarts above (the guide provides details about other installation methods but requires refresh).
 
 ##  Contribute
 
