@@ -51,6 +51,8 @@ jobs:
         #
         # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality       
+        #
+        # Ref: https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning
         config-file: ./.github/workflows/codeql-config.yml
         
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
