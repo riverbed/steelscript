@@ -119,8 +119,7 @@ pip install git+https://github.com/riverbed/steelscript-netim
 # ... and others check the list on [https://github.com/riverbed/steelscript](https://github.com/orgs/riverbed/repositories?q=steelscript)
 ```
 
-> [!Note]
-> Find all the steelscript modules in the [steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
+> [!NOTE] Find all the steelscript modules: [steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
 
 </details>
 
