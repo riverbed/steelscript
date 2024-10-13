@@ -98,7 +98,8 @@ Download a notebook for SteelScript, open it in Visual Studio Code and your good
 * **NetProfiler**: [Timeseries](https://github.com/riverbed/steelscript-netprofiler/blob/master/notebooks/06-traffic-timeseries.ipynb)
 * [SharkFest 2014](https://github.com/riverbed/steelscript/blob/master/docs/_static/SharkFest2014/SharkFest2014.ipynb)
 
-> [!NOTE] Jupyter Notebook files have .ipynb extension.
+> [!NOTE]
+> Jupyter Notebook files have .ipynb extension.
 > More about [Jupyter Notebook](https://jupyter.org)
 
 </details>
@@ -119,7 +120,8 @@ pip install git+https://github.com/riverbed/steelscript-netim
 # ... and others check the list on [https://github.com/riverbed/steelscript](https://github.com/orgs/riverbed/repositories?q=steelscript)
 ```
 
-> [!NOTE] Find all the steelscript modules: [steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
+> [!NOTE]
+> Find all the steelscript modules: [steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
 
 </details>
 
