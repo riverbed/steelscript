@@ -1,0 +1,2 @@
+paths-ignore:
+  - steelscript/tests/ss_fake/services/awesome_service/two/action.py
