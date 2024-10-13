@@ -8,7 +8,7 @@ with Riverbed solutions and appliances, and other network infrastructure devices
 Here are 3 things you can do to start quick and easy with SteelScript.
 
 <details>
-  <summary>Use examples just with git and Docker</summary>
+  <summary>Try examples just with git and Docker</summary>
 
 If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
 Open your shell (bash or PowerShell), build SteelScript from the latest source code and run it locally in a Docker container as follows:
@@ -55,7 +55,7 @@ python examples/steelscript-netim/print-netim-devices-raw.py {netim core fqdn or
 </details>
 
 <details>
-  <summary>Use SteelScript notebooks, just with git and Docker</summary>
+  <summary>Try SteelScript notebooks, just with git and Docker</summary>
 
 If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
 You can build a steelscript container image that includes the Jupyter server and allows to run notebooks.
