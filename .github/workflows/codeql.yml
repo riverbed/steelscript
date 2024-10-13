@@ -55,7 +55,7 @@ jobs:
     - name: custom config
       uses: github/codeql-action/init@v3
       with:
-        config-file: ./.github/codeql/codeql-config.yml        
+        config-file: ./.github/workflows/codeql-config.yml        
 
         
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
