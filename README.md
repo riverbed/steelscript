@@ -5,7 +5,7 @@ with Riverbed solutions and appliances, and other network infrastructure devices
 
 ## Quick Start
 
-Here are 3 things you can do to start quick and easy with SteelScript.
+Here are 4 things you can do to start quick and easy with SteelScript.
 
 <details>
   <summary>Try examples just with git and Docker</summary>
@@ -84,11 +84,31 @@ From there, in the *Notebooks* folder you can find some notebook  based on Steel
 </details>
 
 <details>
-  <summary>Install SteelScript modules in your Python environment, just with pip and git</summary>
+  <summary>Try SteelScript notebooks in your own SteelScript environment, just with python, pip, git and vscode</summary>
 
+If you have all the tools ready:
+1. [Python](https://www.python.org/downloads) and pip
+2. [git](https://git-scm.com/downloads)
+3. [Visual Studio Code](https://code.visualstudio.com)
+   
+Download a notebook for SteelScript, open it in Visual Studio Code and your good to go:
 
-If you have [Python](https://www.python.org/downloads), pip and [git](https://git-scm.com/downloads) installed.
-Open your shell (bash or PowerShell), install the SteelScript modules directly from the latest source code:
+* *work in progress* [Notebooks for Steelscript](https://github.com/riverbed/Riverbed-Community-Toolkit/SteelScript/101-notebook/steelscript-notebook.ipynb) in the [Riverbed Community Toolkit](https://github.com/riverbed/Riverbed-Community-Toolkit/SteelScript)
+* **AppResponse**: [Hostgroups](https://github.com/riverbed/steelscript-appresponse/blob/master/notebooks/01-appresponse-hostgroups.ipynb)
+* **NetProfiler**: [Timeseries](https://github.com/riverbed/steelscript-netprofiler/blob/master/notebooks/06-traffic-timeseries.ipynb)
+* [SharkFest 2014](https://github.com/riverbed/steelscript/blob/master/docs/_static/SharkFest2014/SharkFest2014.ipynb)
+
+> [!NOTE] Jupyter Notebook files have .ipynb extension.
+> More about [Jupyter Notebook](https://jupyter.org)
+
+</details>
+
+<details>
+  <summary>Just install SteelScript modules in your Python environment, with pip and git</summary>
+
+If you have all the tools installed in your environment: [Python](https://www.python.org/downloads), pip, and [git](https://git-scm.com/downloads)
+
+Then, open your shell (bash or PowerShell) to install SteelScript and modules (directly from the latest source code):
 
 ```shell
 # Install SteelScript and modules
@@ -96,8 +116,11 @@ pip install git+https://github.com/riverbed/steelscript
 pip install git+https://github.com/riverbed/steelscript-appresponse
 pip install git+https://github.com/riverbed/steelscript-netprofiler
 pip install git+https://github.com/riverbed/steelscript-netim
-# .... and others check the list on https://github.com/riverbed/steelscript
+# ... and others check the list on [https://github.com/riverbed/steelscript](https://github.com/orgs/riverbed/repositories?q=steelscript)
 ```
+
+> [!Note]
+> Find all the steelscript modules in the [steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
 
 </details>
 
