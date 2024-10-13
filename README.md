@@ -101,8 +101,6 @@ Download a notebook for SteelScript, open it in Visual Studio Code and your good
 
 * *work in progress* [Notebooks for Steelscript](https://github.com/riverbed/Riverbed-Community-Toolkit/SteelScript/101-notebook/steelscript-notebook.ipynb) in the [Riverbed Community Toolkit](https://github.com/riverbed/Riverbed-Community-Toolkit/SteelScript)
 * **AppResponse**: [Hostgroups](https://github.com/riverbed/steelscript-appresponse/blob/master/notebooks/01-appresponse-hostgroups.ipynb)
-* **NetProfiler**: [Timeseries](https://github.com/riverbed/steelscript-netprofiler/blob/master/notebooks/06-traffic-timeseries.ipynb)
-* [SharkFest 2014](https://github.com/riverbed/steelscript/blob/master/docs/_static/SharkFest2014/SharkFest2014.ipynb)
 
 > Jupyter Notebook files have .ipynb extension, [more about Jupyter Notebook](https://jupyter.org)
 
