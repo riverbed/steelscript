@@ -71,7 +71,7 @@ jobs:
         # queries: security-extended,security-and-quality
         #
         # Ref: https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning
-        config-file: ./.github/workflows/codeql-config.yml             
+        config-file: ./.github/codeql-config.yml             
 
     # If the analyze step fails for one of the languages you are analyzing with
     # "We were unable to automatically build your code", modify the matrix above
