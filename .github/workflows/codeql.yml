@@ -14,15 +14,9 @@ name: "CodeQL"
 on:
   push:
     branches: [ "master" ]
-    paths-ignore:
-    # To avoid CodeQL python scan error when processing the syntax test case: runner/work/steelscript/steelscript/tests/ss_fake/services/awesome_service/two/action.py#L3C0:0: A parse error occurred while processing
-      - '**/tests/ss_fake/services/awesome_service/two/action.py'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "master" ]
-    paths-ignore:
-    # To avoid CodeQL python scan error when processing the syntax test case: runner/work/steelscript/steelscript/tests/ss_fake/services/awesome_service/two/action.py#L3C0:0: A parse error occurred while processing
-      - '**/tests/ss_fake/services/awesome_service/two/action.py'    
   schedule:
     - cron: '30 12 * * 5'
 
@@ -60,6 +54,7 @@ jobs:
         #
         # Ref: https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning
         config-file: ./.github/workflows/codeql-config.yml
+
         
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
