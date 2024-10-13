@@ -84,10 +84,10 @@ From there, in the *Notebooks* folder you can find some notebook  based on Steel
 </details>
 
 <details>
-  <summary>Install in your Python environment</summary>
+  <summary>Install SteelScript modules in your Python environment, just with pip and git</summary>
 
 
-If you have [git](https://git-scm.com/downloads), [Python](https://www.python.org/downloads) and pip installed.
+If you have [Python](https://www.python.org/downloads), pip and [git](https://git-scm.com/downloads) installed.
 Open your shell (bash or PowerShell), install the SteelScript modules directly from the latest source code:
 
 ```shell
