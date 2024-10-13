@@ -203,7 +203,7 @@ Optional:
 
 ### Build
 
-Builds are defined in the `SteelScript repo <https://github.com/riverbed/steelscript>`__ 
+Builds are defined in the [SteelScript repo](https://github.com/riverbed/steelscript)
 
 #### Prebuild test-plans validations
 
