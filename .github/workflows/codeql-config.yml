@@ -1,0 +1,3 @@
+paths-ignore:
+  # To avoid CodeQL error on the syntax test case: runner/work/steelscript/steelscript/tests/ss_fake/services/awesome_service/two/action.py#L3C0:0: A parse error occurred while processing
+  - '**steelscript/tests/ss_fake/services/awesome_service/two/action.py'
