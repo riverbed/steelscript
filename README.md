@@ -115,7 +115,7 @@ pip install git+https://github.com/riverbed/steelscript
 pip install git+https://github.com/riverbed/steelscript-appresponse
 pip install git+https://github.com/riverbed/steelscript-netprofiler
 pip install git+https://github.com/riverbed/steelscript-netim
-# ... and others check the list on [https://github.com/riverbed/steelscript](https://github.com/orgs/riverbed/repositories?q=steelscript)
+# ... and others check the list on https://github.com/orgs/riverbed/repositories?q=steelscript
 ```
 
 > Find all the steelscript modules: [steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
