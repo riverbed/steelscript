@@ -197,7 +197,7 @@ The repos of SteelScript modules have a common structure
 
 ```
    steelscript-module-name        # for example: steelscript-appresponse
-   ├── README.md or README.rst    # Markdown is preferred (.md) and reStructuredText (.rst) is ok
+   ├── README.md or README.rst    # Markdown is preferred (.md) and reStructuredText (.rst)
    ├── LICENSE
    ├── CHANGELOG
    ├── .gitignore
@@ -218,7 +218,7 @@ The repos of SteelScript modules have a common structure
 
 Mandatory:
 
-- README.rst: simple description using reStructured Text (rst) file format
+- README.md (or README.rst): README in Markdown (.md) or reStructuredText (.rst) format. Markdown is preferred.
 - LICENSE: Riverbed Technology copyright, terms and conditions based on MIT
 - CHANGELOG: Simple text file tracking major changes
 - /docs: Documentation using reStructured Text (rst) file format.
