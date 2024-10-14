@@ -144,9 +144,7 @@ Other distributions have not been maintained and contain outdated versions of St
 ## Guide
 
 > [!NOTE]
-> The guide needs a good refresh. The source is there [https://github.com/riverbed/steelscript/docs](https://github.com/riverbed/steelscript/docs)
-
-[Link to the SteelScript guide](https://support.riverbed.com/apis/steelscript)
+> The [SteelScript guide](https://support.riverbed.com/apis/steelscript) needs a good refresh. The source is there [https://github.com/riverbed/steelscript/docs](https://github.com/riverbed/steelscript/docs)
 
 ## About SteelScript
 
