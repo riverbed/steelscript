@@ -102,7 +102,7 @@ If you have all the tools ready:
    
 Download a notebook for SteelScript, open it in Visual Studio Code and your good to go:
 
-* *work in progress* [Notebooks for Steelscript](https://github.com/riverbed/Riverbed-Community-Toolkit/SteelScript/101-notebook/steelscript-notebook.ipynb) in the [Riverbed Community Toolkit](https://github.com/riverbed/Riverbed-Community-Toolkit/SteelScript)
+* *work in progress* [Steelscript](https://github.com/riverbed/Riverbed-Community-Toolkit/SteelScript) in the [Riverbed Community Toolkit](https://github.com/riverbed/Riverbed-Community-Toolkit)
 * **AppResponse**: [Hostgroups](https://github.com/riverbed/steelscript-appresponse/blob/master/notebooks/01-appresponse-hostgroups.ipynb)
 
 > Jupyter Notebook files have .ipynb extension, [more about Jupyter Notebook](https://jupyter.org)
