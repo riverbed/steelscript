@@ -145,14 +145,9 @@ pip install git+https://github.com/riverbed/steelscript-scc
 
 SteelScript and modules are distributed via [Riverbed in GitHub](https://github.com/riverbed). The main repository is [SteelScript](https://github.com/riverbed/steelscript).
 
-To use SteelScript, it is recommended whether to buid your own steelscript container or to install the steelscript python modules in your own environment, directly from the source code. See the quickstarts in the section above - *the guide provides details about other installation methods but requires refresh*.
+To use SteelScript, it is recommended to either build your own SteelScript container or install the SteelScript modules in your own Python environment directly from the source in GitHub main repository. Refer to the quickstarts in the section above - *the guide needs update*.
 
-##  Contribute
-
-Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
-
-> [!NOTE]
-> Contributions for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz, ...) can be organized inside /packaging and /test subfolders.
+Other distributions have not been maintained and contain outdated versions of SteelScript: [SteelScript on Dockerhub](https://hub.docker.com/r/riverbed/steelscript), ([SteelScript in pypi](https://pypi.org/search/?q=steelscript), ...
 
 ## About SteelScript
 
@@ -189,6 +184,9 @@ Other SteelScript modules have their own repository. The repository name is pref
 - *pending mantenance* [Business hour reporting plugin for Application Framework](https://github.com/riverbed/steelscript-appfwk-business-hours)
 - *pending mantenance* [Stock report demo with Application Framework](https://github.com/riverbed/steelscript-appfwk-business-hours)
 - *pending mantenance* [VM Config](https://github.com/riverbed/steelscript-vm-config)
+
+<details>
+  <summary>More about SteelScript</summary>
 
 ### Folder Structure for Modules
 
@@ -232,6 +230,10 @@ Optional:
 
 - /tox.ini: standardized python testing definition based on [Tox](https://tox.readthedocs.io/en/latest)
 - /notebooks: Notebooks based on [Jupyter](https://jupyter.org)
+
+
+> Note for the main [SteelScript repo](https://github.com/riverbed/steelscript)
+> Contributions for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz, ...) can be organized inside /packaging and /test subfolders.  
 
 ### Build
 
@@ -317,6 +319,12 @@ Some Dockerfile are provided to build different flavors of the SteelScript conta
 ```  
 
 </details>
+
+</details>
+
+##  Contribute
+
+Feel free to use, enhance and contribute by creating issues, sending pull requests (PR), extending with new modules ...
 
 ## License
 
