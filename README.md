@@ -138,7 +138,8 @@ SteelScript and modules are distributed via [Riverbed in GitHub](https://github.
 
 To use SteelScript, it is recommended to either build your own SteelScript container or install the SteelScript modules in your own Python environment directly from the source in GitHub main repository. Refer to the quickstarts in the section above - *the guide needs update*.
 
-Other distributions have not been maintained and contain outdated versions of SteelScript: [*outdated* SteelScript on Dockerhub](https://hub.docker.com/r/riverbed/steelscript), [*outdated* SteelScript in pypi](https://pypi.org/search/?q=steelscript), ...
+> [!NOTE]
+> Other distributions have not been maintained and contain outdated versions of SteelScript: [*outdated* SteelScript on Dockerhub](https://hub.docker.com/r/riverbed/steelscript), [*outdated* SteelScript in pypi](https://pypi.org/search/?q=steelscript), ...
 
 ## Guide
 
