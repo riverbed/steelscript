@@ -230,13 +230,11 @@ Optional:
 - /tox.ini: standardized python testing definition based on [Tox](https://tox.readthedocs.io/en/latest)
 - /notebooks: Notebooks based on [Jupyter](https://jupyter.org)
 
-
-> Note for the main [SteelScript repo](https://github.com/riverbed/steelscript)
-> Contributions for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz, ...) can be organized inside /packaging and /test subfolders.  
+> Contributions for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz, ...) can be organized inside the `/packaging` folder in the main [SteelScript repository](https://github.com/riverbed/steelscript)
 
 ### Build
 
-Builds are defined in the [SteelScript repo](https://github.com/riverbed/steelscript)
+Builds are defined in the [SteelScript repository](https://github.com/riverbed/steelscript)
 
 #### Prebuild test-plans validations
 
