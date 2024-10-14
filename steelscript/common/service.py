@@ -30,12 +30,16 @@ import logging
 import hashlib
 import time
 
+import http.client
+import urllib.parse
+import json
+
 from steelscript.common import connection
 from steelscript.common.exceptions import RvbdException, RvbdHTTPException
 
 from steelscript.common.api_helpers import APIVersion
 
-__all__ = ['Service', 'Auth', 'UserAuth', 'OAuth', 'RvbdException']
+__all__ = ['Service', 'Auth', 'UserAuth', 'OAuth', 'OAuth2_ClientCredentials', 'RvbdException']
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +49,7 @@ class Auth(object):
     BASIC = 1
     COOKIE = 2
     OAUTH = 3
+    OAUTH2_CLIENT_CREDENTIALS = 4
 
 
 class UserAuth(object):
@@ -80,6 +85,28 @@ class OAuth(object):
         self.access_code = access_code
         self.methods = [Auth.OAUTH]
 
+class OAuth2_ClientCredentials(object):
+    """ 
+    Class for OAuth 2.0 with the grant type "client_credentials" grant type
+    """
+
+    def __init__(self, token_url : str, scope : str, client_id : str, client_secret : str):
+        """
+        Define an OAuth 2.0 based authentication method using `scope`, `client_id` and `client_secret`.
+
+        `token_url` to set the oauth2 access token url.
+            For example: 'https://provider.com/oauth2/token'        
+
+        """
+
+        self.token_url = token_url
+        self.data = {
+                'grant_type': 'client_credentials',
+                'client_id': client_id,
+                'client_secret': client_secret,
+                'scope': scope
+            }
+        self.methods = [Auth.OAUTH2_CLIENT_CREDENTIALS]
 
 class Service(object):
     """This class is the main interface to interact with a device via REST
@@ -99,6 +126,7 @@ class Service(object):
                  supports_auth_basic=True,
                  supports_auth_cookie=False, override_cookie_login_api = '/api/common/1.0/login',
                  supports_auth_oauth=False, override_oauth_token_api='/api/common/1.0/oauth/token',
+                 supports_auth_oauth2_client_credentials=False,
                  enable_services_version_detection=True,override_services_api='/api/appliance/1.0/services'
                  ):
         """Establish a connection to the named host.
@@ -110,8 +138,8 @@ class Service(object):
             automatically be determined.
 
         `auth` defines the authentication method and credentials to use
-            to access the device.  See UserAuth and OAuth.  If set to None,
-            connection is not authenticated.
+            to access the device.  See UserAuth, OAuth and OAuth 2.0 grant type client credentials.
+            If set to None, connection is not authenticated.
 
         `verify_ssl` when set to True will only allow verified SSL certificates
             on any connections, False will not verify certs (useful for
@@ -125,21 +153,35 @@ class Service(object):
         `verify_api_version` when set to True it will fails when the api 
             does not support the steelscript api version check feature
 
+
         `enable_auth_detection set False to bypass the detection feature
+
+        `enable_services_version_detection  set False to bypass the detection feature
 
         `override_auth_info_api set properly for the detection feature
             For example: '/api/common/1.0/auth_info' or '/api/common/1.0.0/auth_info'
 
-        `override_oauth_token_api to set the oauth api path
-            For example: '/api/common/1.0/oauth/token' or '/api/common/1.0.0/oauth/token'
-        
-        `override_cookie_login_api to set the cookie login api path
-            For example: '/api/common/1.0/login'
-        
-        `enable_services_version_detection  set False to bypass the detection feature
-
         `override_services_api the services api or set to None if not supported.
             For example: '/api/appliance/1.0/services' '/api/appliance/1.0.0/services'
+
+
+        `supports_auth_oauth2_client_credentials` set to False to bypass the oauth2 client credentials feature
+
+        `supports_auth_basic` set to False to bypass the basic auth feature
+
+        `supports_auth_oauth` set to False to bypass the oauth feature
+
+        `override_oauth_token_api to set the oauth api path
+            For example: '/api/common/1.0/oauth/token' or '/api/common/1.0.0/oauth/token'
+
+
+        `supports_auth_cookie` set to False to bypass the cookie auth feature
+
+        `override_cookie_login_api to set the cookie login api path
+            For example: '/api/common/1.0/login'
+
+
+
         """
 
         self.service = service
@@ -164,6 +206,9 @@ class Service(object):
         self._cookie_login_api = override_cookie_login_api
 
         self._supports_auth_oauth = supports_auth_oauth
+
+        self._supports_auth_oauth2_client_credentials = supports_auth_oauth2_client_credentials
+
         self._oauth_token_api = override_oauth_token_api
         
         self._services_version_detection_enabled = enable_services_version_detection
@@ -257,7 +302,13 @@ class Service(object):
                         (','.join(supported_methods)))
             self._supports_auth_basic = ("BASIC" in supported_methods)
             self._supports_auth_cookie = ("COOKIE" in supported_methods)
-            self._supports_auth_oauth = ("OAUTH_2_0" in supported_methods)
+
+            # TODO: verify if appliance auth info API actually advertise OAUTH 2.0 when just supporting OAUTH (but not OAUTH2.0)
+            self._supports_auth_oauth = ("OAUTH2.0" in supported_methods)
+
+            # TODO: verify if appliance auth info API actually advertise OAUTH 2.0 CLIENT CREDENTIALS when supporting OAuth 2.0 with grant type client cedentials
+            self._supports_auth_oauth2_client_credentials = ("OAUTH2.0 CLIENT CREDENTIALS" in supported_methods)
+
         except RvbdHTTPException as e:
             if e.status != 404:
                 raise
@@ -265,13 +316,16 @@ class Service(object):
             self._supports_auth_basic = True
             self._supports_auth_cookie = False
             self._supports_auth_oauth = False
+            self._supports_auth_oauth2_client_credentials = False
 
     def authenticate(self, auth):
-        """Authenticate with device using the defined authentication method.
+        """
+        Authenticate with device using the defined authentication method.
         This sets up the appropriate authentication headers to access
         restricted resources.
 
-        `auth` must be an instance of either UserAuth or OAuth."""
+        `auth` must be an instance of either UserAuth, OAuth or OAuth2_ClientCredentials class
+        """
 
         assert auth is not None
 
@@ -280,7 +334,23 @@ class Service(object):
         if self._auth_detection_enabled:
             self._detect_auth_methods()
 
-        if self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
+        if self._supports_auth_oauth2_client_credentials and Auth.OAUTH2_CLIENT_CREDENTIALS in self.auth.methods:
+           
+            # Request access token
+            parsed_url = urllib.parse.urlparse(self.auth.token_url)
+            connection = http.client.HTTPSConnection(parsed_url.netloc)
+            headers = {'Content-Type': 'application/x-www-form-urlencoded'}            
+            connection.request('POST', parsed_url.path, urllib.parse.urlencode(self.auth.data), headers)
+            response = connection.getresponse()
+            access_token = json.loads(response.read().decode())["access_token"]
+            connection.close()
+
+            # Set the Authorization header in subsequent authenticated requests to the API
+            self.conn.add_headers({'Authorization': f'Bearer {access_token}'})
+
+            logger.info('Authenticated using OAUTH 2.0 Grant Type client_credentials')            
+
+        elif self._supports_auth_oauth and Auth.OAUTH in self.auth.methods:
             path = self._oauth_token_api
             assertion = '.'.join([
                 base64.urlsafe_b64encode(b'{"alg":"none"}').decode(),
@@ -308,7 +378,7 @@ class Service(object):
                 msg = 'Unknown OAuth response from server: %s' % st
                 raise RvbdException(msg)
             self.conn.add_headers({'Authorization': auth_header})
-            logger.info('Authenticated using OAUTH2.0')
+            logger.info('Authenticated using OAUTH')
 
             if self.service == "cac":
                 return self.conn

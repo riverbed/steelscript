@@ -57,10 +57,10 @@ class SSLAdapter(HTTPAdapter):
 
 
 def scrub_passwords(data):
-    if hasattr(data, 'iteritems'):
+    if hasattr(data, 'items'):
         result = {}
         for (k, v) in data.items():
-            if k.lower() in ('password', 'authenticate', 'cookie'):
+            if k.lower() in ('password', 'authenticate', 'cookie','secret','key','bearer','authorization'):
                 result[k] = "********"
             else:
                 result[k] = scrub_passwords(data[k])
