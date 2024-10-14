@@ -1,7 +1,6 @@
 # Riverbed SteelScript
 
-Riverbed SteelScript is a collection of libraries and scripts written in Python for interacting
-with Riverbed solutions and appliances, and other network infrastructure devices.
+Riverbed SteelScript is a collection of libraries and scripts written in Python for interacting with Riverbed solutions and appliances, and other network infrastructure devices.
 
 ## Quick Start
 
@@ -150,11 +149,9 @@ Other distributions have not been maintained and contain outdated versions of St
 
 ### The Framework
 
-The common module for SteelScript is in the [SteelScript repository](https://github.com/riverbed/steelscript)
-It contains common code but also it is the entrypoint for Documentation, Build, Test and releases.
+The common module for SteelScript is in the [SteelScript repository](https://github.com/riverbed/steelscript). It contains common code but also it is the entrypoint for Documentation, Build, Test and releases.
 
-Other SteelScript modules have their own repository. The repository name is prefixed by "steelscript": 
-[see steelscript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
+Other SteelScript modules have their own repository. The repository name is prefixed by "steelscript": [List of SteelScript repositories](https://github.com/orgs/riverbed/repositories?q=steelscript)
 
 #### Modules for Riverbed products and appliances:
 
