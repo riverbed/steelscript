@@ -1,5 +1,5 @@
 # Dockerfile
-# version: 24.9.1
+# version: 24.10.1
 
 FROM python:3.12
 LABEL org.opencontainers.image.authors="Riverbed Community"
@@ -21,7 +21,6 @@ RUN set -ex \
             -e git+https://github.com/riverbed/steelscript-appresponse#egg=steelscript-appresponse \
             -e git+https://github.com/riverbed/steelscript-netim.git#egg=steelscript-netim \
             -e git+https://github.com/riverbed/steelscript-client-accelerator-controller#egg=steelscript-cacontroller \
-        && pip install Cython \
         && pip install --src /src \
             -e git+https://github.com/riverbed/steelscript-steelhead#egg=steelscript-steelhead \
             -e git+https://github.com/riverbed/steelscript-packets.git@master#egg=steelscript-packets \
