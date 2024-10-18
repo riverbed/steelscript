@@ -11,7 +11,8 @@ Here are 4 things you can do to start quick and easy with SteelScript.
 
 ### Quick Start SteelScript examples in a container
 
-If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
+If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed, for example on a Linux machine in your lab.
+
 Open your shell (bash or PowerShell), build SteelScript from the latest source code and run it locally in a Docker container as follows:
 
 #### Build and run SteelScript in a container
