@@ -11,7 +11,8 @@ Here are 4 things you can do to start quick and easy with SteelScript.
 
 ### Quick Start SteelScript examples in a container
 
-If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed.
+If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed, for example on a Linux machine in your lab.
+
 Open your shell (bash or PowerShell), build SteelScript from the latest source code and run it locally in a Docker container as follows:
 
 #### Build and run SteelScript in a container
@@ -20,7 +21,7 @@ Build a docker image:
 
 ```shell
 # Build a docker image from latest code
-docker build --tag steelscript:latest https://github.com/riverbed/steelscript
+docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
 ```
 
 Run SteelScript in a container:
@@ -67,10 +68,10 @@ Build both steelscript bash imags and notebook image:
 
 ```shell
 # Build the steelscript base image
-docker build --tag steelscript:latest https://github.com/riverbed/steelscript
+docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
 
 # Build the steelscript image for Jupyter Notebook
-docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript
+docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript.git
 ```
 
 Run a container with the steelscript.notebook image. It contains the Jupyter Notebook server and will be listening on port 8888 by default.
