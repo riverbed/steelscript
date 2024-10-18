@@ -20,7 +20,7 @@ Build a docker image:
 
 ```shell
 # Build a docker image from latest code
-docker build --tag steelscript:latest https://github.com/riverbed/steelscript
+docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
 ```
 
 Run SteelScript in a container:
@@ -67,10 +67,10 @@ Build both steelscript bash imags and notebook image:
 
 ```shell
 # Build the steelscript base image
-docker build --tag steelscript:latest https://github.com/riverbed/steelscript
+docker build --tag steelscript:latest https://github.com/riverbed/steelscript.git
 
 # Build the steelscript image for Jupyter Notebook
-docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript
+docker build --tag steelscript.notebook -f Dockerfile.notebook https://github.com/riverbed/steelscript.git
 ```
 
 Run a container with the steelscript.notebook image. It contains the Jupyter Notebook server and will be listening on port 8888 by default.
