@@ -144,7 +144,7 @@ To use SteelScript, it is recommended to either build your own SteelScript conta
 ## Guide
 
 > [!NOTE]
-> The [SteelScript guide](https://support.riverbed.com/apis/steelscript) needs a good refresh. The source is there [https://github.com/riverbed/steelscript/docs](https://github.com/riverbed/steelscript/docs)
+> The [SteelScript guide](https://support.riverbed.com/apis/steelscript) needs a good refresh. The source is there: [*outdated* source in docs subfolder](docs)
 
 ## About SteelScript
 
