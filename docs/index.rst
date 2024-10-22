@@ -1,12 +1,24 @@
 Riverbed SteelScript for Python
 ===============================
 
+.. warning::
+   This documentation has been created for SteelScript 2.0 at the time of Python 2.x and has not been updated and reviewed for a while.   
+   For quick starts and more about the latest version for Python 3.x, please refer to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_ 
+   
 Welcome, this is the documentation for Riverbed SteelScript for Python.
-The core SteelScript is a collection of Python modules that build upon 
-REST APIs and other interfaces to interact with Riverbed appliances and software.
+The core SteelScript is a collection of Python modules that build upon REST APIs and other interfaces to interact with Riverbed appliances and software.
 
-Quick Start
------------
+Getting started with SteelScript (latest version for Python 3.x)
+----------------------------------------------------------------
+
+Please go to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_ 
+
+
+Getting started with SteelScript 2.0 for Python 2.x
+----------------------------------------------------
+
+Installing
+==========
 
 If you already have pip, just run the following (in a
 `virtualenv <http://www.virtualenv.org/>`_)::
@@ -22,8 +34,8 @@ Not sure about pip, but you know you have Python?
 
       $ python steel_bootstrap.py install
 
-SteelScript SteelHead
----------------------
+Adding a module with steel command
+==================================
 
 The SteelScript SteelHead offers a set of interfaces to control and work
 with a SteelHead appliance. It comes pre-configured with a couple of example
