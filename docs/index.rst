@@ -12,11 +12,11 @@ The core SteelScript is a collection of Python modules that build upon REST APIs
 Getting started with SteelScript (latest)
 =========================================
 
-Please go to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest version of SteelScript for Python 3.x. 
+Please go to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest version of SteelScript for **Python 3**
 
 
-Getting started with SteelScript 2.0 for Python 2.x
-===================================================
+**outdated** Getting started with SteelScript 2.0 for Python 2
+==========================================================
 
 Installing
 ----------
