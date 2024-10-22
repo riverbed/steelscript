@@ -3,17 +3,17 @@ Riverbed SteelScript for Python
 ===============================
 
 .. warning::
-   For quick starts and more about the latest version of SteelScript for Python 3, please refer to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_    
+   For quick starts and more about the latest version of `SteelScript <https://github.com/riverbed/steelscript>`_ for Python 3, please refer to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_    
    This documentation has been created for SteelScript 2.0 at the time of Python 2 and has not been updated and reviewed for a while.   
 
    
-Welcome, this is the documentation for Riverbed SteelScript for Python.
-The core SteelScript is a collection of Python modules that build upon REST APIs and other interfaces to interact with Riverbed appliances and software.
+Welcome, this is the documentation of `Riverbed SteelScript <https://github.com/riverbed/steelscript>`_
+The core `SteelScript <https://github.com/riverbed/steelscript>`_ is a collection of Python modules that build upon REST APIs and other interfaces to interact with Riverbed appliances and software.
 
 Getting started with SteelScript (latest)
 =========================================
 
-Please go to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest version of SteelScript for **Python 3**
+Please go to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest version of `SteelScript <https://github.com/riverbed/steelscript>`_ for **Python 3**
 
 
 *outdated* Getting started with SteelScript 2.0 for Python 2
