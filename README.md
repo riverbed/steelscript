@@ -48,10 +48,16 @@ python examples/steelscript-appresponse/print_hostgroups-formatted.py {apprespon
 python examples/steelscript-cacontroller/cacontroller-rest_api.py {client accelerator controller fqdn or IP address} --access_code {access_code}
 ```
 
-3. **NetIM example**, list the devices:
+3. **NetIM example**, list the Devices:
 
 ```shell   
 python examples/steelscript-netim/print-netim-devices-raw.py {netim core fqdn or IP address} --username {account} --password {password}
+```
+
+4. **NetProfiler example**, get the list of the Ports Top Talkers:
+
+```shell
+python examples/steelscript-netprofiler/top_ports.py {netprofiler fqdn or IP address} -u {admin account} -p {password}
 ```
 
 </details>
@@ -216,16 +222,17 @@ Mandatory:
 - LICENSE: Riverbed Technology copyright, terms and conditions based on MIT
 - CHANGELOG: Simple text file tracking major changes
 - /docs: Documentation using reStructured Text (rst) file format.
-- /: Python scripts samples showing how to use the module.
-- /steelscript: The actual code, written in Python. Must be Python3 only.
-- /tests: Test plans and unit test. Can be organized in subfolders. Test plan are ideally documented and easy to run scripts but can be anything defining a test plan (script, text, ...), for example a python script based on pytest.
+- /examples: Python scripts samples showing how to use the module
+- /steelscript: The actual code, written in Python (Python 3).
+- /tests: Test plans and unit test. Can be organized in subfolders. Test plan are ideally documented and easy to run scripts but can be anything defining a test plan (script, text, ...), for example a Python script based on pytest.
 - setup.py: Python setup file containing meta descriptions and requirements. Based on setuptools, distutils and pytest. Should NOT contain unit test (use Tox and put unit test inside /tests folder instead)
 
 
 Optional:
 
-- /tox.ini: standardized python testing definition based on [Tox](https://tox.readthedocs.io/en/latest)
 - /notebooks: Notebooks based on [Jupyter](https://jupyter.org)
+- /tox.ini: standardized python testing definition based on [Tox](https://tox.readthedocs.io/en/latest)
+
 
 > Contributions for alternative distribution methods and packaging (like pypi, rpm, .deb, rpm, tgz, ...) can be organized inside the `/packaging` folder in the main [SteelScript repository](https://github.com/riverbed/steelscript)
 
