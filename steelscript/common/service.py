@@ -215,10 +215,9 @@ class Service(object):
         self._services_api = override_services_api
        
         self.connect()
+
         if enable_services_version_detection:
             self.check_api_versions(versions)
-        else:
-            self.supported_versions = None
 
         if auth is not None:
             self.authenticate(auth)        
