@@ -127,7 +127,7 @@ class Service(object):
                  supports_auth_cookie=False, override_cookie_login_api = '/api/common/1.0/login',
                  supports_auth_oauth=False, override_oauth_token_api='/api/common/1.0/oauth/token',
                  supports_auth_oauth2_client_credentials=False,
-                 enable_services_version_detection=True,override_services_api='/api/appliance/1.0/services'
+                 enable_services_version_detection=True,override_services_api='/api/common/1.0/services'
                  ):
         """Establish a connection to the named host.
 
@@ -162,7 +162,7 @@ class Service(object):
             For example: '/api/common/1.0/auth_info' or '/api/common/1.0.0/auth_info'
 
         `override_services_api the services api or set to None if not supported.
-            For example: '/api/appliance/1.0/services' '/api/appliance/1.0.0/services'
+            For example: '/api/common/1.0/services' '/api/appliance/1.0.0/services'
 
 
         `supports_auth_oauth2_client_credentials` set to False to bypass the oauth2 client credentials feature
