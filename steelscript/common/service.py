@@ -217,6 +217,8 @@ class Service(object):
         self.connect()
         if enable_services_version_detection:
             self.check_api_versions(versions)
+        else:
+            self.supported_versions = None
 
         if auth is not None:
             self.authenticate(auth)        
@@ -247,9 +249,6 @@ class Service(object):
         if self.conn is None:
             raise RvbdException("Not connected")
         
-        if api_versions is None:
-            return True        
-
         try:
             self.supported_versions = self._get_supported_versions()
         except RvbdHTTPException as e:
@@ -263,6 +262,9 @@ class Service(object):
 
         logger.debug("Server supports the following services: %s" %
                      (",".join([str(v) for v in self.supported_versions])))
+
+        if api_versions is None:
+            return True
 
         for v in api_versions:
             if v in self.supported_versions:
