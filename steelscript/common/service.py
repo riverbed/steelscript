@@ -246,6 +246,9 @@ class Service(object):
         """Check that the server supports the given API versions."""
         if self.conn is None:
             raise RvbdException("Not connected")
+        
+        if api_versions is None:
+            return True        
 
         try:
             self.supported_versions = self._get_supported_versions()
