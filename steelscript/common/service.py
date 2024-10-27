@@ -386,9 +386,6 @@ class Service(object):
             self.conn.add_headers({'Authorization': auth_header})
             logger.info('Authenticated using OAUTH')
 
-            if self.service == "cac":
-                return self.conn
-
         elif self._supports_auth_cookie and Auth.COOKIE in self.auth.methods:
             path = self._cookie_login_api
             data = self.generate_authentication_payload_for_cookie_auth()
