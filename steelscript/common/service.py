@@ -318,6 +318,18 @@ class Service(object):
             self._supports_auth_oauth = False
             self._supports_auth_oauth2_client_credentials = False
 
+    def generate_authentication_payload_for_cookie_auth(self):
+        """
+        Generate the payload required in the authentication phase with COOKIE auth method
+        This class method can be overridden to provide a custom payload
+        """
+        data = {
+            "username": self.auth.username,
+            "password": self.auth.password
+        }
+        return data
+
+
     def authenticate(self, auth):
         """
         Authenticate with device using the defined authentication method.
@@ -385,10 +397,7 @@ class Service(object):
 
         elif self._supports_auth_cookie and Auth.COOKIE in self.auth.methods:
             path = self._cookie_login_api
-            data = {
-                "username": self.auth.username,
-                "password": self.auth.password
-            }
+            data = self.generate_authentication_payload_for_cookie_auth()
 
             body, http_response = self.conn.json_request('POST', path,
                                                          body=data,
