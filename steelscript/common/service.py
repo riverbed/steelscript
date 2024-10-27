@@ -213,13 +213,7 @@ class Service(object):
         
         self._services_version_detection_enabled = enable_services_version_detection
         self._services_api = override_services_api
-
-        # TODO: Update steelscript-client-accelerator-controller module to remove this patch
-        if self.service == "cac":
-            self._auth_info_api = '/api/common/1.0.0/auth_info'
-            self._oauth_token_api = '/api/common/1.0.0/oauth/token'
-            self._services_api = '/api/appliance/1.0.0/services'
-        
+       
         self.connect()
         if enable_services_version_detection:
             self.check_api_versions(versions)
