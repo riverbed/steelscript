@@ -2,7 +2,7 @@
 Riverbed SteelScript for Python
 ===============================
 
-`SteelScript <https://github.com/riverbed/steelscript>`_ is a collection of Python modules that build upon REST APIs and other interfaces to interact with Riverbed appliances and software.
+`SteelScript <https://github.com/riverbed/steelscript>`_ is a collection of libraries and scripts in Python for interacting with `Riverbed <https://www.riverbed.com/>`_ solutions and appliances, and other network infrastructure devices.
 
 .. note::
 
