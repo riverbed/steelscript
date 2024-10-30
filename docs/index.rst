@@ -6,11 +6,12 @@ Riverbed SteelScript for Python
 
 .. note::
 
-  Please go to `SteelScript in GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest `SteelScript <https://github.com/riverbed/steelscript>`_ 
-  that works in container, supports Python 3 and more.
+  Go to `SteelScript in GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest `SteelScript <https://github.com/riverbed/steelscript>`_ 
+  
 
 .. warning::
-  This documentation has been created for SteelScript 2.0 at the time of Python 2 and has not been updated and reviewed for a while.     
+  
+  This documentation has been created for SteelScript 2.0 at the time of Python 2 and has not been updated and reviewed for a while. For latest information about SteelScript that works in container, supports Python 3, notebooks and more, please refer to `SteelScript in GitHub <https://github.com/riverbed/steelscript>`_
 
 <<*outdated*>> SteelScript 2.0 for Python 2 <<*outdated*>>
 ==========================================================
