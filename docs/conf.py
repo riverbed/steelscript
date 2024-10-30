@@ -288,6 +288,6 @@ texinfo_documents = [
 
 def setup(app):
     # add custom css that overrides the default theme
-    app.add_stylesheet('theme.css')
+    app.add_css_file('theme.css')
     # Register the docstring processor with sphinx
     #app.connect('autodoc-process-docstring', process_docstring)
