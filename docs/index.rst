@@ -25,8 +25,8 @@ Installing
 If you already have pip, just run the following (in a
 `virtualenv <http://www.virtualenv.org/>`_)::
 
-   $ pip install steelscript
-   $ steel install
+  pip install steelscript
+  steel install
 
 Not sure about pip, but you know you have Python?
 
@@ -34,7 +34,7 @@ Not sure about pip, but you know you have Python?
 
 2. Run it (in a `virtualenv <http://www.virtualenv.org/>`_)::
 
-      $ python steel_bootstrap.py install
+    python steel_bootstrap.py install
 
 Adding a module with steel command
 ----------------------------------
@@ -47,7 +47,7 @@ provided in this package.
 Once you have the base ``steelscript`` package installed, getting started
 is just one command away::
 
-   $ steel install --steelhead
+  steel install --steelhead
 
 For more details, see the :doc:`complete documentation <steelhead/overview>`.
 
