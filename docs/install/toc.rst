@@ -1,7 +1,7 @@
 SteelScript Installation
 ========================
 
-.. note::
+.. tip::
 
   Go to `SteelScript on GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest `SteelScript <https://github.com/riverbed/steelscript>`_ 
   

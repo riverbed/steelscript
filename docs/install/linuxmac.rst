@@ -1,7 +1,7 @@
 SteelScript Installation - Linux / Mac
 ======================================
 
-.. note::
+.. tip::
 
   Go to `SteelScript on GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest `SteelScript <https://github.com/riverbed/steelscript>`_ 
   
@@ -80,7 +80,7 @@ separate different projects from one another.
        $ . ~/steelscript/venv/bin/activate
        (venv)$
 
-   .. note::
+   .. tip::
       Note how your prompt changes to include the name of the virtual environment.
       You can also confirm you are working within the new environment
       by checking which python executable is in your path::
@@ -180,7 +180,7 @@ and their dependencies instead of directly installing them.
        $ pip install --no-binary -d steelscript_packages steelscript.wireshark
        $ pip install --no-binary -d steelscript_packages virtualenv
 
-   .. note::
+   .. tip::
        The ``--no-binary`` option makes sure the packages can be installed
        on a barebones system that may not have ``pip`` available.
 
@@ -223,7 +223,7 @@ and their dependencies instead of directly installing them.
 
       $ sudo steel install --pip-options="--no-index -f pkgs"
 
-   .. note::
+   .. tip::
       Omit ``sudo`` if you are using virtualenv, as admin
       privileges are not required
 
