@@ -12,7 +12,7 @@ Riverbed SteelScript for Python
 .. warning::
   This documentation has been created for SteelScript 2.0 at the time of Python 2 and has not been updated and reviewed for a while.     
 
-<<*outdated*>> Getting started with SteelScript 2.0 for Python 2
+<<*outdated*>> SteelScript 2.0 for Python 2 <<*outdated*>>
 ==========================================================
 
 Installing
