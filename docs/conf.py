@@ -65,7 +65,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'steelscript'
-copyright = u'2020 Riverbed Technology, Inc.'
+copyright = u'2019 - 2024 Riverbed Technology, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
