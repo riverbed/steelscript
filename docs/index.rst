@@ -2,9 +2,11 @@
 Riverbed SteelScript for Python
 ===============================
 
+.. note::
+  For quick starts and more about the latest version of `SteelScript <https://github.com/riverbed/steelscript>`_ for Python 3, please refer to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_
+
 .. warning::
-   For quick starts and more about the latest version of `SteelScript <https://github.com/riverbed/steelscript>`_ for Python 3, please refer to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_    
-   This documentation has been created for SteelScript 2.0 at the time of Python 2 and has not been updated and reviewed for a while.   
+  This documentation has been created for SteelScript 2.0 at the time of Python 2 and has not been updated and reviewed for a while.   
 
    
 Welcome, this is the documentation of `Riverbed SteelScript <https://github.com/riverbed/steelscript>`_
