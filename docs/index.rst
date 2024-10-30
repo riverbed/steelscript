@@ -13,7 +13,7 @@ Riverbed SteelScript for Python
   
   This documentation has been created for SteelScript 2.0 at the time of Python 2 and 3.8 and has not been updated and reviewed for a while. For latest information about SteelScript that works in containers, on Linux/Mac and Windows, supports Python 3.12+, notebooks and more, please refer to `SteelScript on GitHub <https://github.com/riverbed/steelscript>`_
 
-<<*outdated*>> SteelScript 2.0 for Python 2 <<*outdated*>>
+<<*outdated*>> SteelScript 2.0 for Python 2/3.8 <<*outdated*>>
 ==========================================================
 
 Installing
