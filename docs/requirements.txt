@@ -1,5 +1,6 @@
 Cython
 Sphinx
+sphinx-rtd-theme
 # Cython==0.29.10
 # recommonmark==0.5.0
 # Sphinx==2.1.1
