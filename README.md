@@ -143,9 +143,9 @@ pip install git+https://github.com/riverbed/steelscript-scc
 
 ## Get SteelScript
 
-SteelScript and modules are distributed via [Riverbed in GitHub](https://github.com/riverbed). The main repository is [SteelScript](https://github.com/riverbed/steelscript).
+SteelScript and modules are distributed via [Riverbed on GitHub](https://github.com/riverbed). The main repository is [SteelScript](https://github.com/riverbed/steelscript).
 
-To use SteelScript, it is recommended to either build your own SteelScript container or install the SteelScript modules in your own Python environment directly from the source in GitHub main repository. Refer to the quickstarts in the section above - *the guide needs update*.
+To use SteelScript, it is recommended to either build your own SteelScript container or install the SteelScript modules in your own Python environment directly from the source on GitHub main repository. Refer to the quickstarts in the section above - *the guide needs update*.
 
 > [!NOTE]
 > Other distributions have not been maintained and contain outdated versions of SteelScript: [*outdated* SteelScript on Dockerhub](https://hub.docker.com/r/riverbed/steelscript), [*outdated* SteelScript in pypi](https://pypi.org/search/?q=steelscript), ...
