@@ -6,12 +6,12 @@ Riverbed SteelScript is a collection of libraries and scripts written in Python 
 
 ## Quick Start
 
-Here are 4 things you can do to start quick and easy with SteelScript.
+Here are 4 things you can do to start quick and easy with SteelScript (click to expand the section).
 
 <details>
   <summary>Try examples just with git and Docker</summary>
 
-### Quick Start SteelScript examples in a container
+### Quick start SteelScript examples in a container
 
 If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed, for example on a Linux machine in your lab.
 
@@ -101,7 +101,7 @@ From there, in the *Notebooks* folder you can find some notebooks based on Steel
 <details>
   <summary>Try SteelScript notebooks in your own SteelScript environment, just with python, pip, git and vscode</summary>
 
-### Quick Start SteelScript notebooks in your environment
+### Quick start SteelScript notebooks in your environment
 
 If you have all the tools ready:
 1. [Python](https://www.python.org/downloads) and pip
