@@ -1,0 +1,6 @@
+# grype.yaml
+# version: 24.11.1
+
+# https://github.com/anchore/grype#specifying-matches-to-ignore
+ignore:
+  - fix-state: wont-fix

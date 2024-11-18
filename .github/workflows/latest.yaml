@@ -1,0 +1,78 @@
+# latest.yaml
+# version: 24.11.1
+
+name: latest
+# see extra configuration rule in /.grype.yaml
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Docker Setup Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # Playground
+
+    - name: Build image - SteelScript playground (Dockerfile)
+      run:  docker build --tag steelscript:latest -f Dockerfile .
+
+    - name: Run - SteelScript playground
+      run: docker run steelscript:latest steel about -v
+
+    # Notebook
+
+    - name: Build image - SteelScript notebook (Dockerfile)
+      run:  docker build --tag steelscript.notebook -f Dockerfile.notebook .
+
+    - name: Run - SteelScript notebook
+      run: docker run steelscript:latest steel about -v      
+
+    # Workload
+
+    - name: Build image - SteelScript workload (Dockerfile.workload)
+      run:  docker build --tag steelscript.workload:latest -f Dockerfile.workload .
+   
+    - name: Scan image - SteelScript workload
+      uses: anchore/scan-action@v3
+      with:
+        image: "steelscript.workload:latest"
+        severity-cutoff: critical
+        output-format: table
+
+    - name: Run image - SteelScript workload
+      run: docker run steelscript.workload:latest steel about -v
+
+    # Custom
+
+    - name: Build image - SteelScript custom (Dockerfile.custom)
+      run:  docker build --tag steelscript.custom:latest -f Dockerfile.custom .
+   
+    - name: Run image - SteelScript custom
+      run: docker run steelscript.custom:latest steel about -v
+
+    # Slim
+
+    - name: Build image - SteelScript slim (Dockerfile.slim)
+      run:  docker build --tag steelscript.slim:latest -f Dockerfile.slim .
+   
+    - name: Scan image - SteelScript slim
+      uses: anchore/scan-action@v3
+      with:
+        image: "steelscript.slim:latest"
+        severity-cutoff: critical
+        output-format: table          
+
+    - name: Run image - SteelScript slim
+      run: docker run steelscript.slim:latest steel about -v
+
+    # Extra
+
+    - name: Size images
+      run: docker images
+  
