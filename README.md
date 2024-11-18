@@ -1,6 +1,8 @@
 # Riverbed SteelScript
 
 [![Documentation Status](https://readthedocs.org/projects/steelscript/badge/?version=latest)](https://steelscript.readthedocs.io/en/latest/?badge=latest)
+[![latest](https://github.com/gwenblum/steelscript/actions/workflows/anchore-latest.yml/badge.svg)](https://github.com/gwenblum/steelscript/actions/workflows/anchore-latest.yml)
+[![release](https://github.com/gwenblum/steelscript/actions/workflows/anchore-release.yml/badge.svg)](https://github.com/gwenblum/steelscript/actions/workflows/anchore-release.yml)
 
 Riverbed SteelScript is a collection of libraries and scripts written in Python for interacting with Riverbed solutions and appliances, and other network infrastructure devices.
 
@@ -15,7 +17,7 @@ Here are 4 things you can do to start quick and easy with SteelScript (click to 
 
 If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed, for example on a Linux machine in your lab.
 
-Open your shell (bash or PowerShell), build SteelScript from the latest source code and run it locally in a Docker container as follows:
+Open your shell (bash or PowerShell), build a container image of SteelScript from the latest source code, and run it locally in a Docker container as follows:
 
 #### Build and run SteelScript in a container
 
@@ -254,34 +256,65 @@ Execute test-plans with tox
  
 #### Building Docker containers
 
-Some Dockerfile are provided to build different flavors of the SteelScript container image:
+Some Dockerfiles are provided to build different flavors of the SteelScript container image:
 
-- Dockerfile: standard build
-- Dockerfile.slim: optimized build
-- Dockerfile.notebook: build for demo and learning with Notebooks
-- Dockerfile.dev: build development and testing container from master or fork/branch
+1. Dockerfile: scripting playground, with all CLI and tools. 
+2. Dockerfile.notebook: build for demo and learning with Jupyter Notebooks.
+3. Dockerfile.slim: small build just enough to run steelscript. Should pass security scans.
+4. Dockerfile.workload: optimized to use as a base image for custom workloads. Should pass security scans.
+5. Dockerfile.custom: example of a custom workload (based on Dockerfile.workload).
+6. Dockerfile.dev: build development and testing container from master or fork/branch
 
 
 <details>
   <summary>Build snippets</summary>
 
-##### Standard:
+##### Playground (~1.1 GB)
 
 ```shell
   docker build --tag steelscript -f Dockerfile .
 ```  
 
-##### Slim:
+##### Notebook (~1.4 GB)
+
+```shell
+  docker build --tag steelscript.notebook -f Dockerfile.notebook .
+```
+
+##### Slim (~250 MB)
 
 ```shell
   docker build --tag steelscript.slim -f Dockerfile.slim .
 ```  
 
-##### Notebook
+##### Workload (<180 MB)
 
 ```shell
-  docker build --tag steelscript.notebook -f Dockerfile.notebook .
+  docker build --tag steelscript.workload -f Dockerfile.workload .
 ```
+
+##### Custom workload
+
+```shell
+#   # Build the SteelScript Optimized image
+docker build --tag steelscript.workload:latest -f Dockerfile.workload .
+
+# Create and edit your script
+touch your_script.py
+
+# Build your custom image
+docker build --tag steelscript.your_custom_workload -f Dockerfile.custom .
+
+# Run the workload
+docker run --rm steelscript.your_custom_workload:latest python your_script.py
+``` 
+
+##### Release (<180 MB)
+
+```shell
+  docker build --tag steelscript.release -f Dockerfile.release .
+```
+
 
 </details>
 
