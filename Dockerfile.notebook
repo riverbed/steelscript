@@ -5,7 +5,7 @@
 #
 # Usage
 #
-#   # Build the SteelScript base image
+#   # Build the SteelScript for playground as a base image
 #
 #       docker build --tag steelscript:latest -f Dockerfile .
 #   
