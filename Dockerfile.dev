@@ -1,5 +1,5 @@
 # Dockerfile.dev
-# version: 24.9.1
+# version: 24.10.1
 
 FROM python:3.12
 LABEL org.opencontainers.image.authors="Riverbed Community"
@@ -34,7 +34,6 @@ RUN set -ex \
             -e /src-dev/steelscript-appresponse \
             -e /src-dev/steelscript-netim \
             -e /src-dev/steelscript-client-accelerator-controller \
-        && pip install Cython \
         && pip install --src /src \
             -e /src-dev/steelscript-steelhead \
             -e /src-dev/steelscript-packets \

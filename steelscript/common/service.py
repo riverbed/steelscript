@@ -127,7 +127,7 @@ class Service(object):
                  supports_auth_cookie=False, override_cookie_login_api = '/api/common/1.0/login',
                  supports_auth_oauth=False, override_oauth_token_api='/api/common/1.0/oauth/token',
                  supports_auth_oauth2_client_credentials=False,
-                 enable_services_version_detection=True,override_services_api='/api/appliance/1.0/services'
+                 enable_services_version_detection=True,override_services_api='/api/common/1.0/services'
                  ):
         """Establish a connection to the named host.
 
@@ -162,7 +162,7 @@ class Service(object):
             For example: '/api/common/1.0/auth_info' or '/api/common/1.0.0/auth_info'
 
         `override_services_api the services api or set to None if not supported.
-            For example: '/api/appliance/1.0/services' '/api/appliance/1.0.0/services'
+            For example: '/api/common/1.0/services' '/api/appliance/1.0.0/services'
 
 
         `supports_auth_oauth2_client_credentials` set to False to bypass the oauth2 client credentials feature
@@ -213,14 +213,9 @@ class Service(object):
         
         self._services_version_detection_enabled = enable_services_version_detection
         self._services_api = override_services_api
-
-        # TODO: Update steelscript-client-accelerator-controller module to remove this patch
-        if self.service == "cac":
-            self._auth_info_api = '/api/common/1.0.0/auth_info'
-            self._oauth_token_api = '/api/common/1.0.0/oauth/token'
-            self._services_api = '/api/appliance/1.0.0/services'
-        
+       
         self.connect()
+
         if enable_services_version_detection:
             self.check_api_versions(versions)
 
@@ -252,7 +247,7 @@ class Service(object):
         """Check that the server supports the given API versions."""
         if self.conn is None:
             raise RvbdException("Not connected")
-
+        
         try:
             self.supported_versions = self._get_supported_versions()
         except RvbdHTTPException as e:
@@ -266,6 +261,9 @@ class Service(object):
 
         logger.debug("Server supports the following services: %s" %
                      (",".join([str(v) for v in self.supported_versions])))
+
+        if api_versions is None:
+            return True
 
         for v in api_versions:
             if v in self.supported_versions:
@@ -317,6 +315,18 @@ class Service(object):
             self._supports_auth_cookie = False
             self._supports_auth_oauth = False
             self._supports_auth_oauth2_client_credentials = False
+
+    def generate_authentication_payload_for_cookie_auth(self):
+        """
+        Generate the payload required in the authentication phase with COOKIE auth method
+        This class method can be overridden to provide a custom payload
+        """
+        data = {
+            "username": self.auth.username,
+            "password": self.auth.password
+        }
+        return data
+
 
     def authenticate(self, auth):
         """
@@ -380,15 +390,9 @@ class Service(object):
             self.conn.add_headers({'Authorization': auth_header})
             logger.info('Authenticated using OAUTH')
 
-            if self.service == "cac":
-                return self.conn
-
         elif self._supports_auth_cookie and Auth.COOKIE in self.auth.methods:
             path = self._cookie_login_api
-            data = {
-                "username": self.auth.username,
-                "password": self.auth.password
-            }
+            data = self.generate_authentication_payload_for_cookie_auth()
 
             body, http_response = self.conn.json_request('POST', path,
                                                          body=data,
