@@ -1,0 +1,64 @@
+# Dockerfile.release
+# version: 24.11.1
+#
+# Riverbed SteelScript, https://github.com/riverbed/steelscript
+#
+# Usage
+#   
+#   # Build
+#
+#       docker build --tag steelscript.release:24.11.1 -f Dockerfile.release .
+#
+#   # Run
+#       
+#      docker run --rm steelscript.release:24.11.1 steel
+
+# Use an alpine version for optimization
+FROM python:3.13-alpine
+LABEL org.opencontainers.image.authors="Riverbed Community"
+LABEL org.opencontainers.image.source="https://github.com/riverbed/steelscript"
+LABEL org.opencontainers.image.title="SteelScript - release image"
+LABEL org.opencontainers.image.version="24.11.1"
+
+RUN set -ex && \
+        # Install tools and deps for build
+        tools=' \
+                bash \
+        ' && \
+        # Install deps for build
+        buildDeps=' \
+                git \
+                gcc \
+                libpcap-dev \
+                musl-dev \
+        ' && \
+        apk update && \ 
+        apk add --no-cache $buildDeps $tools && \
+        # Install SteelScript and modules with static version
+        pip install --no-cache-dir --upgrade pip && \
+        pip install --no-cache-dir \
+                git+https://github.com/riverbed/steelscript@24.11.1 \
+                git+https://github.com/riverbed/steelscript-netprofiler@24.2.1 \
+                git+https://github.com/riverbed/steelscript-wireshark@24.10.1 \
+                git+https://github.com/riverbed/steelscript-cmdline@24.2.1 \
+                git+https://github.com/riverbed/steelscript-scc@24.2.1 \
+                git+https://github.com/riverbed/steelscript-appresponse@24.10.1 \
+                git+https://github.com/riverbed/steelscript-netim@24.11.1 \
+                git+https://github.com/riverbed/steelscript-client-accelerator-controller@24.2.1 \
+                git+https://github.com/riverbed/steelscript-steelhead@24.2.1 \
+                git+https://github.com/riverbed/steelscript-packets@24.10.1 && \
+        # Cleanup, purging build deps
+        apk del $buildDeps && \
+        apk cache clean
+
+# Create a non-root user and group for steelscript
+ARG USER_ID=1000
+ARG GROUP_ID=$USER_ID
+RUN addgroup -g $GROUP_ID steelscript && adduser -u $USER_ID -G steelscript -h /steelscript -D steelscript
+USER steelscript
+
+# Set the steelscript workdir
+WORKDIR /steelscript
+
+# Configure container startup
+CMD ["/bin/bash"]

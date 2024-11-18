@@ -1,0 +1,35 @@
+# release.yaml
+# version: 24.11.1
+
+name: release
+# see extra configuration rule in /.grype.yaml
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Docker Setup Buildx
+      uses: docker/setup-buildx-action@v3
+
+
+    - name: Build image - SteelScript release (Dockerfile.release)
+      run:  docker build --progress=plain --tag localbuild/steelscript.release -f Dockerfile.release .
+   
+    - name: Scan image - SteelScript release
+      uses: anchore/scan-action@v3
+      with:
+        image: "localbuild/steelscript.release"
+        severity-cutoff: critical
+        output-format: table
+
+    - name: Run image - SteelScript release
+      run: docker run localbuild/steelscript.release steel about -v
+
+    - name: Size image
+      run: docker images
