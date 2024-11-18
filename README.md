@@ -1,8 +1,8 @@
 # Riverbed SteelScript
 
 [![Documentation Status](https://readthedocs.org/projects/steelscript/badge/?version=latest)](https://steelscript.readthedocs.io/en/latest/?badge=latest)
-[![latest](https://github.com/gwenblum/steelscript/actions/workflows/anchore-latest.yml/badge.svg)](https://github.com/gwenblum/steelscript/actions/workflows/anchore-latest.yml)
-[![release](https://github.com/gwenblum/steelscript/actions/workflows/anchore-release.yml/badge.svg)](https://github.com/gwenblum/steelscript/actions/workflows/anchore-release.yml)
+[![latest](https://github.com/gwenblum/steelscript/actions/workflows/anchore-latest.yaml/badge.svg)](https://github.com/gwenblum/steelscript/actions/workflows/anchore-latest.yaml)
+[![release](https://github.com/gwenblum/steelscript/actions/workflows/anchore-release.yaml/badge.svg)](https://github.com/gwenblum/steelscript/actions/workflows/anchore-release.yaml)
 
 Riverbed SteelScript is a collection of libraries and scripts written in Python for interacting with Riverbed solutions and appliances, and other network infrastructure devices.
 
