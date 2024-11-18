@@ -37,13 +37,13 @@ RUN set -ex && \
         # Install SteelScript and modules with static version
         pip install --no-cache-dir --upgrade pip && \
         pip install --no-cache-dir \
-                git+https://github.com/riverbed/steelscript@24.2.1 \
+                git+https://github.com/riverbed/steelscript@24.11.1 \
                 git+https://github.com/riverbed/steelscript-netprofiler@24.2.1 \
                 git+https://github.com/riverbed/steelscript-wireshark@24.10.1 \
                 git+https://github.com/riverbed/steelscript-cmdline@24.2.1 \
                 git+https://github.com/riverbed/steelscript-scc@24.2.1 \
                 git+https://github.com/riverbed/steelscript-appresponse@24.10.1 \
-                git+https://github.com/riverbed/steelscript-netim@24.2.1 \
+                git+https://github.com/riverbed/steelscript-netim@24.11.1 \
                 git+https://github.com/riverbed/steelscript-client-accelerator-controller@24.2.1 \
                 git+https://github.com/riverbed/steelscript-steelhead@24.2.1 \
                 git+https://github.com/riverbed/steelscript-packets@24.10.1 && \
