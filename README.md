@@ -6,12 +6,12 @@ Riverbed SteelScript is a collection of libraries and scripts written in Python 
 
 ## Quick Start
 
-Here are 4 things you can do to start quick and easy with SteelScript.
+Here are 4 things you can do to start quick and easy with SteelScript (click to expand the section).
 
 <details>
   <summary>Try examples just with git and Docker</summary>
 
-### Quick Start SteelScript examples in a container
+### Quick start SteelScript examples in a container
 
 If you have [git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started) installed, for example on a Linux machine in your lab.
 
@@ -91,9 +91,9 @@ docker run --init --rm -p 8888:8888 --name=steelscript.notebook steelscript.note
 
 In the output, grab the url containing the *token*, for example *http://127.0.0.1:8888/tree?token=123456* , and open it in your browser to log into the Jupyter web-console.
 
-From there, in the *Notebooks* folder you can find some notebook  based on SteelScript:
+From there, in the *Notebooks* folder you can find some notebooks based on SteelScript:
 
-* **AppResponse**: 01-appresponse-hostgroups.ipynb
+* **AppResponse**: [01-appresponse-hostgroups.ipynb](https://github.com/riverbed/steelscript-appresponse/blob/master/notebooks/01-appresponse-hostgroups.ipynb)
 * *work in progress* NetProfiler
 
 </details>
@@ -101,7 +101,7 @@ From there, in the *Notebooks* folder you can find some notebook  based on Steel
 <details>
   <summary>Try SteelScript notebooks in your own SteelScript environment, just with python, pip, git and vscode</summary>
 
-### Quick Start SteelScript notebooks in your environment
+### Quick start SteelScript notebooks in your environment
 
 If you have all the tools ready:
 1. [Python](https://www.python.org/downloads) and pip
@@ -143,9 +143,9 @@ pip install git+https://github.com/riverbed/steelscript-scc
 
 ## Get SteelScript
 
-SteelScript and modules are distributed via [Riverbed in GitHub](https://github.com/riverbed). The main repository is [SteelScript](https://github.com/riverbed/steelscript).
+SteelScript and modules are distributed via [Riverbed on GitHub](https://github.com/riverbed). The main repository is [SteelScript](https://github.com/riverbed/steelscript).
 
-To use SteelScript, it is recommended to either build your own SteelScript container or install the SteelScript modules in your own Python environment directly from the source in GitHub main repository. Refer to the quickstarts in the section above - *the guide needs update*.
+To use SteelScript, it is recommended to either build your own SteelScript container or install the SteelScript modules in your own Python environment directly from the source on GitHub main repository. Refer to the quickstarts in the section above - *the guide needs update*.
 
 > [!NOTE]
 > Other distributions have not been maintained and contain outdated versions of SteelScript: [*outdated* SteelScript on Dockerhub](https://hub.docker.com/r/riverbed/steelscript), [*outdated* SteelScript in pypi](https://pypi.org/search/?q=steelscript), ...
@@ -214,6 +214,7 @@ The repos of SteelScript modules have a common structure
    │       └── __init__.py
    ├── tests
    ├── setup.py
+   ├── examples
    ├── notebooks
    └── tox.ini
 ```
@@ -224,7 +225,7 @@ Mandatory:
 - LICENSE: Riverbed Technology copyright, terms and conditions based on MIT
 - CHANGELOG: Simple text file tracking major changes
 - /docs: Documentation using reStructured Text (rst) file format.
-- /examples: Python scripts samples showing how to use the module
+- /examples: Python scripts samples showing how to use the module (only .py files)
 - /steelscript: The actual code, written in Python (Python 3).
 - /tests: Test plans and unit test. Can be organized in subfolders. Test plan are ideally documented and easy to run scripts but can be anything defining a test plan (script, text, ...), for example a Python script based on pytest.
 - setup.py: Python setup file containing meta descriptions and requirements. Based on setuptools, distutils and pytest. Should NOT contain unit test (use Tox and put unit test inside /tests folder instead)

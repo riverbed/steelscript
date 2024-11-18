@@ -1,13 +1,23 @@
 SteelScript Installation
 ========================
 
-SteelScript is provided as open source on GitHub (https://github.com/riverbed).
+.. tip::
+
+  Go to `SteelScript on GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest `SteelScript <https://github.com/riverbed/steelscript>`_ 
+  
+.. warning::
+  
+  This documentation has been created for SteelScript 2.0 at the time of Python 2 and 3.8 and has not been updated and reviewed for a while. For latest information about SteelScript that works in containers, on Linux/Mac and Windows, supports Python 3.12+, notebooks and more, please refer to `SteelScript on GitHub <https://github.com/riverbed/steelscript>`_
+
+
+`SteelScript <https://github.com/riverbed/steelscript>` is provided by `Riverbed <https://www.riverbed.com/>`_ as an open source project on `GitHub <https://github.com/riverbed/steelscript>`_
+
 Installation of SteelScript varies depending on the platform you are using.
+
+The quickest and easiest installation method is probably the :doc:`Docker container <docker>`.
 
 Start with the specific instructions for :doc:`Docker <docker>`, 
 :doc:`Linux or Mac OS <linuxmac>`, or :doc:`Windows <windows>` for greater detail.
-
-The quickest and easiest installation method is probably the :doc:`Docker container <docker>`.
 
 Installing SteelScript SteelHead package requires executing the command ``steel install --steelhead``.
 But it might take a few more steps, see :doc:`SteelHead Installation Instructions <steelhead>` for more details.  

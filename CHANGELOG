@@ -1,5 +1,12 @@
 CHANGELOG
 ---------
+[24.10.1]
+* Fix service issues with version (init with empty api_versions, ...)
+* Add OAuth 2.0
+* Add custom payload for cookie auth
+* Switch to pyreadline3 for Windows / Python 3.x
+* Clean Dockerfile 
+
 [24.2.1]
 * Remove deprecated libs and functions (pkg_resources, datetime, gitpy_versioning)
 * Log warnings

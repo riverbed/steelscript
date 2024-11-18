@@ -2,21 +2,18 @@
 Riverbed SteelScript for Python
 ===============================
 
+`SteelScript <https://github.com/riverbed/steelscript>`_ is a collection of libraries and scripts in Python for interacting with `Riverbed <https://www.riverbed.com/>`_ solutions and appliances, and other network infrastructure devices.
+`SteelScript <https://github.com/riverbed/steelscript>`_ is provided by `Riverbed <https://www.riverbed.com/>`_ as an open source project on `GitHub <https://github.com/riverbed/steelscript>`_
+
+.. tip::
+
+  Go to `SteelScript on GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest `SteelScript <https://github.com/riverbed/steelscript>`_ 
+  
 .. warning::
-   For quick starts and more about the latest version of `SteelScript <https://github.com/riverbed/steelscript>`_ for Python 3, please refer to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_    
-   This documentation has been created for SteelScript 2.0 at the time of Python 2 and has not been updated and reviewed for a while.   
+  
+  This documentation has been created for SteelScript 2.0 at the time of Python 2 and 3.8 and has not been updated and reviewed for a while. For latest information about SteelScript that works in containers, on Linux/Mac and Windows, supports Python 3.12+, notebooks and more, please refer to `SteelScript on GitHub <https://github.com/riverbed/steelscript>`_
 
-   
-Welcome, this is the documentation of `Riverbed SteelScript <https://github.com/riverbed/steelscript>`_
-The core `SteelScript <https://github.com/riverbed/steelscript>`_ is a collection of Python modules that build upon REST APIs and other interfaces to interact with Riverbed appliances and software.
-
-Getting started with SteelScript (latest)
-=========================================
-
-Please go to `SteelScript repository in GitHub <https://github.com/riverbed/steelscript>`_ for quick starts and more about the latest version of `SteelScript <https://github.com/riverbed/steelscript>`_ for **Python 3**
-
-
-*outdated* Getting started with SteelScript 2.0 for Python 2
+<<*outdated*>> SteelScript 2.0 for Python 2/3.8 <<*outdated*>>
 ==========================================================
 
 Installing
@@ -25,8 +22,8 @@ Installing
 If you already have pip, just run the following (in a
 `virtualenv <http://www.virtualenv.org/>`_)::
 
-   $ pip install steelscript
-   $ steel install
+  pip install steelscript
+  steel install
 
 Not sure about pip, but you know you have Python?
 
@@ -34,7 +31,7 @@ Not sure about pip, but you know you have Python?
 
 2. Run it (in a `virtualenv <http://www.virtualenv.org/>`_)::
 
-      $ python steel_bootstrap.py install
+    python steel_bootstrap.py install
 
 Adding a module with steel command
 ----------------------------------
@@ -47,9 +44,9 @@ provided in this package.
 Once you have the base ``steelscript`` package installed, getting started
 is just one command away::
 
-   $ steel install --steelhead
+  steel install --steelhead
 
-For more details, see the :doc:`complete documentation <steelhead/overview>`.
+For more details, see the :doc:`doc of the steelscript module for SteelHead <steelhead/overview>`.
 
 Documentation
 -------------

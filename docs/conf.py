@@ -42,7 +42,7 @@ highlight_language = 'cython'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-              'cython_highlighting',
+#              'cython_highlighting',
               'sphinx.ext.intersphinx',
               'sphinx.ext.todo',
               'sphinx.ext.coverage']
@@ -65,7 +65,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'steelscript'
-copyright = u'2020 Riverbed Technology, Inc.'
+copyright = u'2019 - 2024 Riverbed Technology, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -288,6 +288,6 @@ texinfo_documents = [
 
 def setup(app):
     # add custom css that overrides the default theme
-    app.add_stylesheet('theme.css')
+    app.add_css_file('theme.css')
     # Register the docstring processor with sphinx
     #app.connect('autodoc-process-docstring', process_docstring)
