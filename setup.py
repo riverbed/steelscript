@@ -68,7 +68,7 @@ setup_requires = ['pytest-runner']
 
 setup_args = {
     'name':               'steelscript',
-    'version':            '24.10.1',
+    'version':            '24.11.1',
     'author':             'Riverbed Technology',
     'author_email':       'community@riverbed.com',
     'url':                'https://community.riverbed.com',

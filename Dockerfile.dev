@@ -1,9 +1,19 @@
 # Dockerfile.dev
-# version: 24.10.1
+# version: 24.11.1
+#
+# Riverbed SteelScript, https://github.com/riverbed/steelscript
+#
+# Usage
+#   
+#   # Build
+#
+#   docker build --tag steelscript.dev:latest -f Dockerfile.dev .
 
-FROM python:3.12
+FROM python:3.13
 LABEL org.opencontainers.image.authors="Riverbed Community"
 LABEL org.opencontainers.image.source="https://github.com/riverbed/steelscript"
+LABEL org.opencontainers.image.title="SteelScript - development"
+LABEL org.opencontainers.image.version="24.11.1"
 
 COPY steelscript /src-dev/steelscript 
 COPY steelscript-netprofiler /src-dev/steelscript-netprofiler
@@ -23,9 +33,10 @@ RUN set -ex \
                 libpcap-dev \
         ' \
         && apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* 
-
-RUN set -ex \
-        && pip install --src /src \
+       
+RUN set -ex && \
+        pip install --no-cache-dir --upgrade pip && \
+        pip install --src /src \
             -e /src-dev/steelscript \
             -e /src-dev/steelscript-netprofiler \
             -e /src-dev/steelscript-wireshark \
@@ -34,16 +45,13 @@ RUN set -ex \
             -e /src-dev/steelscript-appresponse \
             -e /src-dev/steelscript-netim \
             -e /src-dev/steelscript-client-accelerator-controller \
-        && pip install --src /src \
             -e /src-dev/steelscript-steelhead \
-            -e /src-dev/steelscript-packets \
-        && rm -f /src/pip-delete-this-directory.txt \
-        && rm -rf ~/.cache
+            -e /src-dev/steelscript-packets
 
 RUN set -ex \
-        && steel mkworkspace -d /root/steelscript-workspace
+        && steel mkworkspace -d /steelscript/workspace
 
-WORKDIR /root/steelscript-workspace
+WORKDIR /steelscript/workspace
 
 # Configure container startup
 CMD ["/bin/bash"]

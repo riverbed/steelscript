@@ -1,0 +1,31 @@
+# Dockerfile.custom
+# version: 24.11.1
+#
+# Riverbed SteelScript, https://github.com/riverbed/steelscript
+#
+# Usage
+#
+#   # Build the SteelScript Optimized image
+#
+#       docker build --tag steelscript.workload:latest -f Dockerfile.workload .
+#   
+#   # Build your SteelScript custom image
+#
+#       docker build --tag steelscript.your_custom_workload -f Dockerfile.custom .
+#
+#   # Run
+#       
+#      docker run --rm steelscript.your_custom_workload:latest python your_script.py
+
+FROM steelscript.workload:latest
+LABEL org.opencontainers.image.authors="Riverbed Community"
+LABEL org.opencontainers.image.source="https://github.com/riverbed/steelscript"
+LABEL org.opencontainers.image.title="SteelScript - custom workload"
+LABEL org.opencontainers.image.version="24.11.1"
+
+# Copy local script to the steelscript workdir (default: /steelscript)
+COPY *.py .
+
+
+# TODO: set the name of your script
+CMD ["python", "your_script.py"]
